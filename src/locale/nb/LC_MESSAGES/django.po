@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 10:50+0100\n"
+"POT-Creation-Date: 2025-10-30 16:50+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -54,7 +54,7 @@ msgstr ""
 "vises på forsiden."
 
 #: src/announcements/models.py:53 src/contentbox/models.py:21
-#: src/docs/models.py:51 src/make_queue/models/machine.py:206
+#: src/docs/models.py:51 src/make_queue/models/machine.py:207
 #: src/news/models.py:40
 msgid "content"
 msgstr "innhold"
@@ -323,7 +323,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: src/checkin/templates/checkin/profile_detail_internal.html:97
-#: src/internal/forms.py:43 src/make_queue/forms/course.py:68
+#: src/internal/forms.py:43 src/make_queue/forms/course.py:72
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -337,15 +337,15 @@ msgstr "Kontakt %(email)s for å fikse problemet."
 msgid "People with these skills are at <br/>Makerverkstedet right now"
 msgstr "Folk med disse ferdighetene er på <br/>Makerverkstedet akkurat nå"
 
-#: src/checkin/views.py:120
+#: src/checkin/views.py:115
 msgid "You have completed the 3D printer course"
 msgstr "Du har fullført 3D-printerkurset"
 
-#: src/checkin/views.py:121
+#: src/checkin/views.py:116
 msgid "You have not taken the 3D printer course"
 msgstr "Du har ikke tatt 3D-printerkurset"
 
-#: src/checkin/views.py:123
+#: src/checkin/views.py:118
 msgid ""
 "To use a 3D printer, make a reservation in the calendar of one of the 3D "
 "printers on the “Reservations” page."
@@ -353,15 +353,15 @@ msgstr ""
 "For å bruke en 3D-printer, lag en reservasjon i kalenderen til en av 3D-"
 "printerne på «Reservasjoner»-siden."
 
-#: src/checkin/views.py:132
+#: src/checkin/views.py:124
 msgid "You have completed the {} course"
 msgstr "Du har fullført {}kurset"
 
-#: src/checkin/views.py:133
+#: src/checkin/views.py:126
 msgid "You have not taken the {} course"
 msgstr "Du har ikke tatt {}kurset"
 
-#: src/checkin/views.py:135
+#: src/checkin/views.py:128
 msgid ""
 "To use a {}, make a reservation in the calendar of one of the {}s on the "
 "“Reservations” page."
@@ -369,15 +369,15 @@ msgstr ""
 "For å bruke en {}, lag en reservasjon i kalenderen til en av {}ne på "
 "«Reservasjoner»-siden."
 
-#: src/checkin/views.py:175 src/checkin/views.py:178
+#: src/checkin/views.py:170 src/checkin/views.py:173
 msgid "Enter both norwegian and english skill name"
 msgstr "Skriv inn tittel på både norsk og engelsk"
 
-#: src/checkin/views.py:185
+#: src/checkin/views.py:180
 msgid "Skill already exists!"
 msgstr "Ferdigheten finnes allerede!"
 
-#: src/checkin/views.py:203
+#: src/checkin/views.py:198
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
@@ -404,9 +404,9 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 #: src/internal/models.py:62 src/internal/models.py:208
 #: src/internal/models.py:280
 #: src/internal/templates/internal/secret_list.html:67
-#: src/make_queue/models/course.py:15 src/make_queue/models/course.py:46
-#: src/make_queue/models/machine.py:153
-#: src/make_queue/models/machine.py:207
+#: src/make_queue/models/course.py:23 src/make_queue/models/course.py:54
+#: src/make_queue/models/machine.py:154
+#: src/make_queue/models/machine.py:208
 #: src/make_queue/models/reservation.py:313 src/makerspace/models.py:33
 #: src/news/models.py:51 src/news/models.py:207
 msgid "last modified"
@@ -697,7 +697,7 @@ msgid "clickbait"
 msgstr "lokketekst"
 
 #: src/groups/models.py:107 src/internal/models.py:263
-#: src/make_queue/models/course.py:14 src/makerspace/models.py:24
+#: src/make_queue/models/course.py:22 src/makerspace/models.py:24
 msgid "description"
 msgstr "beskrivelse"
 
@@ -738,7 +738,7 @@ msgstr "Administrasjonsside for komiteer"
 msgid "Change {committee}"
 msgstr "Endre {committee}"
 
-#: src/internal/admin.py:21 src/make_queue/models/course.py:39
+#: src/internal/admin.py:21 src/make_queue/models/course.py:47
 msgid "full name"
 msgstr "fullt navn"
 
@@ -787,7 +787,7 @@ msgstr ""
 "«pang»."
 
 #: src/internal/models.py:31 src/make_queue/forms/quota.py:19
-#: src/make_queue/models/course.py:36
+#: src/make_queue/models/course.py:44
 #: src/make_queue/models/reservation.py:31 src/news/admin.py:306
 #: src/news/models.py:250
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:16
@@ -945,7 +945,7 @@ msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
 #: src/internal/models.py:267 src/make_queue/models/machine.py:44
-#: src/make_queue/models/machine.py:149 src/makerspace/models.py:30
+#: src/make_queue/models/machine.py:150 src/makerspace/models.py:30
 msgid "priority"
 msgstr "prioritet"
 
@@ -978,13 +978,8 @@ msgid "context"
 msgstr "kontekst"
 
 #: src/internal/models.py:303
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:100
-#: src/make_queue/views/course.py:125
-#: src/news/templates/news/event/event_list_contents.html:26
-#: src/web/templates/web/forms/widgets/semantic_date.html:11
-#: src/web/templates/web/forms/widgets/semantic_datetime.html:11
-msgid "date"
-msgstr "dato"
+msgid "time it was said"
+msgstr "tidspunkt det ble sagt"
 
 #: src/internal/models.py:308
 msgid "author"
@@ -1105,7 +1100,7 @@ msgstr "Filtrer komiteer"
 
 #: src/internal/templates/internal/member_list.html:132
 #: src/internal/templates/internal/member_list.html:268
-#: src/make_queue/models/course.py:12 src/make_queue/models/machine.py:120
+#: src/make_queue/models/course.py:21 src/make_queue/models/machine.py:121
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:97
 #: src/make_queue/views/course.py:122
 msgid "name"
@@ -1118,7 +1113,7 @@ msgstr "komité"
 
 #: src/internal/templates/internal/member_list.html:141
 #: src/internal/templates/internal/member_list.html:350
-#: src/make_queue/models/course.py:44 src/make_queue/models/machine.py:140
+#: src/make_queue/models/course.py:52 src/make_queue/models/machine.py:141
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:101
 #: src/make_queue/templates/make_queue/machine_detail.html:100
 msgid "status"
@@ -1139,7 +1134,7 @@ msgstr "Sluttdato"
 
 #: src/internal/templates/internal/member_list.html:190
 #: src/internal/templatetags/member.py:48
-#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:109
+#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:108
 #: src/news/admin.py:263 src/util/admin_utils.py:113
 msgid "Yes"
 msgstr "Ja"
@@ -1287,28 +1282,32 @@ msgstr "Legg til sitat"
 msgid "Change Quote"
 msgstr "Endre sitat"
 
-#: src/make_queue/admin.py:22
+#: src/make_queue/admin.py:24
 #: src/make_queue/templates/make_queue/machine_list.html:7
 #: src/make_queue/templates/make_queue/machine_list.html:19
 #: src/make_queue/templates/make_queue/reservation_list.html:44
 msgid "machines"
 msgstr "maskiner"
 
-#: src/make_queue/admin.py:46 src/make_queue/models/machine.py:136
+#: src/make_queue/admin.py:48 src/make_queue/models/machine.py:137
 #: src/make_queue/templates/make_queue/machine_detail.html:79
 #: src/news/admin.py:238 src/news/models.py:202
 msgid "location"
 msgstr "sted"
 
-#: src/make_queue/api/views.py:139
+#: src/make_queue/admin.py:100 src/make_queue/models/course.py:53
+msgid "course permissions"
+msgstr "kurs tillatelser"
+
+#: src/make_queue/api/views.py:140
 msgid "Cannot mark reservation as finished when it has not started yet."
 msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå."
 
-#: src/make_queue/api/views.py:141
+#: src/make_queue/api/views.py:142
 msgid "Cannot mark reservation as finished when it has already ended."
 msgstr "Kan ikke sette reservasjonen som ferdig når den allerede er over."
 
-#: src/make_queue/api/views.py:165
+#: src/make_queue/api/views.py:166
 msgid ""
 "Cannot delete reservation when it has already started. Mark it as finished "
 "instead."
@@ -1316,7 +1315,7 @@ msgstr ""
 "Kan ikke slette reservasjonen når den allerede har startet. Sett den som "
 "ferdig istedenfor."
 
-#: src/make_queue/api/views.py:167
+#: src/make_queue/api/views.py:168
 msgid "Cannot delete reservation when it has already ended."
 msgstr "Kan ikke slette reservasjonen når den allerede er over."
 
@@ -1328,7 +1327,7 @@ msgstr "Velg bruker"
 #. Translators: See the Norwegian and English versions of this page for
 #. a translation of "Building security":
 #. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
-#: src/make_queue/forms/course.py:56
+#: src/make_queue/forms/course.py:55
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -1338,7 +1337,7 @@ msgstr ""
 
 #: src/make_queue/forms/machine.py:20 src/make_queue/forms/quota.py:24
 #: src/make_queue/forms/reservation.py:66
-#: src/make_queue/models/machine.py:134
+#: src/make_queue/models/machine.py:135
 #: src/make_queue/models/reservation.py:37
 #: src/make_queue/models/reservation.py:304
 #: src/make_queue/templates/make_queue/machine_detail.html:86
@@ -1388,44 +1387,56 @@ msgid "Rule time periods overlap with time periods of other rules."
 msgstr ""
 "Tidsperiodene til regelen overlapper med tidsperiodene til andre regler."
 
-#: src/make_queue/models/course.py:13
+#: src/make_queue/models/course.py:15
+msgid "Only has to be logged in"
+msgstr "Trenger bare å være innlogget"
+
+#: src/make_queue/models/course.py:16
+msgid "Taken the 3D printer course"
+msgstr "Tatt 3D-printerkurset"
+
+#: src/make_queue/models/course.py:17
+msgid "Taken the course on Raise3D printers"
+msgstr "Tatt Raise3D-printerkurset"
+
+#: src/make_queue/models/course.py:18
+msgid "Taken the SLA 3D printer course"
+msgstr "Tatt SLA 3D-printerkurset"
+
+#: src/make_queue/models/course.py:20
 msgid "short name"
 msgstr "kort navn"
 
-#: src/make_queue/models/course.py:24
+#: src/make_queue/models/course.py:32
 msgid "Registered"
 msgstr "Registrert"
 
 #. Translators: See the Norwegian and English versions of this page for
 #. a translation of "Building security":
 #. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
-#: src/make_queue/models/course.py:28
+#: src/make_queue/models/course.py:36
 msgid "Sent to Building security"
 msgstr "Sendt til Vakt og service"
 
-#: src/make_queue/models/course.py:29
+#: src/make_queue/models/course.py:37
 msgid "Access granted"
 msgstr "Tilgang gitt"
 
-#: src/make_queue/models/course.py:38
+#: src/make_queue/models/course.py:46
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:98
 #: src/make_queue/views/course.py:123
 msgid "username"
 msgstr "brukernavn"
 
-#: src/make_queue/models/course.py:43
+#: src/make_queue/models/course.py:51
 msgid "course date"
 msgstr "kursdato"
 
-#: src/make_queue/models/course.py:45
-msgid "course permissions"
-msgstr "kurs tillatelser"
-
-#: src/make_queue/models/course.py:52
+#: src/make_queue/models/course.py:60
 msgid "3D printer course"
 msgstr "3D-printerkurs"
 
-#: src/make_queue/models/course.py:53
+#: src/make_queue/models/course.py:61
 msgid "3D printer courses"
 msgstr "3D-printerkurs"
 
@@ -1437,47 +1448,47 @@ msgstr "brukskrav"
 msgid "The machine types are sorted ascending by this value."
 msgstr "Maskintypene sorteres stigende på denne verdien."
 
-#: src/make_queue/models/machine.py:112
+#: src/make_queue/models/machine.py:113
 msgid "Reserved"
 msgstr "Reservert"
 
-#: src/make_queue/models/machine.py:113
+#: src/make_queue/models/machine.py:114
 msgid "Available"
 msgstr "Ledig"
 
-#: src/make_queue/models/machine.py:114
+#: src/make_queue/models/machine.py:115
 msgid "In use"
 msgstr "I bruk"
 
-#: src/make_queue/models/machine.py:115
+#: src/make_queue/models/machine.py:116
 msgid "Out of order"
 msgstr "I ustand"
 
-#: src/make_queue/models/machine.py:116
+#: src/make_queue/models/machine.py:117
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: src/make_queue/models/machine.py:126
+#: src/make_queue/models/machine.py:127
 msgid "stream name"
 msgstr "videostrømnavn"
 
-#: src/make_queue/models/machine.py:127
+#: src/make_queue/models/machine.py:128
 msgid "Used for connecting to the machine's stream."
 msgstr "Brukes til å koble til maskinens videostrøm."
 
-#: src/make_queue/models/machine.py:129
+#: src/make_queue/models/machine.py:130
 msgid "machine model"
 msgstr "maskinmodell"
 
-#: src/make_queue/models/machine.py:137 src/news/models.py:203
+#: src/make_queue/models/machine.py:138 src/news/models.py:203
 msgid "location URL"
 msgstr "sted-URL"
 
-#: src/make_queue/models/machine.py:138 src/news/models.py:50
+#: src/make_queue/models/machine.py:139 src/news/models.py:50
 msgid "internal"
 msgstr "internt"
 
-#: src/make_queue/models/machine.py:139
+#: src/make_queue/models/machine.py:140
 msgid ""
 "If selected, the machine will only be visible to and reservable by MAKE "
 "members."
@@ -1485,12 +1496,12 @@ msgstr ""
 "Hvis valgt vil maskinen bare være synlig og mulig å reservere for MAKE-"
 "medlemmer."
 
-#: src/make_queue/models/machine.py:141
+#: src/make_queue/models/machine.py:142
 #: src/make_queue/templates/make_queue/machine_detail.html:115
 msgid "info message"
 msgstr "infomelding"
 
-#: src/make_queue/models/machine.py:142
+#: src/make_queue/models/machine.py:143
 msgid ""
 "Information that's useful to know before using the machine, e.g. the "
 "filament that the 3D printer uses, the needle that's currently inserted in "
@@ -1501,23 +1512,23 @@ msgstr ""
 "som 3D-printeren bruker, nåla som er satt i symaskinen, eller "
 "tilstanden/«humøret» til maskinen for tida (emoji-er er tillatt 🤠)."
 
-#: src/make_queue/models/machine.py:145
+#: src/make_queue/models/machine.py:146
 msgid "time the info message was changed"
 msgstr "tidspunkt infomeldingen ble endra"
 
-#: src/make_queue/models/machine.py:150
+#: src/make_queue/models/machine.py:151
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
-#: src/make_queue/models/machine.py:152
+#: src/make_queue/models/machine.py:153
 msgid "notes"
 msgstr "notater"
 
-#: src/make_queue/models/machine.py:152
+#: src/make_queue/models/machine.py:153
 msgid "This is only for internal use and is not displayed anywhere."
 msgstr "Dette er bare for intern bruk og blir ikke vist fram noe sted."
 
-#: src/make_queue/models/machine.py:212 src/make_queue/views/machine.py:52
+#: src/make_queue/models/machine.py:213 src/make_queue/views/machine.py:52
 #, python-brace-format
 msgid "Usage rules for {machine_type}"
 msgstr "Bruksregler for {machine_type}"
@@ -1702,14 +1713,14 @@ msgstr "Nullstill valg"
 msgid "Registration status"
 msgstr "Registreringsstatus"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:122
+#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:116
 #: src/make_queue/templates/make_queue/reservation_form.html:188
 #: src/util/view_utils.py:115
 msgid "Save"
 msgstr "Lagre"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:126
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:211
+#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:120
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:209
 #: src/make_queue/templates/make_queue/reservation_form.html:190
 #: src/news/templates/news/event/ticket/event_ticket_cancel.html:17
 #: src/web/templates/web/delete_modal.html:22
@@ -1765,6 +1776,14 @@ msgstr "Veksle visning av ikke-valgte brukere"
 msgid "Select all shown users"
 msgstr "Velg alle viste brukere"
 
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:100
+#: src/make_queue/views/course.py:125
+#: src/news/templates/news/event/event_list_contents.html:26
+#: src/web/templates/web/forms/widgets/semantic_date.html:11
+#: src/web/templates/web/forms/widgets/semantic_datetime.html:11
+msgid "date"
+msgstr "dato"
+
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:126
 #, python-format
 msgid "Are you sure you want to delete the course registration of %(user)s?"
@@ -1774,27 +1793,27 @@ msgstr "Er du sikker på at du vil slette kursregistreringen til %(user)s?"
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:178
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:176
 msgid "Filter matches"
 msgstr "Filter matcher"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:182
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:180
 msgid "registrations"
 msgstr "registreringer"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:192
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:190
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:201
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:199
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:203
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:201
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:208
+#: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:206
 msgid "Set status"
 msgstr "Sett status"
 
@@ -3273,15 +3292,3 @@ msgstr "Søk etter steder"
 
 #~ msgid "SLA course"
 #~ msgstr "SLA-kurs"
-
-#~ msgid "Only has to be logged in"
-#~ msgstr "Trenger bare å være innlogget"
-
-#~ msgid "Taken the 3D printer course"
-#~ msgstr "Tatt 3D-printerkurset"
-
-#~ msgid "Taken the course on Raise3D printers"
-#~ msgstr "Tatt Raise3D-printerkurset"
-
-#~ msgid "Taken the SLA 3D printer course"
-#~ msgstr "Tatt SLA 3D-printerkurset"
