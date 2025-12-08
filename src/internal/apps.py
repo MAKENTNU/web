@@ -2,8 +2,8 @@ from django.apps import AppConfig
 
 
 class InternalConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'internal'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "internal"
 
     def ready(self):
         # Importing models (which is done in the `signals` module) should not be done in the global scope,

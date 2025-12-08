@@ -1,6 +1,7 @@
 """
 Code based on https://github.com/xcom-data/xcom/blob/b2c51ce07f9f33e16742a61bd9e3d96f0683a317/xcom/util/ckeditor_utils.py
 """
+
 from typing import Type
 from urllib.parse import unquote, urlparse
 
@@ -28,7 +29,11 @@ def get_filename(upload_name: str, request):
     try:
         folder_name = get_folder_name(request)
     except Exception as e:
-        log_request_exception(f"Failed to determine the proper folder name for the file with name '{upload_name}'", e, request)
+        log_request_exception(
+            f"Failed to determine the proper folder name for the file with name '{upload_name}'",
+            e,
+            request,
+        )
         # Fall back to the default date-prefixed format
         return f"{date_prefix}/{filename}" if should_prefix_date() else filename
 
@@ -37,7 +42,7 @@ def get_filename(upload_name: str, request):
 
 def get_folder_name(request):
     http_headers = request.headers
-    origin_full_url = http_headers.get('REFERER')  # REFERER is supposed to have a typo
+    origin_full_url = http_headers.get("REFERER")  # REFERER is supposed to have a typo
     if not origin_full_url:
         raise Exception("Could not find HTTP_REFERER among the request's headers")
 
@@ -56,7 +61,8 @@ def get_folder_name(request):
         model: Type[Model] = view_func.view_class.model
 
     model_name_plural = get_model_name_plural(model)
-    return slugify(model_name_plural).replace("-", "_")  # The naming convention for folders is snake_case
+    # The naming convention for folders is snake_case
+    return slugify(model_name_plural).replace("-", "_")
 
 
 def get_model_name_plural(model: Type[Model]):
@@ -69,4 +75,4 @@ def get_model_name_plural(model: Type[Model]):
 def should_prefix_date():
     # If not grouping uploaded files by date, do it anyway, manually;
     # otherwise, the filename should already be date-prefixed
-    return not getattr(settings, 'CKEDITOR_RESTRICT_BY_DATE', True)
+    return not getattr(settings, "CKEDITOR_RESTRICT_BY_DATE", True)

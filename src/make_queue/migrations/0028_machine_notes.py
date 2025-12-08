@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0027_history_date_db_index'),
+        ("make_queue", "0027_history_date_db_index"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='notes',
-            field=models.TextField(blank=True, help_text='This is only for internal use and is not displayed anywhere.', verbose_name='notes'),
+            model_name="machine",
+            name="notes",
+            field=models.TextField(
+                blank=True,
+                help_text="This is only for internal use and is not displayed anywhere.",
+                verbose_name="notes",
+            ),
         ),
     ]

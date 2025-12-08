@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0001_initial'),
+        ("contentbox", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='contentbox',
-            name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='title'),
+            model_name="contentbox",
+            name="title",
+            field=models.CharField(max_length=100, unique=True, verbose_name="title"),
         ),
     ]

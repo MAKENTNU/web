@@ -5,26 +5,54 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0002_verbose_names_and_allow_blank'),
+        ("internal", "0002_verbose_names_and_allow_blank"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SystemAccess',
+            name="SystemAccess",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(choices=[('drive', 'Drive'), ('slack', 'Slack'), ('calendar', 'Calendar'), ('trello', 'Trello'), ('email', 'Email'), ('website', 'Website')], max_length=32, verbose_name='system')),
-                ('value', models.BooleanField(verbose_name='access')),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Member', verbose_name='member')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        choices=[
+                            ("drive", "Drive"),
+                            ("slack", "Slack"),
+                            ("calendar", "Calendar"),
+                            ("trello", "Trello"),
+                            ("email", "Email"),
+                            ("website", "Website"),
+                        ],
+                        max_length=32,
+                        verbose_name="system",
+                    ),
+                ),
+                ("value", models.BooleanField(verbose_name="access")),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="internal.Member",
+                        verbose_name="member",
+                    ),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='memberproperty',
-            name='member',
+            model_name="memberproperty",
+            name="member",
         ),
         migrations.DeleteModel(
-            name='MemberProperty',
+            name="MemberProperty",
         ),
     ]

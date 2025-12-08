@@ -5,26 +5,40 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('groups', '0006_alter_id_fields_to_use_bigautofield'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("groups", "0006_alter_id_fields_to_use_bigautofield"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='committee',
-            name='group',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='committee', to='groups.inheritancegroup', verbose_name='group'),
+            model_name="committee",
+            name="group",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="committee",
+                to="groups.inheritancegroup",
+                verbose_name="group",
+            ),
         ),
         migrations.AlterField(
-            model_name='inheritancegroup',
-            name='own_permissions',
-            field=models.ManyToManyField(blank=True, related_name='inheritance_groups', to='auth.Permission', verbose_name='own permissions'),
+            model_name="inheritancegroup",
+            name="own_permissions",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="inheritance_groups",
+                to="auth.Permission",
+                verbose_name="own permissions",
+            ),
         ),
         migrations.AlterField(
-            model_name='inheritancegroup',
-            name='parents',
-            field=models.ManyToManyField(blank=True, related_name='children', to='groups.InheritanceGroup', verbose_name='parents'),
+            model_name="inheritancegroup",
+            name="parents",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="children",
+                to="groups.InheritanceGroup",
+                verbose_name="parents",
+            ),
         ),
     ]

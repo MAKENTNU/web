@@ -4,20 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0002_auto_20180504_2004'),
+        ("checkin", "0002_auto_20180504_2004"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='skill',
-            name='title_en',
-            field=models.CharField(default='', max_length=100, unique=True, verbose_name='skill (english)'),
+            model_name="skill",
+            name="title_en",
+            field=models.CharField(
+                default="", max_length=100, unique=True, verbose_name="skill (english)"
+            ),
         ),
         migrations.AddField(
-            model_name='suggestskill',
-            name='title_en',
-            field=models.CharField(default='', max_length=100, unique=True, verbose_name='suggested skill'),
+            model_name="suggestskill",
+            name="title_en",
+            field=models.CharField(
+                default="", max_length=100, unique=True, verbose_name="suggested skill"
+            ),
         ),
     ]

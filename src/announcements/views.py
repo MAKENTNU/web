@@ -11,43 +11,49 @@ from .models import Announcement
 
 
 class AdminAnnouncementListView(PermissionRequiredMixin, ListView):
-    permission_required = ('announcements.change_announcement',)
+    permission_required = ("announcements.change_announcement",)
     model = Announcement
-    queryset = Announcement.objects.order_by('-display_from')
-    template_name = 'announcements/admin_announcement_list.html'
+    queryset = Announcement.objects.order_by("-display_from")
+    template_name = "announcements/admin_announcement_list.html"
     context_object_name = "announcements"
 
 
 class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     model = Announcement
     form_class = AnnouncementForm
-    success_url = reverse_lazy('admin_announcement_list')
+    success_url = reverse_lazy("admin_announcement_list")
 
     narrow = False
     centered_title = False
     back_button_link = success_url
     back_button_text = _("Admin page for announcements")
     custom_fieldsets = [
-        {'fields': ('classification', 'link'), 'layout_class': "ui two fields"},
-        {'fields': ('display_from', 'display_to'), 'layout_class': "ui two fields"},
-        {'fields': ('content', 'site_wide')},
+        {"fields": ("classification", "link"), "layout_class": "ui two fields"},
+        {"fields": ("display_from", "display_to"), "layout_class": "ui two fields"},
+        {"fields": ("content", "site_wide")},
     ]
 
 
-class AnnouncementCreateView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
-    permission_required = ('announcements.add_announcement',)
+class AnnouncementCreateView(
+    PermissionRequiredMixin, AnnouncementFormMixin, CreateView
+):
+    permission_required = ("announcements.add_announcement",)
 
     form_title = _("Add Announcement")
     save_button_text = _("Add")
 
 
-class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
-    permission_required = ('announcements.change_announcement',)
+class AnnouncementUpdateView(
+    PermissionRequiredMixin, AnnouncementFormMixin, UpdateView
+):
+    permission_required = ("announcements.change_announcement",)
 
     form_title = _("Change Announcement")
 
 
-class AnnouncementDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('announcements.delete_announcement',)
+class AnnouncementDeleteView(
+    PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView
+):
+    permission_required = ("announcements.delete_announcement",)
     model = Announcement
-    success_url = reverse_lazy('admin_announcement_list')
+    success_url = reverse_lazy("admin_announcement_list")

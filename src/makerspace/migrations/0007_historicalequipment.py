@@ -8,30 +8,58 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('makerspace', '0006_equipment_last_modified'),
+        ("makerspace", "0006_equipment_last_modified"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HistoricalEquipment',
+            name="HistoricalEquipment",
             fields=[
-                ('id', models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(db_index=True, verbose_name='title')),
-                ('description', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='description')),
-                ('image', models.CharField(max_length=100, verbose_name='image')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigIntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "title",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        db_index=True, verbose_name="title"
+                    ),
+                ),
+                (
+                    "description",
+                    web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                        verbose_name="description"
+                    ),
+                ),
+                ("image", models.CharField(max_length=100, verbose_name="image")),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical equipment',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': 'history_date',
+                "verbose_name": "historical equipment",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": "history_date",
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),

@@ -5,19 +5,23 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0002_auto_20180412_1740'),
+        ("contentbox", "0002_auto_20180412_1740"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='contentbox',
-            options={'permissions': (('can_upload_image', 'Can upload images in CKEditor'), ('can_browse_image', 'Can browse images in CKEditor'))},
+            name="contentbox",
+            options={
+                "permissions": (
+                    ("can_upload_image", "Can upload images in CKEditor"),
+                    ("can_browse_image", "Can browse images in CKEditor"),
+                )
+            },
         ),
         migrations.AlterField(
-            model_name='contentbox',
-            name='content',
+            model_name="contentbox",
+            name="content",
             field=ckeditor_uploader.fields.RichTextUploadingField(),
         ),
     ]

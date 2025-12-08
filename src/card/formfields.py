@@ -10,16 +10,19 @@ class CardNumberField(forms.CharField):
     """
     Custom form field for card numbers.
     """
+
     widget = CardNumberInput
     default_validators = [card_number_input_validator]
 
     def __init__(self, **kwargs):
-        super().__init__(**{
-            'empty_value': None,
-            # `capfirst()` to avoid duplicate translation differing only in case
-            'label': capfirst(_("card number")),
-            **kwargs,
-        })
+        super().__init__(
+            **{
+                "empty_value": None,
+                # `capfirst()` to avoid duplicate translation differing only in case
+                "label": capfirst(_("card number")),
+                **kwargs,
+            }
+        )
 
     def clean(self, value):
         value = super().clean(value)

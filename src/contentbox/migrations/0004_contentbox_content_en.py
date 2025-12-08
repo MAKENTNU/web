@@ -5,15 +5,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0003_auto_20181013_1418'),
+        ("contentbox", "0003_auto_20181013_1418"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contentbox',
-            name='content_en',
-            field=ckeditor_uploader.fields.RichTextUploadingField(default=''),
+            model_name="contentbox",
+            name="content_en",
+            field=ckeditor_uploader.fields.RichTextUploadingField(default=""),
         ),
     ]

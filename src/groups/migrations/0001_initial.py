@@ -6,24 +6,43 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('auth', '0009_alter_user_last_name_max_length'),
+        ("auth", "0009_alter_user_last_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='InheritanceGroup',
+            name="InheritanceGroup",
             fields=[
-                ('group_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='auth.Group')),
-                ('own_permissions', models.ManyToManyField(blank=True, to='auth.Permission')),
-                ('parents', models.ManyToManyField(blank=True, related_name='sub_groups', to='groups.InheritanceGroup')),
+                (
+                    "group_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="auth.Group",
+                    ),
+                ),
+                (
+                    "own_permissions",
+                    models.ManyToManyField(blank=True, to="auth.Permission"),
+                ),
+                (
+                    "parents",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="sub_groups",
+                        to="groups.InheritanceGroup",
+                    ),
+                ),
             ],
-            bases=('auth.group',),
+            bases=("auth.group",),
             managers=[
-                ('objects', django.contrib.auth.models.GroupManager()),
+                ("objects", django.contrib.auth.models.GroupManager()),
             ],
         ),
     ]

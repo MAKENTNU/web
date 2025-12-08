@@ -5,15 +5,18 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('announcements', '0002_help_text_and_naming'),
+        ("announcements", "0002_help_text_and_naming"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='announcement',
-            name='display_from',
-            field=models.DateTimeField(default=django.utils.timezone.localtime, help_text='The date from which the announcement will be shown.', verbose_name='display from'),
+            model_name="announcement",
+            name="display_from",
+            field=models.DateTimeField(
+                default=django.utils.timezone.localtime,
+                help_text="The date from which the announcement will be shown.",
+                verbose_name="display from",
+            ),
         ),
     ]

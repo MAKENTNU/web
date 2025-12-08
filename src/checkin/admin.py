@@ -5,9 +5,9 @@ from .models import Profile, Skill, SuggestSkill, UserSkill
 
 
 class ProfileAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
-    list_display = ('__str__',)
+    list_display = ("__str__",)
 
-    readonly_fields = ('last_checkin',)
+    readonly_fields = ("last_checkin",)
 
 
 class SkillAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
@@ -15,11 +15,11 @@ class SkillAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
 
 class UserSkillAdmin(admin.ModelAdmin):
-    list_display = ('profile', 'skill', 'skill_level')
+    list_display = ("profile", "skill", "skill_level")
 
 
 class SuggestSkillAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
-    list_display = ('title', 'title_en')
+    list_display = ("title", "title_en")
 
 
 admin.site.register(Profile, ProfileAdmin)

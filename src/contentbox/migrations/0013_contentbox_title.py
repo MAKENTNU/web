@@ -6,22 +6,27 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0012_rename_title_contentbox_url_name'),
+        ("contentbox", "0012_rename_title_contentbox_url_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contentbox',
-            name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), verbose_name='title'),
+            model_name="contentbox",
+            name="title",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                default=MultiLingualTextStructure("", use_default_for_empty=True),
+                verbose_name="title",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='historicalcontentbox',
-            name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), verbose_name='title'),
+            model_name="historicalcontentbox",
+            name="title",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                default=MultiLingualTextStructure("", use_default_for_empty=True),
+                verbose_name="title",
+            ),
             preserve_default=False,
         ),
     ]

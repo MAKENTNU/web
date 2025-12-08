@@ -5,20 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0018_quote'),
+        ("internal", "0018_quote"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='quote',
-            name='date',
-            field=models.DateField(default=date.fromtimestamp(0), verbose_name='date'),
+            model_name="quote",
+            name="date",
+            field=models.DateField(default=date.fromtimestamp(0), verbose_name="date"),
             preserve_default=False,
         ),
         migrations.AlterModelOptions(
-            name='quote',
-            options={'ordering': ('-date',)},
+            name="quote",
+            options={"ordering": ("-date",)},
         ),
     ]

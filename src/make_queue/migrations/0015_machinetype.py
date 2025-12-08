@@ -10,8 +10,15 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 
 
 class MachineTypeStruct:
-
-    def __init__(self, pk: int, name: dict, cannot_use_text: Union[dict, str], usage_requirement: str, has_stream: bool, priority: int):
+    def __init__(
+        self,
+        pk: int,
+        name: dict,
+        cannot_use_text: Union[dict, str],
+        usage_requirement: str,
+        has_stream: bool,
+        priority: int,
+    ):
         self.pk = pk
         self.name = json.dumps(name)
         self.usage_requirement = usage_requirement
@@ -30,9 +37,9 @@ default_machine_types = (
         name={"en": "3D printers", "nb": "3D-printere"},
         cannot_use_text={
             "en": "You must have completed a 3D printer course to reserve the printers."
-                  " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
+            " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av 3D-printere krever fullført 3D-printerkurs."
-                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+            " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="3DPR",
         has_stream=True,
@@ -75,9 +82,9 @@ default_machine_types = (
         name={"en": "Raise3D printers", "nb": "Raise3D-printere"},
         cannot_use_text={
             "en": "You must have completed the course on Raise3D printers to reserve these."
-                  " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
+            " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av disse krever fullført Raise3D-printerkurs."
-                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+            " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="R3DP",
         has_stream=True,
@@ -88,9 +95,9 @@ default_machine_types = (
         name={"en": "SLA 3D printers", "nb": "SLA 3D-printere"},
         cannot_use_text={
             "en": "You must have completed the SLA 3D printer course to reserve these."
-                  " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
+            " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av disse krever fullført SLA 3D-printerkurs."
-                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+            " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="SLAP",
         has_stream=False,
@@ -100,60 +107,119 @@ default_machine_types = (
 
 
 def create_default_machine_types(apps, schema_editor):
-    MachineType = apps.get_model('make_queue', 'MachineType')
+    MachineType = apps.get_model("make_queue", "MachineType")
     for machine_type in default_machine_types:
         MachineType.objects.get_or_create(
-            name=MultiLingualTextStructure(machine_type.name, use_default_for_empty=True),
+            name=MultiLingualTextStructure(
+                machine_type.name, use_default_for_empty=True
+            ),
             defaults={
-                'pk': machine_type.pk,
-                'cannot_use_text': MultiLingualTextStructure(machine_type.cannot_use_text, use_default_for_empty=True),
-                'usage_requirement': machine_type.usage_requirement,
-                'has_stream': machine_type.has_stream,
-                'priority': machine_type.priority,
-            }
+                "pk": machine_type.pk,
+                "cannot_use_text": MultiLingualTextStructure(
+                    machine_type.cannot_use_text, use_default_for_empty=True
+                ),
+                "usage_requirement": machine_type.usage_requirement,
+                "has_stream": machine_type.has_stream,
+                "priority": machine_type.priority,
+            },
         )
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0014_machine_priority'),
+        ("make_queue", "0014_machine_priority"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MachineType',
+            name="MachineType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', web.multilingual.modelfields.MultiLingualTextField(max_length=30, unique=True)),
-                ('cannot_use_text', web.multilingual.modelfields.MultiLingualTextField(blank=True)),
-                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course'), ('R3DP', 'Taken the course on Raise3D printers'), ('SLAP', 'Taken the SLA 3D printer course')], default='AUTH', max_length=4, verbose_name='usage requirement')),
-                ('has_stream', models.BooleanField(default=False)),
-                ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='priority')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        max_length=30, unique=True
+                    ),
+                ),
+                (
+                    "cannot_use_text",
+                    web.multilingual.modelfields.MultiLingualTextField(blank=True),
+                ),
+                (
+                    "usage_requirement",
+                    models.CharField(
+                        choices=[
+                            ("AUTH", "Only has to be logged in"),
+                            ("3DPR", "Taken the 3D printer course"),
+                            ("R3DP", "Taken the course on Raise3D printers"),
+                            ("SLAP", "Taken the SLA 3D printer course"),
+                        ],
+                        default="AUTH",
+                        max_length=4,
+                        verbose_name="usage requirement",
+                    ),
+                ),
+                ("has_stream", models.BooleanField(default=False)),
+                (
+                    "priority",
+                    models.IntegerField(
+                        help_text="The machine types are sorted ascending by this value.",
+                        verbose_name="priority",
+                    ),
+                ),
             ],
             options={
-                'ordering': ('priority',),
+                "ordering": ("priority",),
             },
         ),
         migrations.RunPython(create_default_machine_types, migrations.RunPython.noop),
         migrations.AlterField(
-            model_name='machine',
-            name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='machines', to='make_queue.MachineType', verbose_name='machine type'),
+            model_name="machine",
+            name="machine_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="machines",
+                to="make_queue.MachineType",
+                verbose_name="machine type",
+            ),
         ),
         migrations.AlterField(
-            model_name='machineusagerule',
-            name='machine_type',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='usage_rule', to='make_queue.MachineType'),
+            model_name="machineusagerule",
+            name="machine_type",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="usage_rule",
+                to="make_queue.MachineType",
+            ),
         ),
         migrations.AlterField(
-            model_name='quota',
-            name='machine_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='machine type'),
+            model_name="quota",
+            name="machine_type",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="quotas",
+                to="make_queue.MachineType",
+                verbose_name="machine type",
+            ),
         ),
         migrations.AlterField(
-            model_name='reservationrule',
-            name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_rules', to='make_queue.MachineType', verbose_name='machine type'),
+            model_name="reservationrule",
+            name="machine_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="reservation_rules",
+                to="make_queue.MachineType",
+                verbose_name="machine type",
+            ),
         ),
     ]

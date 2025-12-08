@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0004_auto_20181009_1356'),
+        ("groups", "0004_auto_20181009_1356"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='committee',
-            name='clickbait',
-            field=models.TextField(blank=True, verbose_name='clickbait'),
+            model_name="committee",
+            name="clickbait",
+            field=models.TextField(blank=True, verbose_name="clickbait"),
         ),
     ]

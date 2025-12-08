@@ -8,40 +8,43 @@ from .models import Content, Page
 class AddPageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ('title', 'created_by')
+        fields = ("title", "created_by")
         widgets = {
-            'created_by': forms.HiddenInput(),
+            "created_by": forms.HiddenInput(),
         }
 
 
 class PageContentForm(forms.ModelForm):
     class Meta:
         model = Content
-        fields = ('page', 'content', 'made_by')
+        fields = ("page", "content", "made_by")
         widgets = {
-            'page': forms.HiddenInput(),
-            'made_by': forms.HiddenInput(),
+            "page": forms.HiddenInput(),
+            "made_by": forms.HiddenInput(),
         }
         error_messages = {
-            'content': {'required': _("The page is currently empty; please add some content.")},
+            "content": {
+                "required": _("The page is currently empty; please add some content.")
+            },
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Have to set the widget here instead of in `Meta.widgets` above,
         # as the `widget` kwarg is always overwritten in `RichTextUploadingFormField`
-        self.fields['content'].widget = CKEditorUploadingWidget()
+        self.fields["content"].widget = CKEditorUploadingWidget()
 
     def clean(self):
         cleaned_data = super().clean()
-        page: Page = cleaned_data.get('page')
-        content = cleaned_data.get('content')
+        page: Page = cleaned_data.get("page")
+        content = cleaned_data.get("content")
 
         if page and content:
             if page.current_content and content == page.current_content.content:
-                raise forms.ValidationError({
-                    'content': _("The content must be changed in order to create a new version."),
-                })
+                message = _(
+                    "The content must be changed in order to create a new version."
+                )
+                raise forms.ValidationError({"content": message})
 
         return cleaned_data
 
@@ -56,26 +59,25 @@ class PageContentForm(forms.ModelForm):
 class ChangePageVersionForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ('current_content',)
+        fields = ("current_content",)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Limit the choices to the initial ones, to reduce the size of the HTML generated for a non-changing hidden form
-        choice = kwargs.get('initial').get('current_content')
+        choice = kwargs.get("initial").get("current_content")
         if choice:
-            self.fields['current_content'].choices = [(choice.pk, choice)]
+            self.fields["current_content"].choices = [(choice.pk, choice)]
 
     def clean(self):
         cleaned_data = super().clean()
-        current_content = cleaned_data.get('current_content')
+        current_content = cleaned_data.get("current_content")
 
         # Make sure that the content belongs to the given page
         if current_content:
             if current_content.page != self.instance:
-                raise forms.ValidationError({
-                    'current_content': _("The content does not belong to the given page"),
-                })
+                message = _("The content does not belong to the given page")
+                raise forms.ValidationError({"current_content": message})
         return cleaned_data
 
 

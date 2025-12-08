@@ -32,29 +32,45 @@ def escape_to_named_characters(string: str):
     return "".join(ESCAPE_UNICODE_TO_HTML5.get(c, c) for c in string)
 
 
-def block_join(object_collection: Sequence | QuerySet, sep="<b>&bull;</b>", multiline=True):
+def block_join(
+    object_collection: Sequence | QuerySet, sep="<b>&bull;</b>", multiline=True
+):
     if len(object_collection) == 0:
         return ""
 
     tag = '<div style="display: inline-block; white-space: nowrap;">'
     if multiline:
         return format_html_join(
-            mark_safe("<br>"), f"{tag}{sep}" + " {}</div>",
-            ((str(obj),) for obj in object_collection)
+            mark_safe("<br>"),
+            f"{tag}{sep}" + " {}</div>",
+            ((str(obj),) for obj in object_collection),
         )
     else:
         if len(object_collection) > 1:
             everything_except_first = format_html_join(
-                "", f" {tag}{sep}" + " {}</div>",
-                ((str(obj),) for obj in object_collection[1:])
+                "",
+                f" {tag}{sep}" + " {}</div>",
+                ((str(obj),) for obj in object_collection[1:]),
             )
         else:
             everything_except_first = ""
-        return mark_safe(tag) + escape(object_collection[0]) + mark_safe("</div>") + everything_except_first
+        return (
+            mark_safe(tag)
+            + escape(object_collection[0])
+            + mark_safe("</div>")
+            + everything_except_first
+        )
 
 
-def tag_media_img(media_img_url: str, *, url_host_name='', alt_text: str, max_size="50px"):
+def tag_media_img(
+    media_img_url: str, *, url_host_name="", alt_text: str, max_size="50px"
+):
     if url_host_name:
         media_img_url = f"//{reverse_host(url_host_name)}{media_img_url}"
-    return format_html('<img src="{}" style="max-width: {}; max-height: {};" alt="{}"/>',
-                       media_img_url, max_size, max_size, alt_text)
+    return format_html(
+        '<img src="{}" style="max-width: {}; max-height: {};" alt="{}"/>',
+        media_img_url,
+        max_size,
+        max_size,
+        alt_text,
+    )

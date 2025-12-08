@@ -3,8 +3,8 @@ from django.contrib.admin.apps import AdminConfig
 
 
 class WebConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'web'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "web"
 
     def ready(self):
         # Importing models (which is done in the `signals` module) should not be done in the global scope,
@@ -16,4 +16,4 @@ class WebConfig(AppConfig):
 
 
 class WebAdminConfig(AdminConfig):
-    default_site = 'web.admin.WebAdminSite'
+    default_site = "web.admin.WebAdminSite"

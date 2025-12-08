@@ -13,7 +13,9 @@ class Command(test.Command):
         if not args:
             args = (str(relative_tests_dir),)
         else:
-            relative_dotted_tests_dir = str(relative_tests_dir.as_posix()).replace('/', '.')
+            relative_dotted_tests_dir = str(relative_tests_dir.as_posix()).replace(
+                "/", "."
+            )
             disallowed_prefix = f"{relative_dotted_tests_dir}."
             for arg in args:
                 if arg.startswith(disallowed_prefix):

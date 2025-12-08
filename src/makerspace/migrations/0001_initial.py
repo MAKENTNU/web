@@ -5,20 +5,36 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Tool',
+            name="Tool",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(max_length=100, unique=True, verbose_name='title')),
-                ('image', models.ImageField(upload_to='tools', verbose_name='image')),
-                ('description', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='description')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        max_length=100, unique=True, verbose_name="title"
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="tools", verbose_name="image")),
+                (
+                    "description",
+                    web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                        verbose_name="description"
+                    ),
+                ),
             ],
         ),
     ]

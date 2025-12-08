@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,56 +14,171 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('card_id', models.CharField(max_length=100, verbose_name='kortnummer')),
-                ('image', models.ImageField(blank=True, upload_to='profile', verbose_name='profilbilde')),
-                ('on_make', models.BooleanField(default=False, verbose_name='innsjekkingsstatus')),
-                ('last_checkin', models.DateTimeField(auto_now=True, verbose_name='sist sjekket inn')),
-                ('user', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "card_id",
+                    models.CharField(max_length=100, verbose_name="kortnummer"),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, upload_to="profile", verbose_name="profilbilde"
+                    ),
+                ),
+                (
+                    "on_make",
+                    models.BooleanField(
+                        default=False, verbose_name="innsjekkingsstatus"
+                    ),
+                ),
+                (
+                    "last_checkin",
+                    models.DateTimeField(
+                        auto_now=True, verbose_name="sist sjekket inn"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='RegisterProfile',
+            name="RegisterProfile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('card_id', models.CharField(max_length=100, verbose_name='kortnummer')),
-                ('last_scan', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "card_id",
+                    models.CharField(max_length=100, verbose_name="kortnummer"),
+                ),
+                ("last_scan", models.DateTimeField()),
             ],
         ),
         migrations.CreateModel(
-            name='Skill',
+            name="Skill",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=100, unique=True, verbose_name='ferdighet')),
-                ('image', models.ImageField(blank=True, upload_to='skills', verbose_name='ferdighetbilde')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=100, unique=True, verbose_name="ferdighet"
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, upload_to="skills", verbose_name="ferdighetbilde"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='SuggestSkill',
+            name="SuggestSkill",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=100, unique=True, verbose_name='foreslått ferdighet')),
-                ('approved', models.BooleanField(default=False)),
-                ('image', models.ImageField(blank=True, upload_to='skills', verbose_name='ferdighetbilde')),
-                ('creator', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='suggestions', to='checkin.Profile')),
-                ('voters', models.ManyToManyField(related_name='votes', to='checkin.Profile')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=100, unique=True, verbose_name="foreslått ferdighet"
+                    ),
+                ),
+                ("approved", models.BooleanField(default=False)),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, upload_to="skills", verbose_name="ferdighetbilde"
+                    ),
+                ),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="suggestions",
+                        to="checkin.Profile",
+                    ),
+                ),
+                (
+                    "voters",
+                    models.ManyToManyField(related_name="votes", to="checkin.Profile"),
+                ),
             ],
             options={
-                'ordering': ('title',),
+                "ordering": ("title",),
             },
         ),
         migrations.CreateModel(
-            name='UserSkill',
+            name="UserSkill",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('skill_level', models.IntegerField(choices=[(1, 'Nybegynner'), (2, 'Viderekommen'), (3, 'Ekspert')])),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='checkin.Profile')),
-                ('skill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='checkin.Skill')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "skill_level",
+                    models.IntegerField(
+                        choices=[(1, "Nybegynner"), (2, "Viderekommen"), (3, "Ekspert")]
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="checkin.Profile",
+                    ),
+                ),
+                (
+                    "skill",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="checkin.Skill"
+                    ),
+                ),
             ],
             options={
-                'ordering': ('skill__title',),
+                "ordering": ("skill__title",),
             },
         ),
     ]

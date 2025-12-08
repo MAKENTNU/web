@@ -3,29 +3,29 @@ from django_hosts import reverse
 
 
 class CommonContextVariablesTests(TestCase):
-
-    @override_settings(LANGUAGE_CODE='nb')
+    @override_settings(LANGUAGE_CODE="nb")
     def test_common_context_variables_have_expected_values_when_norwegian(self):
-        self.assert_common_context_variables_have_expected_values('nb')
+        self.assert_common_context_variables_have_expected_values("nb")
 
-    @override_settings(LANGUAGE_CODE='en')
+    @override_settings(LANGUAGE_CODE="en")
     def test_common_context_variables_have_expected_values_when_english(self):
-        self.assert_common_context_variables_have_expected_values('en')
+        self.assert_common_context_variables_have_expected_values("en")
 
-    def assert_common_context_variables_have_expected_values(self, default_language_code: str):
+    def assert_common_context_variables_have_expected_values(
+        self, default_language_code: str
+    ):
         context = self.client.get("/").context
-        self.assertEqual(context['DEFAULT_LANGUAGE_CODE'], default_language_code)
-        self.assertEqual(context['CURRENT_LANGUAGE_CODE'], default_language_code)
+        self.assertEqual(context["DEFAULT_LANGUAGE_CODE"], default_language_code)
+        self.assertEqual(context["CURRENT_LANGUAGE_CODE"], default_language_code)
 
 
 class TestLoginRedirect(TestCase):
-
     def test_index_page_has_no_next_parameter(self):
         response = self.client.get("/")
-        self.assertEqual(response.context['login_next_param'], "")
+        self.assertEqual(response.context["login_next_param"], "")
 
     def test_login_page_keeps_redirect_target(self):
-        login_path = reverse('login', host='main')
+        login_path = reverse("login", host="main")
         response = self.client.get(f"{login_path}?next=/asdf/")
         login_redirect_path = self.get_login_redirect_path(response)
         self.assertEqual(login_redirect_path, "/asdf/")
@@ -38,4 +38,4 @@ class TestLoginRedirect(TestCase):
 
     @staticmethod
     def get_login_redirect_path(response):
-        return response.context['login_next_param'].split("?next=")[-1]
+        return response.context["login_next_param"].split("?next=")[-1]

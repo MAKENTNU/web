@@ -5,15 +5,16 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0014_event_type'),
+        ("news", "0014_event_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newsbase',
-            name='clickbait',
-            field=web.multilingual.modelfields.MultiLingualTextField(max_length=300, verbose_name='clickbait'),
+            model_name="newsbase",
+            name="clickbait",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                max_length=300, verbose_name="clickbait"
+            ),
         ),
     ]

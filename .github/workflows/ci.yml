@@ -1,40 +1,46 @@
+---
 name: CI
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v5
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          uv-sync-extra-args: "--group linting"
+
+      # Code based on https://pre-commit.com/#github-actions-example
+      - name: Set `PY` envvar
+        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
+      - name: Cache installed pre-commit hooks
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit hooks
+        run: make lint
+
   test:
     name: Tests
     runs-on: ubuntu-latest
 
-    # Code based on https://docs.astral.sh/uv/guides/integration/github/
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
         with:
-          python-version-file: "pyproject.toml"
-
-      - name: Install System Dependencies
-        # Retries installing files 3 times, as either the GitHub Actions runner or APT's API can be unreliable
-        run: |
-          sudo apt update
-          sudo apt install python3-dev libldap2-dev libsasl2-dev libssl-dev -o Acquire::Retries=3
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-
-      - name: Set `UV_PROJECT_ENVIRONMENT` envvar
-        # Install packages into the system environment instead of a `.venv/`.
-        # (`pythonLocation` is from `actions/setup-python` - see
-        # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#environment-variables)
-        run: echo "UV_PROJECT_ENVIRONMENT=$pythonLocation" >> $GITHUB_ENV
-      - name: Install Python dependencies
-        run: uv sync --locked --group ci
+          uv-sync-extra-args: "--group ci"
 
       - name: Create `.env`
         shell: bash

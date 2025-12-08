@@ -21,16 +21,20 @@ from users.models import User
 from .url_utils import reverse_admin
 
 
-T = TypeVar('T')
-ModelT = TypeVar('ModelT', bound=models.Model)
+T = TypeVar("T")
+ModelT = TypeVar("ModelT", bound=models.Model)
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
-MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
-               b'\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10' \
-               b'\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11' \
-               b'\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9'
+MOCK_JPG_RAW = (
+    b"\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04"
+    b"\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10"
+    b"\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11"
+    b"\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9"
+)
 
-MOCK_JPG_FILE = SimpleUploadedFile(name="img.jpg", content=MOCK_JPG_RAW, content_type='image/jpeg')
+MOCK_JPG_FILE = SimpleUploadedFile(
+    name="img.jpg", content=MOCK_JPG_RAW, content_type="image/jpeg"
+)
 
 
 # noinspection PyPep8Naming
@@ -83,7 +87,9 @@ def mock_module_attrs(module_and_attrname_to_newattr: dict[tuple[Any, str], Any]
             module_and_attrname_to_oldattr = {}
             for module_and_attrname, new_attr in module_and_attrname_to_newattr.items():
                 module, attr_name = module_and_attrname
-                module_and_attrname_to_oldattr[module_and_attrname] = getattr(module, attr_name)
+                module_and_attrname_to_oldattr[module_and_attrname] = getattr(
+                    module, attr_name
+                )
                 setattr(module, attr_name, new_attr)
 
             value = func(*args, **kwargs)
@@ -100,7 +106,9 @@ def mock_module_attrs(module_and_attrname_to_newattr: dict[tuple[Any, str], Any]
 
 
 # noinspection PyPep8Naming
-def assertRaisesIntegrityError_withRollback(self: SimpleTestCase, transaction_func: Callable[[], None], *, raises: bool):
+def assertRaisesIntegrityError_withRollback(
+    self: SimpleTestCase, transaction_func: Callable[[], None], *, raises: bool
+):
     if raises:
         with transaction.atomic(), self.assertRaises(IntegrityError):
             transaction_func()
@@ -109,15 +117,19 @@ def assertRaisesIntegrityError_withRollback(self: SimpleTestCase, transaction_fu
 
 
 # noinspection PyPep8Naming
-def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_prefix: str):
+def assertRedirectsWithPathPrefix(
+    self: SimpleTestCase, response, expected_path_prefix: str
+):
     """
     Tests whether the provided ``response`` redirects, and whether the path of the redirect URL starts with the provided ``expected_path_prefix``.
     Also tests whether the redirect URL can be loaded by the same client that produced the provided ``response``.
     """
     self.assertEqual(response.status_code, HTTPStatus.FOUND)
     redirect_path = urlparse(response.url).path
-    self.assertTrue(redirect_path.startswith(expected_path_prefix),
-                    f"The redirected path {redirect_path} did not start with the expected prefix {expected_path_prefix}")
+    self.assertTrue(
+        redirect_path.startswith(expected_path_prefix),
+        f"The redirected path {redirect_path} did not start with the expected prefix {expected_path_prefix}",
+    )
 
     def get_redirected_response(response_func: Callable):
         redirect_netloc = urlparse(response.url).netloc
@@ -129,7 +141,7 @@ def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_
         # Ensure that the client makes requests to the same netloc (domain) as the redirect URL
         response.client.defaults = {
             **original_client_defaults,
-            'SERVER_NAME': redirect_netloc,
+            "SERVER_NAME": redirect_netloc,
         }
         try:
             return response_func()
@@ -137,7 +149,9 @@ def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_
             # Ensure that the `SERVER_NAME` we set earlier is reset
             response.client.defaults = original_client_defaults
 
-    redirected_response = get_redirected_response(lambda: response.client.get(response.url))
+    redirected_response = get_redirected_response(
+        lambda: response.client.get(response.url)
+    )
     self.assertEqual(redirected_response.status_code, HTTPStatus.OK)
 
 
@@ -157,7 +171,9 @@ class PathPredicate(ABC):
     def __repr__(self):
         return f"<{self.path} public={self.public} translated={self.translated}>"
 
-    def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+    def do_request_assertion(
+        self, client: Client, is_superuser: bool, test_case: SimpleTestCase
+    ):
         raise NotImplementedError
 
     @staticmethod
@@ -169,24 +185,37 @@ class PathPredicate(ABC):
 
 
 class Get(PathPredicate):
-
     def __init__(self, *args, redirect=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.redirect = redirect
 
-    def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+    def do_request_assertion(
+        self, client: Client, is_superuser: bool, test_case: SimpleTestCase
+    ):
         language_prefixes = self.LANGUAGE_PREFIXES if self.translated else [""]
         for prefix in language_prefixes:
             path = self._prepend_url_path(prefix, self.path)
             with test_case.subTest(path=path, is_superuser=is_superuser):
-                self._do_request_assertion_for_path(path, prefix, client, is_superuser, test_case)
+                self._do_request_assertion_for_path(
+                    path, prefix, client, is_superuser, test_case
+                )
 
-    def _do_request_assertion_for_path(self, path: str, language_prefix: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+    def _do_request_assertion_for_path(
+        self,
+        path: str,
+        language_prefix: str,
+        client: Client,
+        is_superuser: bool,
+        test_case: SimpleTestCase,
+    ):
         response = client.get(path)
 
         if self.redirect:
-            test_case.assertIn(response.status_code, {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND},
-                               "The response did not redirect as expected.")
+            test_case.assertIn(
+                response.status_code,
+                {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND},
+                "The response did not redirect as expected.",
+            )
             # Follow the redirect URL from the response, and do the rest of the assertions from the perspective of this URL
             response = client.get(response.url)
 
@@ -194,19 +223,30 @@ class Get(PathPredicate):
             test_case.assertEqual(response.status_code, HTTPStatus.OK)
         else:
             if response.status_code == HTTPStatus.FOUND:
-                assertRedirectsWithPathPrefix(test_case, response, f"{language_prefix}/login/")
+                assertRedirectsWithPathPrefix(
+                    test_case, response, f"{language_prefix}/login/"
+                )
             else:
                 test_case.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: list[PathPredicate], subdomain=''):
+def assert_requesting_paths_succeeds(
+    self: SimpleTestCase, path_predicates: list[PathPredicate], subdomain=""
+):
     previous_language = translation.get_language()
 
     password = "1234"
-    superuser = User.objects.create_user("unique_superuser_username", "admin@makentnu.no", password,
-                                         is_superuser=True, is_staff=True)
+    superuser = User.objects.create_user(
+        "unique_superuser_username",
+        "admin@makentnu.no",
+        password,
+        is_superuser=True,
+        is_staff=True,
+    )
 
-    server_name = f'{subdomain}.{settings.PARENT_HOST}' if subdomain else settings.PARENT_HOST
+    server_name = (
+        f"{subdomain}.{settings.PARENT_HOST}" if subdomain else settings.PARENT_HOST
+    )
     superuser_client = Client(SERVER_NAME=server_name)
     superuser_client.login(username=superuser.username, password=password)
     anon_client = Client(SERVER_NAME=server_name)
@@ -219,20 +259,24 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: list
     translation.activate(previous_language)
 
 
-def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> list[str]:
-    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
+def generate_all_admin_urls_for_model_and_objs(
+    model: Type[ModelT], model_objs: Iterable[ModelT]
+) -> list[str]:
+    url_name_prefix = f"{model._meta.app_label}_{model._meta.model_name}"
     return [
-        reverse_admin(f'{url_name_prefix}_changelist'),
-        reverse_admin(f'{url_name_prefix}_add'),
+        reverse_admin(f"{url_name_prefix}_changelist"),
+        reverse_admin(f"{url_name_prefix}_add"),
         *[
-            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
+            reverse_admin(f"{url_name_prefix}_{url_name_suffix}", args=[obj.pk])
             for obj in model_objs
-            for url_name_suffix in ['change', 'delete', 'history']
+            for url_name_suffix in ["change", "delete", "history"]
         ],
     ]
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Collection[T] | QuerySet[T]) -> set[T]:
+def set_without_duplicates(
+    self: SimpleTestCase, collection: Collection[T] | QuerySet[T]
+) -> set[T]:
     collection_list = list(collection)
     collection_set = set(collection_list)
     self.assertEqual(len(collection_set), len(collection_list))
@@ -241,4 +285,6 @@ def set_without_duplicates(self: SimpleTestCase, collection: Collection[T] | Que
 
 def with_time(datetime_obj: datetime, time_str: str):
     time_obj = parse_time(time_str)
-    return datetime_obj.replace(hour=time_obj.hour, minute=time_obj.minute, second=time_obj.second)
+    return datetime_obj.replace(
+        hour=time_obj.hour, minute=time_obj.minute, second=time_obj.second
+    )

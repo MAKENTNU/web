@@ -7,7 +7,7 @@ from django.db.models import Q, QuerySet
 def get_perms(*app_labels_and_codenames: str) -> QuerySet[Permission]:
     query = Q()
     for app_label_and_codename in app_labels_and_codenames:
-        app_label, codename = app_label_and_codename.split('.', 1)
+        app_label, codename = app_label_and_codename.split(".", 1)
         query |= Q(content_type__app_label=app_label, codename=codename)
     perms = Permission.objects.filter(query)
     _check_perms(perms, app_labels_and_codenames)
@@ -26,7 +26,9 @@ def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, 
             # combinations of app labels and codenames, in which case it's fine to just return them
             return
         perms_not_found_str = ", ".join(f"'{perm}'" for perm in perms_not_found)
-        raise Permission.DoesNotExist(f"The following permissions do not exist: {perms_not_found_str}")
+        raise Permission.DoesNotExist(
+            f"The following permissions do not exist: {perms_not_found_str}"
+        )
 
 
 def get_perm(app_label_and_codename: str) -> Permission:
@@ -36,15 +38,19 @@ def get_perm(app_label_and_codename: str) -> Permission:
 
 def perm_to_str(permission: Permission) -> str:
     """Find the ``<app_label>.<codename>`` string for a permission object."""
-    return f'{permission.content_type.app_label}.{permission.codename}'
+    return f"{permission.content_type.app_label}.{permission.codename}"
 
 
-def perms_to_str(permissions: QuerySet[Permission] | Sequence[Permission]) -> tuple[str]:
+def perms_to_str(
+    permissions: QuerySet[Permission] | Sequence[Permission],
+) -> tuple[str]:
     """Find the ``<app_label>.<codename>`` strings for a collection of permission objects."""
     if isinstance(permissions, QuerySet):
         return tuple(
-            f'{app_label}.{codename}' for app_label, codename in
-            permissions.values_list('content_type__app_label', 'codename')
+            f"{app_label}.{codename}"
+            for app_label, codename in permissions.values_list(
+                "content_type__app_label", "codename"
+            )
         )
     else:
         return tuple(perm_to_str(perm) for perm in permissions)

@@ -5,35 +5,42 @@ from django import forms
 from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazeMapSearchInput, SemanticChoiceInput, SemanticDateTimeInput, SemanticFileInput
+from web.widgets import (
+    MazeMapSearchInput,
+    SemanticChoiceInput,
+    SemanticDateTimeInput,
+    SemanticFileInput,
+)
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class TimePlaceForm(forms.ModelForm):
     class Meta:
         model = TimePlace
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'event': forms.HiddenInput(),
-            'place': MazeMapSearchInput(url_field='place_url'),
-            'start_time': SemanticDateTimeInput(end_calendar_name='end_time'),
-            'end_time': SemanticDateTimeInput(start_calendar_name='start_time'),
-            'publication_time': SemanticDateTimeInput(),
+            "event": forms.HiddenInput(),
+            "place": MazeMapSearchInput(url_field="place_url"),
+            "start_time": SemanticDateTimeInput(end_calendar_name="end_time"),
+            "end_time": SemanticDateTimeInput(start_calendar_name="start_time"),
+            "publication_time": SemanticDateTimeInput(),
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        start_time = cleaned_data.get('start_time')
-        end_time = cleaned_data.get('end_time')
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
 
         if start_time and end_time:
             if start_time > end_time:
                 error_message = _("The event cannot end before it starts.")
-                code = 'invalid_relative_to_other_field'
-                raise forms.ValidationError({
-                    'start_time': forms.ValidationError(error_message, code=code),
-                    'end_time': forms.ValidationError(error_message, code=code),
-                })
+                code = "invalid_relative_to_other_field"
+                raise forms.ValidationError(
+                    {
+                        "start_time": forms.ValidationError(error_message, code=code),
+                        "end_time": forms.ValidationError(error_message, code=code),
+                    }
+                )
 
         return cleaned_data
 
@@ -41,9 +48,9 @@ class TimePlaceForm(forms.ModelForm):
 class NewsBaseForm(forms.ModelForm):
     class Meta(ABCMeta):
         model: Type[NewsBase]
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'image': SemanticFileInput(),
+            "image": SemanticFileInput(),
         }
         help_texts: dict[str, str]
 
@@ -57,15 +64,23 @@ class NewsBaseForm(forms.ModelForm):
                 the_type = _("the event")
                 content_help_text = _("The main description of the event.")
             return {
-                'content': content_help_text,
+                "content": content_help_text,
                 # Translators: `the_type` is either "the article" or "the event"
-                'clickbait': _("A short text designed to bait users into clicking {the_type}.").format(the_type=the_type),
+                "clickbait": _(
+                    "A short text designed to bait users into clicking {the_type}."
+                ).format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
-                'featured': _("If selected, {the_type} may be shown on the front page.").format(the_type=the_type),
+                "featured": _(
+                    "If selected, {the_type} may be shown on the front page."
+                ).format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
-                'hidden': _("If selected, {the_type} will be hidden for all users.").format(the_type=the_type),
+                "hidden": _(
+                    "If selected, {the_type} will be hidden for all users."
+                ).format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
-                'private': _("If selected, {the_type} will only be visible to members of MAKE NTNU.").format(the_type=the_type),
+                "private": _(
+                    "If selected, {the_type} will only be visible to members of MAKE NTNU."
+                ).format(the_type=the_type),
             }
 
 
@@ -74,7 +89,7 @@ class ArticleForm(NewsBaseForm):
         model = Article
         widgets = {
             **NewsBaseForm.Meta.widgets,
-            'publication_time': SemanticDateTimeInput(),
+            "publication_time": SemanticDateTimeInput(),
         }
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
@@ -97,14 +112,18 @@ class EventParticipantsSearchQueryForm(forms.Form):
 class EventTicketForm(forms.ModelForm):
     class Meta:
         model = EventTicket
-        fields = ('user', 'timeplace', 'event', 'language', 'comment')
+        fields = ("user", "timeplace", "event", "language", "comment")
         widgets = {
-            'language': SemanticChoiceInput(),
-            'comment': forms.Textarea(attrs={
-                'cols': "40",
-                'rows': "3",
-                'placeholder': _("Here you can enter any requests or information you want to provide to the organizers."),
-            }),
+            "language": SemanticChoiceInput(),
+            "comment": forms.Textarea(
+                attrs={
+                    "cols": "40",
+                    "rows": "3",
+                    "placeholder": _(
+                        "Here you can enter any requests or information you want to provide to the organizers."
+                    ),
+                }
+            ),
         }
 
 
@@ -113,17 +132,19 @@ class ToggleForm(forms.Form):
     toggle_attr = forms.CharField(required=True)
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.pop('instance')
+        instance = kwargs.pop("instance")
         self.instance = instance
         super().__init__(*args, **kwargs)
 
     def clean_toggle_attr(self):
-        toggle_attr = self.cleaned_data['toggle_attr']
+        toggle_attr = self.cleaned_data["toggle_attr"]
         try:
             attr_value = getattr(self.instance, toggle_attr)
         except AttributeError:
             raise forms.ValidationError("No attribute found with this name")
         if type(attr_value) is not bool:
-            raise forms.ValidationError("The attribute is not a boolean field, and is therefore not toggleable")
+            raise forms.ValidationError(
+                "The attribute is not a boolean field, and is therefore not toggleable"
+            )
 
         return toggle_attr

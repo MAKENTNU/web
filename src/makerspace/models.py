@@ -7,23 +7,29 @@ from simple_history.models import HistoricalRecords
 
 from util.modelfields import CompressedImageField
 from util.storage import OverwriteStorage, UploadToUtils
-from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.multilingual.modelfields import (
+    MultiLingualRichTextUploadingField,
+    MultiLingualTextField,
+)
 
 
 class EquipmentQuerySet(models.QuerySet):
-
-    def default_order_by(self) -> 'EquipmentQuerySet[Equipment]':
+    def default_order_by(self) -> "EquipmentQuerySet[Equipment]":
         return self.order_by(
-            F('priority').asc(nulls_last=True),
-            Lower('title'),
+            F("priority").asc(nulls_last=True),
+            Lower("title"),
         )
 
 
 class Equipment(models.Model):
     title = MultiLingualTextField(unique=True, verbose_name=_("title"))
     description = MultiLingualRichTextUploadingField(verbose_name=_("description"))
-    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('equipment'),
-                                 max_length=200, storage=OverwriteStorage(), verbose_name=_("image"))
+    image = CompressedImageField(
+        upload_to=UploadToUtils.get_pk_prefixed_filename_func("equipment"),
+        max_length=200,
+        storage=OverwriteStorage(),
+        verbose_name=_("image"),
+    )
     priority = models.IntegerField(
         null=True,
         blank=True,
@@ -33,7 +39,7 @@ class Equipment(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = EquipmentQuerySet.as_manager()
-    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
+    history = HistoricalRecords(excluded_fields=["priority", "last_modified"])
 
     class Meta:
         verbose_name = _("equipment")
@@ -43,4 +49,4 @@ class Equipment(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse('equipment_detail', args=[self.pk])
+        return reverse("equipment_detail", args=[self.pk])

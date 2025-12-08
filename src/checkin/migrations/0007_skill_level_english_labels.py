@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0006_auto_20180906_1915'),
+        ("checkin", "0006_auto_20180906_1915"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userskill',
-            name='skill_level',
-            field=models.IntegerField(choices=[(1, 'Beginner'), (2, 'Experienced'), (3, 'Expert')]),
+            model_name="userskill",
+            name="skill_level",
+            field=models.IntegerField(
+                choices=[(1, "Beginner"), (2, "Experienced"), (3, "Expert")]
+            ),
         ),
     ]

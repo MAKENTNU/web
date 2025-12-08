@@ -21,4 +21,6 @@ def comparison_boilerplate(self, other, comparison_type: ComparisonType):
     """Performs various common boilerplate checks for comparison methods on models."""
     if not isinstance(other, type(self)):
         verb, preposition = comparison_type.value, comparison_type.label
-        raise TypeError(f"Cannot {verb} '{type(other).__name__}' {preposition} {type(self).__name__}")
+        raise TypeError(
+            f"Cannot {verb} '{type(other).__name__}' {preposition} {type(self).__name__}"
+        )

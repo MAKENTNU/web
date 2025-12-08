@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0004_auto_20180412_1740'),
+        ("make_queue", "0004_auto_20180412_1740"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='machine',
-            name='stream_url',
+            model_name="machine",
+            name="stream_url",
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='name',
+            model_name="machine",
+            name="name",
             field=models.CharField(max_length=30, unique=True),
         ),
     ]

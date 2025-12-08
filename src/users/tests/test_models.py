@@ -5,7 +5,6 @@ from ..models import User
 
 
 class UserModelTests(TestCase):
-
     def setUp(self):
         self.user1 = User.objects.create_user("user1")
 

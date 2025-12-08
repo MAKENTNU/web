@@ -5,20 +5,33 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0001_initial'),
+        ("groups", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Committee',
+            name="Committee",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.TextField()),
-                ('email', models.EmailField(max_length=254)),
-                ('image', models.ImageField(blank=True, upload_to='')),
-                ('group', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='groups.InheritanceGroup')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.TextField()),
+                ("email", models.EmailField(max_length=254)),
+                ("image", models.ImageField(blank=True, upload_to="")),
+                (
+                    "group",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="groups.InheritanceGroup",
+                    ),
+                ),
             ],
         ),
     ]

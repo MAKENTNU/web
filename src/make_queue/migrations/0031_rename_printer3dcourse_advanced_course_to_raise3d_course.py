@@ -4,26 +4,30 @@ from django.db import migrations, models
 
 
 def rename_machine_type_usage_requirement_from_A3DP_to_R3DP(apps, schema_editor):
-    MachineType = apps.get_model('make_queue', 'MachineType')
-    MachineType.objects.filter(usage_requirement='A3DP').update(usage_requirement='R3DP')
+    MachineType = apps.get_model("make_queue", "MachineType")
+    MachineType.objects.filter(usage_requirement="A3DP").update(
+        usage_requirement="R3DP"
+    )
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0030_machine_info_message'),
+        ("make_queue", "0030_machine_info_message"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='printer3dcourse',
-            old_name='advanced_course',
-            new_name='raise3d_course',
+            model_name="printer3dcourse",
+            old_name="advanced_course",
+            new_name="raise3d_course",
         ),
         migrations.AlterField(
-            model_name='printer3dcourse',
-            name='raise3d_course',
-            field=models.BooleanField(default=False, verbose_name='Raise3D course'),
+            model_name="printer3dcourse",
+            name="raise3d_course",
+            field=models.BooleanField(default=False, verbose_name="Raise3D course"),
         ),
-        migrations.RunPython(rename_machine_type_usage_requirement_from_A3DP_to_R3DP, migrations.RunPython.noop),
+        migrations.RunPython(
+            rename_machine_type_usage_requirement_from_A3DP_to_R3DP,
+            migrations.RunPython.noop,
+        ),
     ]
