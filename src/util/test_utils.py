@@ -24,12 +24,14 @@ from .url_utils import reverse_admin
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=models.Model)
 
-# A very small JPEG image without any content; used for mocking a valid image while testing
+# A very small JPEG image without any content; used for mocking a valid image while
+# testing
 MOCK_JPG_RAW = (
-    b"\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04"
-    b"\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10"
-    b"\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11"
-    b"\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9"
+    b"\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03"
+    b"\x04\x06\x04\x04\x04\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f"
+    b"\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13"
+    b"\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11\x00\xff\xcc\x00"
+    b"\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9"
 )
 
 MOCK_JPG_FILE = SimpleUploadedFile(
@@ -52,11 +54,14 @@ class CleanUpTempFilesTestMixin(ABC):
 
     def tearDown(self):
         """
-        Deletes all files and folders in the temp media root folder after each test case,
-        as on some systems, they're not deleted before the next test case is run, which can cause filename collisions.
+        Deletes all files and folders in the temp media root folder after each test
+        case, as on some systems, they're not deleted before the next test case is run,
+        which can cause filename collisions.
 
-        It might be easier to just create the temp media root folder in ``setUp()`` (instead of ``setUpClass()``) and delete the whole folder
-        in this method, but that would be slightly riskier, as it's not common to remember calling the super class' ``setUp()`` in a test case.
+        It might be easier to just create the temp media root folder in ``setUp()``
+        (instead of ``setUpClass()``) and delete the whole folder in this method, but
+        that would be slightly riskier, as it's not common to remember calling the super
+        class' ``setUp()`` in a test case.
         """
         for child in self._temp_media_root.iterdir():
             if child.is_file() or child.is_symlink():
@@ -74,11 +79,11 @@ class CleanUpTempFilesTestMixin(ABC):
 
 def mock_module_attrs(module_and_attrname_to_newattr: dict[tuple[Any, str], Any]):
     """
-    A decorator for monkey patching attributes of modules while the decorated function is executed;
-    the original module attributes are monkey patched back after execution.
+    A decorator for monkey patching attributes of modules while the decorated function
+    is executed; the original module attributes are monkey patched back after execution.
 
-    This can be useful when testing code that e.g. calls functions that are hard to mock;
-    these functions can instead be replaced by mock functions.
+    This can be useful when testing code that e.g. calls functions that are hard to
+    mock; these functions can instead be replaced by mock functions.
     """
 
     def decorator(func):
@@ -121,24 +126,29 @@ def assertRedirectsWithPathPrefix(
     self: SimpleTestCase, response, expected_path_prefix: str
 ):
     """
-    Tests whether the provided ``response`` redirects, and whether the path of the redirect URL starts with the provided ``expected_path_prefix``.
-    Also tests whether the redirect URL can be loaded by the same client that produced the provided ``response``.
+    Tests whether the provided ``response`` redirects, and whether the path of
+    the redirect URL starts with the provided ``expected_path_prefix``.
+    Also tests whether the redirect URL can be loaded by the same client that produced
+    the provided ``response``.
     """
     self.assertEqual(response.status_code, HTTPStatus.FOUND)
     redirect_path = urlparse(response.url).path
     self.assertTrue(
         redirect_path.startswith(expected_path_prefix),
-        f"The redirected path {redirect_path} did not start with the expected prefix {expected_path_prefix}",
+        f"The redirected path {redirect_path} did not start with the expected prefix"
+        f" {expected_path_prefix}",
     )
 
     def get_redirected_response(response_func: Callable):
         redirect_netloc = urlparse(response.url).netloc
-        # If the redirect URL is on the same domain as the request that produced the response:
+        # If the redirect URL is on the same domain as the request that produced
+        # the response:
         if not redirect_netloc:
             return response_func()
 
         original_client_defaults: dict = response.client.defaults
-        # Ensure that the client makes requests to the same netloc (domain) as the redirect URL
+        # Ensure that the client makes requests to the same netloc (domain) as
+        # the redirect URL
         response.client.defaults = {
             **original_client_defaults,
             "SERVER_NAME": redirect_netloc,
@@ -161,8 +171,10 @@ class PathPredicate(ABC):
     def __init__(self, path: str, *, public: bool, translated=True):
         """
         :param path: the path to be tested (e.g. from ``reverse()``)
-        :param public: whether a user has to be authenticated or not to successfully request the path
-        :param translated: whether the path has a translated version (typically prefixed with e.g. ``/en``)
+        :param public: whether a user has to be authenticated or not to successfully
+            request the path
+        :param translated: whether the path has a translated version (typically prefixed
+            with e.g. ``/en``)
         """
         self.path = path
         self.public = public
@@ -216,7 +228,8 @@ class Get(PathPredicate):
                 {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND},
                 "The response did not redirect as expected.",
             )
-            # Follow the redirect URL from the response, and do the rest of the assertions from the perspective of this URL
+            # Follow the redirect URL from the response, and do the rest of
+            # the assertions from the perspective of this URL
             response = client.get(response.url)
 
         if self.public or is_superuser:
@@ -255,7 +268,8 @@ def assert_requesting_paths_succeeds(
         predicate.do_request_assertion(anon_client, False, self)
         predicate.do_request_assertion(superuser_client, True, self)
 
-    # Reactivate the previously set language, as requests to translated URLs change the active language
+    # Reactivate the previously set language, as requests to translated URLs change
+    # the active language
     translation.activate(previous_language)
 
 

@@ -24,9 +24,11 @@ from web.multilingual.admin import create_multi_lingual_admin_formfield
 
 def link_to_admin_change_form(obj: Model, *, text=None, should_open_new_tab=True):
     """
-    Constructs a string consisting of an ``<a>`` tag which links to the Django admin change form of ``obj``.
+    Constructs a string consisting of an ``<a>`` tag which links to the Django admin
+    change form of ``obj``.
     The tag's text is set to ``text``, or ``obj`` if not given.
-    If ``should_open_new_tab`` is ``True``, the link is opened in a new tab or window when clicked.
+    If ``should_open_new_tab`` is ``True``, the link is opened in a new tab or window
+    when clicked.
     """
     url = reverse(
         f"admin:{obj._meta.app_label}_{obj._meta.model_name}_change", args=[obj.pk]
@@ -38,8 +40,10 @@ def search_escaped_and_unescaped(
     super_obj: admin.ModelAdmin, request, input_queryset: QuerySet, search_term: str
 ):
     """
-    Can be called from the ``get_search_results()`` method of ``ModelAdmin`` classes, to search using both escaped and unescaped characters.
-    For example, passing in "grøt" as ``search_term``, will search for both "grøt" and "gr&oslash;t".
+    Can be called from the ``get_search_results()`` method of ``ModelAdmin`` classes, to
+    search using both escaped and unescaped characters.
+    For example, passing in "grøt" as ``search_term``, will search for both "grøt" and
+    "gr&oslash;t".
     """
     # `use_distinct` starts as `False` in Django's `get_search_results()`
     combined_searched_querysets, use_distinct_result = input_queryset.none(), False
@@ -63,7 +67,8 @@ def search_escaped_and_unescaped(
 # noinspection PyUnresolvedReferences
 class UserSearchFieldsMixin:
     user_lookup: str  # E.g. 'user__'
-    name_for_full_name_lookup: str  # E.g. 'full_name'; used in `User.get_user_search_fields()` and `User.annotate_full_name()`
+    # Used in `User.get_user_search_fields()` and `User.annotate_full_name()`
+    name_for_full_name_lookup: str  # E.g. 'full_name'
 
     def get_search_fields(self, request):
         search_fields = super().get_search_fields(request)
@@ -80,7 +85,8 @@ class UserSearchFieldsMixin:
 
 # noinspection PyUnresolvedReferences
 class DefaultAdminWidgetsMixin:
-    """Overrides the Django admin change forms' widgets with the default ones used in this project."""
+    """Overrides the Django admin change forms' widgets with the default ones used in
+    this project."""
 
     formfield_overrides = {
         models.ImageField: {"widget": AdminImageWidget},
@@ -156,8 +162,8 @@ def list_filter_factory(
     new_class_members = {
         "title": title,
         "parameter_name": parameter_name,
-        # Can't pass `filter_func` directly, as calling it from the new class (`self.filter_func()`)
-        # will pass an extra `self` argument
+        # Can't pass `filter_func` directly, as calling it from the new class
+        # (`self.filter_func()`) will pass an extra `self` argument
         "get_filter_func": lambda _self: filter_func,
     }
     new_class = type(new_class_name, (YesNoListFilter,), new_class_members)
@@ -167,8 +173,9 @@ def list_filter_factory(
 # noinspection PyUnresolvedReferences
 class LabelFreeRawIdWidgetAdminMixin:
     """
-    Extending this class can help reducing the number of database queriees done by Django's ``ForeignKeyRawIdWidget``,
-    if the ``__str__()`` method of the admin class' model uses values from related fields.
+    Extending this class can help reducing the number of database queriees done by
+    Django's ``ForeignKeyRawIdWidget``, if the ``__str__()`` method of the admin class'
+    model uses values from related fields.
     """
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

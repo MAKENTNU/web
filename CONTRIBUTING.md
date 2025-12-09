@@ -14,7 +14,6 @@
 ## Table of contents
 
 * [Global](#global)
-  + [Max line length](#max-line-length)
   + [MAKE vs. the word "make"](#make-vs-the-word-make)
 * [Git](#git)
   + [Branch name](#branch-name)
@@ -91,10 +90,6 @@
 *Tip: [The project's `.editorconfig` file](.editorconfig) may be used to configure a text editor to format code to (roughly) fit this style guide -
 especially when using an IntelliJ-based IDE, like PyCharm.*
 
-#### Max line length
-
-150 (can be surpassed if it's impossible to wrap).
-
 #### MAKE vs. the word "make"
 
 If writing the name of the organization (MAKE), write it in capital letters, to avoid confusion with the verb "make".
@@ -120,13 +115,13 @@ Common name prefixes include:
 Use the verb conjugation (e.g. past, present or imperative) you prefer.
 
 The first line of the commit message should concisely outline the changes in the commit.
-It should ideally be 50 characters or shorter.
+It should ideally be [50 characters or shorter](https://stackoverflow.com/q/2290016).
 <br/>*Tip: if you find yourself using the word "and" in this summary,
 it's often a sign that the changes in the commit should be split into multiple commits.*
 
 Details that were omitted from the first line should be elaborated on and explained in subsequent lines
 (with an empty line between the first line, and the rest of the commit message).
-These lines should comply with the same length restriction as described in [Max line length](#max-line-length).
+These lines should be [72 characters or shorter](https://stackoverflow.com/q/2290016).
 Common things to include in this part of the commit message, are:
 * A more complete overview/description/explanation of the commit's changes - especially changes that are not immediately obvious
 * The reason for the changes, like if they've been discussed, or if the reason is not entirely straightforward

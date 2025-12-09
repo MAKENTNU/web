@@ -51,7 +51,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
         self.client1 = Client()
         self.client1.force_login(self.user1)
 
-    def test__event_registration_view__can_only_be_viewed_with_correct_url_for_event_type(
+    def test__event_registration_view__only_allows_correct_url_for_event_type(
         self,
     ):
         def assert_response_status_code(url: str, status_code: int):
@@ -81,7 +81,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
             HTTPStatus.FORBIDDEN,
         )
 
-    def test__event_registration_view__can_only_be_viewed_with_correct_combination_of_event_and_time_place(
+    def test__event_registration_view__only_allows_correct_event_and_time_place(
         self,
     ):
         repeating_event1 = self.repeating_event
@@ -148,7 +148,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 with self.subTest(url=url, data=data):
                     self.assertEqual(self.user1.event_tickets.count(), 0)
 
-                    # Create a ticket by registering for the event, while capturing whatever is printed to the console
+                    # Create a ticket by registering for the event, while capturing
+                    # whatever is printed to the console
                     console_output = io.StringIO()
                     with redirect_stdout(console_output):
                         response = self.client1.post(url, data)
@@ -168,7 +169,10 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     self.assertIn("Content-Type: text/html", printed_email_str)
 
                     def count_fail_message(search_str):
-                        return f'The following string did not contain the expected number of occurrences of "{search_str}":\n{printed_email_str}'
+                        return (
+                            "The following string did not contain the expected number"
+                            f' of occurrences of "{search_str}":\n{printed_email_str}'
+                        )
 
                     self.assertEqual(
                         printed_email_str.count(str(ticket.registered_event.title)),
@@ -181,7 +185,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                         count_fail_message(ticket.uuid),
                     )
 
-                    # Delete the ticket, so that the next for-loop iteration has a clean slate
+                    # Delete the ticket, so that the next for-loop iteration has a clean
+                    # slate
                     ticket.delete()
 
     @staticmethod
@@ -190,7 +195,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
         max_length_comment = lorem_ipsum.sentence()
         while len(max_length_comment) < comment_max_length:
             max_length_comment = f"{max_length_comment}\n{lorem_ipsum.sentence()}"
-        # Make each line shorter by placing a newline after every comma instead of a space
+        # Make each line shorter by placing a newline after every comma instead of
+        # a space
         return max_length_comment.replace(", ", ",\n")[:comment_max_length]
 
     def test__event_registration_view__creates_and_reactivates_tickets_as_expected(
@@ -295,7 +301,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 assert_ticket_active_after_posting(False)
                 last_modified = ticket.active_last_modified
                 self.assertGreater(last_modified, ticket.creation_date)
-                # Posting to an already canceled ticket without the cancel permission, should do nothing
+                # Posting to an already canceled ticket without the cancel permission,
+                # should do nothing
                 assert_ticket_active_after_posting(False)
                 self.assertEqual(ticket.active_last_modified, last_modified)
 
@@ -331,7 +338,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     ticket.active = True
                     ticket.save()
 
-                # Check that it redirects to the detail URL when no `next` parameter is provided
+                # Check that it redirects to the detail URL when no `next` parameter is
+                # provided
                 response = self.client1.post(ticket_cancel_url)
                 self.assertRedirects(response, ticket_detail_url)
                 ticket_repeating.active = True
@@ -344,7 +352,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 assert_next_param_is_valid("http://google.com", False)
                 assert_next_param_is_valid("https://google.com", False)
                 assert_next_param_is_valid(f"google.com{ticket_detail_url}", False)
-                # The URLs listed in `EventTicketCancelView.get_allowed_next_params()`, which should be allowed
+                # The URLs listed in `EventTicketCancelView.get_allowed_next_params()`,
+                # which should be allowed
                 assert_next_param_is_valid(ticket_detail_url, True)
                 self.assertEqual(ticket.get_absolute_url(), ticket_detail_url)
                 assert_next_param_is_valid(

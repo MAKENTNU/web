@@ -35,24 +35,25 @@ class RedirectViewWithStaticQuery(RedirectView):
 # noinspection PyUnresolvedReferences
 class QueryParameterFormMixin(FormMixin, ABC):
     query_params: dict = None
-    """
-    This will be a ``dict`` in inheriting views' ``get()`` as long as ``get_form()`` returns a form.
-    (If the form contains errors, ``get()`` won't be called.)
-    """
+    """This will be a ``dict`` in inheriting views' ``get()`` as long as ``get_form()``
+    returns a form. (If the form contains errors, ``get()`` won't be called.)"""
 
     ignore_params_not_on_form = False
-    """If ``False``, responds with an error code if any of the request's query parameter fields is not defined on the form class."""
+    """If ``False``, responds with an error code if any of the request's query parameter
+    fields is not defined on the form class."""
 
     _query_param_errors: dict = None
 
     def get(self, request, *args, **kwargs):
-        # This check allows inheriting views to potentially call `validate_query_params()` before this method is called,
-        # without having to repeat the same validation
+        # This check allows inheriting views to potentially call
+        # `validate_query_params()` before this method is called, without having to
+        # repeat the same validation
         if self._query_param_errors is None:
             self.validate_query_params()
 
         if self._query_param_errors is None:
-            # The form validation logic was skipped, so have to return the default implementation
+            # The form validation logic was skipped, so have to return the default
+            # implementation
             return super().get(request, *args, **kwargs)
 
         if self._query_param_errors:
@@ -85,7 +86,8 @@ class QueryParameterFormMixin(FormMixin, ABC):
                 }
 
     def get_form(self, form_class=None):
-        # This makes the form validation logic optional, by skipping it in the methods above
+        # This makes the form validation logic optional, by skipping it in the methods
+        # above
         if not form_class and not self.get_form_class():
             return None
         return super().get_form(form_class=form_class)
@@ -177,9 +179,11 @@ class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
                         rendered_field = form[field_name]
                     except KeyError as e:
                         raise KeyError(
-                            f"'{field_name}' was not found among the fields of {type(form)}"
+                            f"'{field_name}' was not found among the fields of"
+                            f" {type(form)}"
                         ) from e
-                    # Don't render hidden fields; the view should manually fill them with a value when submitted
+                    # Don't render hidden fields; the view should manually fill them
+                    # with a value when submitted
                     if rendered_field.is_hidden:
                         continue
 
@@ -204,8 +208,10 @@ class PreventGetRequestsMixin(View):
 
 # noinspection PyUnresolvedReferences
 class CleanNextParamMixin:
-    # A whitelist is being used here, but it should be mentioned that the main strings we want to blacklist, are strings starting with:
-    # * word characters (i.e. not symbols), as this allows for arbitrary absolute URLs (e.g. `google.com` or `http://google.com`);
+    # A whitelist is being used here, but it should be mentioned that the main strings
+    # we want to blacklist, are strings starting with:
+    # * word characters (i.e. not symbols), as this allows for arbitrary absolute URLs
+    #   (e.g. `google.com` or `http://google.com`);
     # * `//`, as this allows for protocol-relative URLs (e.g. `//google.com`).
     allowed_next_params = set()
 

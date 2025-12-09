@@ -79,7 +79,8 @@ class NewsBaseForm(forms.ModelForm):
                 ).format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
                 "private": _(
-                    "If selected, {the_type} will only be visible to members of MAKE NTNU."
+                    "If selected, {the_type} will only be visible to members of"
+                    " MAKE NTNU."
                 ).format(the_type=the_type),
             }
 
@@ -120,7 +121,8 @@ class EventTicketForm(forms.ModelForm):
                     "cols": "40",
                     "rows": "3",
                     "placeholder": _(
-                        "Here you can enter any requests or information you want to provide to the organizers."
+                        "Here you can enter any requests or information you want to"
+                        " provide to the organizers."
                     ),
                 }
             ),

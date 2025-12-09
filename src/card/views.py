@@ -21,7 +21,8 @@ class RFIDView(View):
         Handles the request from the RFID card reader.
         Does a basic check for a valid card id.
 
-        :param request: The HTTP POST request to handle. Must include a secret and the card id.
+        :param request: The HTTP POST request to handle. Must include a secret and
+            the card id.
         :return: An HttpResponse.
         """
         secret = request.POST.get("secret")

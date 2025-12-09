@@ -28,8 +28,9 @@ class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(
             **{
-                # This translation is here instead of in the template, to avoid two translation entries
-                # differing only in format syntax (`{var}` vs `%(var)s`)
+                # This translation is here instead of in the template, to avoid two
+                # translation entries differing only in format syntax
+                # (`{var}` vs `%(var)s`)
                 "title": _("Reservation rules for {machine_type}").format(
                     machine_type=self.machine_type,
                 ),

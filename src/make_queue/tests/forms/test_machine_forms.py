@@ -99,7 +99,8 @@ class TestCreateMachineForm(TestCase):
         self.assertEqual(machine.info_message_date, with_time(base_datetime, "00:00"))
 
     def assertErrorCodeInForm(self, field_name, error_code, form):
-        """Asserts ``error_code`` appears among the errors for ``field_name`` in ``form``"""
+        """Asserts ``error_code`` appears among the errors for ``field_name`` in
+        ``form``."""
         error_data = form.errors.as_data()
         error_list = error_data.get(field_name)
         self.assertIsNotNone(error_list)
@@ -176,7 +177,8 @@ class TestEditMachineForm(TestCase):
 
         now_mock.return_value = with_time(base_datetime, "02:00")
 
-        # Info message date should remain unchanged when info message is also not changed
+        # Info message date should remain unchanged when info message is also not
+        # changed
         assert_editing_machine_makes_info_message_date_equal(
             with_time(base_datetime, "01:00")
         )
@@ -192,8 +194,8 @@ class TestEditMachineForm(TestCase):
 
         now_mock.return_value = with_time(base_datetime, "04:00")
 
-        # Removing info message from the form data should be interpreted as it having changed (Django default),
-        # and so the info message date should also change
+        # Removing info message from the form data should be interpreted as it having
+        # changed (Django default), and so the info message date should also change
         del form_data["info_message"]
         assert_editing_machine_makes_info_message_date_equal(
             with_time(base_datetime, "04:00")

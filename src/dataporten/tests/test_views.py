@@ -87,7 +87,8 @@ class ViewTestCase(TestCase):
                 expected_ldap_full_name="Name Nameson",
             )
 
-        # When the user's full name and ldap_full_name are equal, they should both be set to social_data['fullname']
+        # When the user's full name and ldap_full_name are equal, they should both be
+        # set to social_data['fullname']
         user2 = self.create_social_user(
             "user2",
             "email2",
@@ -111,7 +112,8 @@ class ViewTestCase(TestCase):
             ldap_full_name="Name Nameson",
             social_data_fullname="Name Nameson",
         )
-        # When the user's username differs from the LDAP data's username, the former should change to match
+        # When the user's username differs from the LDAP data's username, the former
+        # should change to match
         ldap_data_return_value["username"] = "ldap_username3"
         self.assert_expected_values_after_login(
             user3,
@@ -119,8 +121,8 @@ class ViewTestCase(TestCase):
             expected_full_name="Name Nameson",
             expected_ldap_full_name="Name Nameson",
         )
-        # When the user's username differs from the local-part of the email (and the LDAP data doesn't contain anything),
-        # the username should change to match
+        # When the user's username differs from the local-part of the email (and
+        # the LDAP data doesn't contain anything), the username should change to match
         ldap_data_return_value.pop("username")
         self.assert_expected_values_after_login(
             user3,

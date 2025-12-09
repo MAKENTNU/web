@@ -223,7 +223,8 @@ class UrlTests(TestCase):
         for system_access in self.member.system_accesses.all():
             with self.subTest(system_access=system_access):
                 # No one is allowed to change their `WEBSITE` access. Other than that,
-                # all members can edit their own accesses, but only editors can edit other members'.
+                # all members can edit their own accesses, but only editors can edit
+                # other members'.
                 allowed_clients = (
                     {self.member_client, self.member_editor_client}
                     if system_access.name != SystemAccess.WEBSITE

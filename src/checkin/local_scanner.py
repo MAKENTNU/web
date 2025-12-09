@@ -1,5 +1,6 @@
 """
-Module for testing the RFID functionality on makentnu.no when running locally and/or without an RFID scanner.
+Module for testing the RFID functionality on makentnu.no when running locally and/or
+without an RFID scanner.
 """
 
 import requests

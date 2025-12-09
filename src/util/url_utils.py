@@ -45,16 +45,19 @@ def reverse_docs(viewname: str, *args):
 
 def get_host_object_from_url(url: str) -> host:
     """
-    This does kind of the opposite of ``django_hosts.resolvers.reverse_host()``
-    (which returns the host part of a URL from :class:`django_hosts.defaults.host` arguments),
-    in that a :class:`django_hosts.defaults.host` instance is returned from the host part of the passed ``url``.
+    This does kind of the opposite of ``django_hosts.resolvers.reverse_host()`` (which
+    returns the host part of a URL from :class:`django_hosts.defaults.host` arguments),
+    in that a :class:`django_hosts.defaults.host` instance is returned from the host
+    part of the passed ``url``.
 
-    :raises ValueError: if the passed ``url`` is not an internal URL, i.e. if the URL's host doesn't contain``settings.PARENT_HOST``
+    :raises ValueError: if the passed ``url`` is not an internal URL, i.e. if the URL's
+        host doesn't contain``settings.PARENT_HOST``
     """
     url_host = urlparse(url).netloc
     if settings.PARENT_HOST not in url_host:
         raise ValueError(
-            f"The passed URL ({url}) must be internal, i.e. {settings.PARENT_HOST} must be part of the URL's host."
+            f"The passed URL ({url}) must be internal, i.e. {settings.PARENT_HOST} must"
+            f" be part of the URL's host."
         )
 
     hosts_middleware = HostsBaseMiddleware(get_response=lambda request: None)
@@ -64,8 +67,9 @@ def get_host_object_from_url(url: str) -> host:
 
 def get_reverse_host_kwargs_from_url(url: str) -> dict:
     """
-    :return: A ``dict`` containing the ``host`` and ``host_args`` kwargs that can be passed to ``django_hosts.resolvers.reverse_host()``
-             to return a URL on the same subdomain as the passed ``url``.
+    :return: A ``dict`` containing the ``host`` and ``host_args`` kwargs that can be
+        passed to ``django_hosts.resolvers.reverse_host()`` to return a URL on the same
+        subdomain as the passed ``url``.
     """
     host_obj = get_host_object_from_url(url)
     result__params__tuples = regex_helper.normalize(host_obj.regex)
@@ -87,8 +91,9 @@ def get_reverse_host_kwargs_from_url(url: str) -> dict:
 def permission_required_else_denied(perm, login_url=None):
     """
     Decorator for views that checks whether a user has a particular permission.
-    When the user does not have the permission, they will be redirected to the login page if not logged in,
-    and a ``PermissionDenied`` will be raised if already logged in.
+    When the user does not have the permission, they will be redirected to the login
+    page if not logged in, and a ``PermissionDenied`` will be raised if already logged
+    in.
     """
     from users.models import User  # Avoids circular importing
 
@@ -110,15 +115,19 @@ def permission_required_else_denied(perm, login_url=None):
 
 def logout_urls():
     """
-    Should be used in every URL config referenced in ``web/hosts.py``, so that the user can log out from each of the corresponding subdomains.
+    Should be used in every URL config referenced in ``web/hosts.py``, so that the user
+    can log out from each of the corresponding subdomains.
 
-    DEV: It should technically be possible to only have one logout URL on e.g. the main subdomain, but when submitting the logout form on other
-    subdomains (i.e. pressing the "Log out" button), multiple browsers (like Chrome) send an ``Origin`` header with a value of ``null``, which causes
-    the CSRF verification to always fail.
+    DEV: It should technically be possible to only have one logout URL on e.g. the main
+         subdomain, but when submitting the logout form on other subdomains (i.e.
+         pressing the "Log out" button), multiple browsers (like Chrome) send
+         an ``Origin`` header with a value of ``null``, which causes the CSRF
+         verification to always fail.
     """
     from dataporten import views as dataporten_views  # Avoids circular importing
 
-    # Both of these views log the user out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
+    # Both of these views log the user out, then redirects to the value of
+    # the `LOGOUT_REDIRECT_URL` setting
     if settings.USE_DATAPORTEN_AUTH:
         logout_view = dataporten_views.Logout.as_view()
     else:
@@ -127,7 +136,8 @@ def logout_urls():
     return i18n_patterns(
         # This path's `name` should be the same as the one for Django admin's logout URL
         # (https://github.com/django/django/blob/4.1.7/django/contrib/admin/sites.py#L270),
-        # so that this path can override it, and consequently be used as intended in `admin_urls.py`
+        # so that this path can override it, and consequently be used as intended in
+        # `admin_urls.py`
         path("logout/", logout_view, name="logout"),
         prefix_default_language=False,
     )
@@ -135,11 +145,13 @@ def logout_urls():
 
 def ckeditor_uploader_urls():
     """
-    Should be used in every URL config referenced in ``web/hosts.py``, so that the CKEditor uploader widgets work correctly.
+    Should be used in every URL config referenced in ``web/hosts.py``, so that
+    the CKEditor uploader widgets work correctly.
 
-    NOTE: The paths returned by this function must be used as top-level paths, with no prefix between the URL host and these paths
-    (i.e. for example ``makentnu.no/<these paths>``).
-    This is so that the CKEditor uploader widgets can reverse these paths regardless of the subdomain.
+    NOTE: The paths returned by this function must be used as top-level paths, with no
+          prefix between the URL host and these paths (i.e. for example
+          ``makentnu.no/<these paths>``). This is so that the CKEditor uploader widgets
+          can reverse these paths regardless of the subdomain.
     """
     return [
         # Based on https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py#L8-L13

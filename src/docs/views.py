@@ -33,12 +33,14 @@ from .models import Content, MAIN_PAGE_TITLE, Page
 
 class DocumentationPageRelatedViewMixin:
     """
-    NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
-    which will be used to query the database for the requested page by title.
+    NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path
+          converter named ``title`` as part of the view's path, which will be used to
+          query the database for the requested page by title.
     """
 
     model = Page
-    # The name of the model field that will be queried using the value of `slug_url_kwarg`
+    # The name of the model field that will be queried using the value of
+    # `slug_url_kwarg`
     slug_field = "title"
     # The name of the path parameter whose value will be used to query `slug_field`
     slug_url_kwarg = "title"
@@ -165,7 +167,8 @@ class DocumentationPageUpdateView(
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
-        # UpdateView inserts the Page instance into the Content form, so remove it, as a new Content instance will be created
+        # UpdateView inserts the Page instance into the Content form, so remove it, as
+        # a new Content instance will be created
         form_kwargs.pop("instance")
         # Forcefully insert the page and user into the form
         return insert_form_field_values(

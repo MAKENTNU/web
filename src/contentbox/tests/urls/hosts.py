@@ -3,9 +3,10 @@ from django_hosts import host
 
 from web.settings import generate_all_hosts
 
-# (Changing settings should be done before importing other parts of our code, as it might use these settings
-# - like the login path in `web.urls`)
-# Set the subdomain and host settings again, as more subdomains are added to `host_patterns` below.
+# (Changing settings should be done before importing other parts of our code, as it
+# might use these settings - like the login path in `web.urls`)
+# Set the subdomain and host settings again, as more subdomains are added to
+# `host_patterns` below.
 settings.ALL_SUBDOMAINS = (
     *settings.ALL_SUBDOMAINS,
     "test-internal",

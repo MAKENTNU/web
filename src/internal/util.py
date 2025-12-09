@@ -7,11 +7,13 @@ from .validators import semester_string_regex
 
 def date_to_semester(date_: date) -> str:
     """
-    Finds the semester based on the provided date. If the date is before June, then it is the spring semester ("V").
-    If the date is in June, July or before the 20th of August, it is the summer semester / vacation ("S").
-    Otherwise, the semester is the fall semester ("H").
+    Finds the semester based on the provided date. If the date is before June, then it
+    is the spring semester ("V"). If the date is in June, July or before the 20th of
+    August, it is the summer semester / vacation ("S"). Otherwise, the semester is
+    the fall semester ("H").
 
-    :return: A three character long string consisting of the two last digits of the year and a letter for the semester.
+    :return: A three character long string consisting of the two last digits of the year
+        and a letter for the semester.
     """
     semester = "H"
     if date_.month < 6:
@@ -23,12 +25,13 @@ def date_to_semester(date_: date) -> str:
 
 def semester_to_year(semester: str) -> float:
     """
-    Converts ``semester`` from a string representation of a specific semester to a float representation.
+    Converts ``semester`` from a string representation of a specific semester to a float
+    representation.
 
-    :param semester: a string in the format [V/H][year], where ``year`` is either the 2 last digits of a year or the full 4 digits.
-                     For example "V17" or "H2017".
-    :return: a float denoting the full year, with the decimal part representing the year half.
-             For example ``2017.0`` (V17) or ``2017.5`` (H17).
+    :param semester: a string in the format [V/H][year], where ``year`` is either the 2
+        last digits of a year or the full 4 digits. For example "V17" or "H2017".
+    :return: a float denoting the full year, with the decimal part representing the year
+        half. For example ``2017.0`` (V17) or ``2017.5`` (H17).
     """
     regex_match = semester_string_regex.match(semester)
     if not regex_match:
@@ -47,8 +50,9 @@ def semester_to_year(semester: str) -> float:
 
 def year_to_semester(year: float) -> str:
     """
-    Converts ``year`` from a float representation of a specific semester to a string representation.
-    This function does the opposite of ``semester_to_year()``; see its documentation for more details.
+    Converts ``year`` from a float representation of a specific semester to a string
+    representation. This function does the opposite of ``semester_to_year()``; see its
+    documentation for more details.
     """
     if not 0 <= year <= 9999:
         raise ValueError(f"'{year}' is not a valid year")

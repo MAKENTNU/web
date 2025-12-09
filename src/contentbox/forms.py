@@ -24,10 +24,11 @@ class ContentBoxForm(forms.ModelForm):
         **kwargs,
     ):
         """
-        :param single_language: A language code;
-                                if set, the form widget of ``content`` will display only this language, and the submitted value for this language
-                                will be copied to the other languages used by the website.
-        :param content_extra_widget_kwargs: Extra kwargs for the widget of the ``content`` field.
+        :param single_language: A language code; if set, the form widget of ``content``
+            will display only this language, and the submitted value for this language
+            will be copied to the other languages used by the website.
+        :param content_extra_widget_kwargs: Extra kwargs for the widget of
+            the ``content`` field.
         """
         super().__init__(*args, **kwargs)
 
@@ -56,9 +57,11 @@ class ContentBoxForm(forms.ModelForm):
 
 class EditSourceContentBoxForm(ContentBoxForm):
     """
-    Enables the user to change the ContentBox's HTML source code directly (including adding ``script`` tags).
+    Enables the user to change the ContentBox's HTML source code directly (including
+    adding ``script`` tags).
 
-    NOTE: Make sure that the user has the ``internal.can_change_rich_text_source`` permission before using this form.
+    NOTE: Make sure that the user has the ``internal.can_change_rich_text_source``
+          permission before using this form.
     """
 
     def __init__(self, *args, **kwargs):

@@ -12,7 +12,8 @@ def calculate_file_hash(file: File) -> bytes:
         file_hash.update(chunk)
 
     if isinstance(file, UploadedFile):
-        # Reset file seek; do not close, as uploaded (temporary) files are deleted when closed
+        # Reset file seek; do not close, as uploaded (temporary) files are deleted when
+        # closed
         file.seek(0)
     else:
         file.close()

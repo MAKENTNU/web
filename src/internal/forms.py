@@ -84,7 +84,8 @@ class RestrictedChangeMemberForm(ChangeMemberForm):
 
 class MemberRetireForm(forms.ModelForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as retired, as the member already has the status “quit” or “retired”."
+        "Member was not set as retired, as the member already has the status “quit” or"
+        " “retired”."
     )
 
     class Meta:
@@ -115,7 +116,8 @@ class MemberRetireForm(forms.ModelForm):
 
 class MemberQuitForm(MemberRetireForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as quit, as the member already has the status “quit” or “retired”."
+        "Member was not set as quit, as the member already has the status “quit” or"
+        " “retired”."
     )
 
     class Meta(MemberRetireForm.Meta):
@@ -154,12 +156,14 @@ class MemberStatusForm(forms.ModelForm):
         match status_action:
             case self.StatusAction.UNDO_QUIT if not member.quit:
                 message = _(
-                    "Member's “quit” status was not undone, as the member did not have the status “quit”."
+                    "Member's “quit” status was not undone, as the member did not have"
+                    " the status “quit”."
                 )
                 raise forms.ValidationError(message, code="warning_message")
             case self.StatusAction.UNDO_RETIRE if not member.retired:
                 message = _(
-                    "Member's retirement was not undone, as the member did not have the status “retired”."
+                    "Member's retirement was not undone, as the member did not have"
+                    " the status “retired”."
                 )
                 raise forms.ValidationError(message, code="warning_message")
         return cleaned_data

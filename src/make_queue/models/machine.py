@@ -28,8 +28,9 @@ class MachineTypeQuerySet(models.QuerySet):
         self, *, machine_queryset=None, machines_attr_name: str
     ) -> "MachineTypeQuerySet[MachineType]":
         """
-        Returns a ``QuerySet`` where all the machine types' machines have been prefetched
-        and can be accessed through the attribute with the same name as ``machines_attr_name``.
+        Returns a ``QuerySet`` where all the machine types' machines have been
+        prefetched and can be accessed through the attribute with the same name as
+        ``machines_attr_name``.
         """
         if machine_queryset is None:
             machine_queryset = Machine.objects.all()
@@ -109,7 +110,8 @@ class MachineQuerySet(models.QuerySet):
         exclude_query = Q(internal=True)
         if (
             not hasattr(user, "printer_3d_course")
-            # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
+            # Machines that require the SLA course should not be visible to non-internal
+            # users who have not taken the SLA course
             or not user.printer_3d_course.course_permissions.filter(
                 short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE
             ).exists()
@@ -161,7 +163,8 @@ class Machine(models.Model):
         default=False,
         verbose_name=_("internal"),
         help_text=_(
-            "If selected, the machine will only be visible to and reservable by MAKE members."
+            "If selected, the machine will only be visible to and reservable by MAKE"
+            " members."
         ),
     )
     status = models.CharField(
@@ -174,8 +177,10 @@ class Machine(models.Model):
         blank=True,
         verbose_name=_("info message"),
         help_text=_(
-            "Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses,"
-            " the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠)."
+            "Information that's useful to know before using the machine, e.g."
+            " the filament that the 3D printer uses, the needle that's currently"
+            " inserted in the sewing machine, or just the machine's current"
+            " state/“mood” (emojis are allowed 🤠)."
         ),
     )
     info_message_date = models.DateTimeField(

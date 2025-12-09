@@ -212,7 +212,8 @@ class APIReservationDeleteView(
             if reservation.start_time <= now:
                 if reservation.end_time > now:
                     message = _(
-                        "Cannot delete reservation when it has already started. Mark it as finished instead."
+                        "Cannot delete reservation when it has already started. Mark it"
+                        " as finished instead."
                     )
                 else:
                     message = _("Cannot delete reservation when it has already ended.")

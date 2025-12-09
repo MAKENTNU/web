@@ -20,7 +20,8 @@ class UrlTests(TestCase):
         self.user5 = User.objects.create_user("user5", is_superuser=True, is_staff=True)
         self.user6 = User.objects.create_user("user6", ldap_full_name="Qwer Asdf Zxcv")
         self.user7 = User.objects.create_user("user7", card_number="0123456789")
-        # I.e. with all attributes returned by `ldap_utils._get_user_details_from_user_field()`
+        # I.e. with all attributes returned by
+        # `ldap_utils._get_user_details_from_user_field()`
         self.user_with_basic_info = User.objects.create_user(
             "user8", email="user8@makentnu.no", first_name="Aaa", last_name="Bbb"
         )

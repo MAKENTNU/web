@@ -47,7 +47,8 @@ class QuotaForm(forms.ModelForm):
             user_error_message = _("User cannot be set when “All users” is set.")
 
         if user_error_message:
-            # Can't raise ValidationError when adding errors for both a specific field and the whole form (field=None)
+            # Can't raise ValidationError when adding errors for both a specific field
+            # and the whole form (field=None)
             self.add_error("user", user_error_message)
             self.add_error(None, _("Must select either specific user or all users."))
             return

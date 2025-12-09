@@ -34,7 +34,8 @@ class TestAdminUserQuotaListView(TestCase):
 
 class TestAdminQuotaPanelView(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
         self.user = User.objects.create_user("test")

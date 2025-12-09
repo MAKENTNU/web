@@ -57,8 +57,25 @@ ci = [
   { include-group = "linting" },
 ]
 linting = [
-  "pre-commit==4.3.0",
+  "pre-commit==4.5.1",
 ]
+
+[tool.ruff]
+line-length = 88
+show-fixes = true
+
+# Reformat code snippets in docstrings
+format.docstring-code-format = true
+
+lint.select = [
+  "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
+]
+
+# Disable line length check in migrations
+lint.per-file-ignores."**/migrations/**" = [ "E501" ]
+
+# Ignore E501 for comments starting with TODO, FIXME, etc.
+lint.pycodestyle.ignore-overlong-task-comments = true
 
 [tool.uv]
 # Don't install `dev` by default (see

@@ -332,7 +332,7 @@ class EventTicketTests(TestCase):
         )
 
     @mock.patch("django.utils.timezone.now")
-    def test_event_tickets_have_equal__active_last_modified__and__creation_date__when_created(
+    def test_event_tickets_have_equal__active_last_modified__and__creation_date__when_created(  # noqa: E501
         self, now_mock
     ):
         now = parse_datetime_localized("2022-09-14 15:31")

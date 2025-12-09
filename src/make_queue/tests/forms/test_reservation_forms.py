@@ -10,7 +10,8 @@ from ...models.machine import Machine, MachineType
 
 class TestReservationForm(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         printer_machine_type = MachineType.objects.get(pk=1)
         self.machine = Machine.objects.create(
             name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type
@@ -31,7 +32,8 @@ class TestReservationForm(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            # Since there is only one machine we can get an invalid primary key by just negating the current one
+            # Since there is only one machine we can get an invalid primary key by just
+            # negating the current one
             "machine_name": -self.machine.pk,
         }
 
@@ -59,7 +61,8 @@ class TestReservationForm(TestCase):
             "end_time": timezone.now() + timedelta(hours=2),
             "machine_name": self.machine.pk,
             "event": True,
-            # Since there is only one timeplace object we can invert its pk to get an invalid pk
+            # Since there is only one timeplace object we can invert its pk to get
+            # an invalid pk
             "event_pk": int(not self.timeplace.pk),
         }
 

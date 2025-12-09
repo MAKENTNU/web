@@ -40,7 +40,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
                         # Makes each subwidget distinguishable in the template
                         "language": language,
                     },
-                    # Pass the kwargs to each subwidget (only used by the CKEditor-based widgets)
+                    # Pass the kwargs to each subwidget (only used by the CKEditor-based
+                    # widgets)
                     **(subwidget_kwargs or {}),
                 }
             )
@@ -48,10 +49,11 @@ class MultiLingualTextEdit(forms.MultiWidget):
         super().__init__(widgets, attrs)
 
     def decompress(self, value):
-        """
-        Turns the value for the multi-widget into a list of values, one for each sub-widget.
+        """Turns the value for the multi-widget into a list of values, one for each
+        sub-widget.
 
-        :param value: The value for the whole multi-widget, either of type None or MultiLingualTextStructure
+        :param value: The value for the whole multi-widget, either of type ``None`` or
+            ``MultiLingualTextStructure``
         :return: A list of values for the individual sub-widgets
         """
         if value is None:
@@ -60,8 +62,9 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     def get_context(self, name, value, attrs):
         """
-        Constructs the context passed to the widget template. This method extends the default multi-widget context with
-        the render function of each sub-widget. This, as CKEditor uses the pre-Django 1.11 method of rendering widgets,
+        Constructs the context passed to the widget template. This method extends
+        the default multi-widget context with the render function of each sub-widget.
+        This, as CKEditor uses the pre-Django 1.11 method of rendering widgets,
         that is through a render function, rather than directly through a template.
 
         :param name: The name of the widget (e.g. title, content)
@@ -72,7 +75,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
         context = super().get_context(name, value, attrs)
 
         for index, widget in enumerate(self.widgets):
-            # Include the render function of the subwidget, as CKEditor does not use templates
+            # Include the render function of the subwidget, as CKEditor does not use
+            # templates
             context["widget"]["subwidgets"][index]["render"] = widget.render
 
         return context
@@ -82,8 +86,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
         field_name: str, languages=MultiLingualTextStructure.SUPPORTED_LANGUAGES
     ):
         """
-        :return: The expected names of the subwidgets (one for each language) of the provided ``field_name``
-                 (which should be a ``MultiLingualFormField``).
+        :return: The expected names of the subwidgets (one for each language) of
+            the provided ``field_name`` (which should be a ``MultiLingualFormField``).
         """
         return [f"{field_name}_{language}" for language in languages]
 

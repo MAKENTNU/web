@@ -47,7 +47,8 @@ class ReservationRuleForm(forms.ModelForm):
                 or (days_changed == 7 and start_time < end_time)
             ):
                 message = _(
-                    "Period is either too long (7+ days) or start time is earlier than end time."
+                    "Period is either too long (7+ days) or start time is earlier than"
+                    " end time."
                 )
                 raise forms.ValidationError(message)
 

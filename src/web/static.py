@@ -12,7 +12,8 @@ from django.http import FileResponse
 from django.views.static import serve
 
 
-# The glob pattern for the files that should have their contents interpolated (as in https://en.wikipedia.org/wiki/String_interpolation)
+# The glob pattern for the files that should have their contents interpolated (as in
+# https://en.wikipedia.org/wiki/String_interpolation)
 INTERPOLATION_GLOB_PATTERN = "*.interpolated.*"
 INTERPOLATION_PATTERNS = (
     (
@@ -21,8 +22,10 @@ INTERPOLATION_PATTERNS = (
             (
                 # The strings matching this regex are replaced by the template below
                 r"""(?P<matched>\{% static ["'](?P<url>.*?)["'] %\})""",
-                # This simply inserts the string matched by the `url` capturing group (defined in the regex above) as it is;
-                # when the template is used, the URL in the file has been looked up in the static file manifest, and replaced by its hashed version
+                # This simply inserts the string matched by the `url` capturing group
+                # (defined in the regex above) as it is; when the template is used,
+                # the URL in the file has been looked up in the static file manifest,
+                # and replaced by its hashed version
                 "%(url)s",
             ),
         ),
@@ -32,8 +35,9 @@ INTERPOLATION_PATTERNS = (
 
 class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
     """
-    This class extends the functionality of Django's ``ManifestStaticFilesStorage`` by replacing ``static`` tags
-    in files whose names end with ``.interpolated`` (not including the extension),  with the path of another static file.
+    This class extends the functionality of Django's ``ManifestStaticFilesStorage`` by
+    replacing ``static`` tags in files whose names end with ``.interpolated`` (not
+    including the extension),  with the path of another static file.
 
     For example,
     ::
@@ -42,8 +46,9 @@ class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
     ::
         /static/web/img/favicons/android-chrome-192x192.edcbcb619832.png
 
-    This class also implements logic for ignoring adding a hash to the files whose paths match
-    the glob patterns defined in the ``MANIFEST_STATICFILES_IGNORE_PATTERNS`` setting.
+    This class also implements logic for ignoring adding a hash to the files whose paths
+    match the glob patterns defined in the ``MANIFEST_STATICFILES_IGNORE_PATTERNS``
+    setting.
     """
 
     patterns = (
@@ -61,8 +66,8 @@ class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
             matched = matches["matched"]
             url = matches["url"]
 
-            # Prefix the URL with `STATIC_URL`, so that it doesn't get ignored by `base_converter`
-            # (see https://github.com/django/django/blob/dc8bb35e39388d41b1f38b6c5d0181224e075f16/django/contrib/staticfiles/storage.py#L184-L187)
+            # Prefix the URL with `STATIC_URL`, so that it doesn't get ignored by
+            # `base_converter` - see https://github.com/django/django/blob/dc8bb35e39388d41b1f38b6c5d0181224e075f16/django/contrib/staticfiles/storage.py#L184-L187
             replaced_matched = matched.replace(url, self.get_full_static_url(url))
             return base_converter(match_obj.re.match(replaced_matched))
 
@@ -75,7 +80,8 @@ class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
     def file_hash(self, name, content=None):
         if name:
             normalized_file_path = Path(name).as_posix()
-            # Don't hash the filename if the path matches any of the patterns in the `MANIFEST_STATICFILES_IGNORE_PATTERNS` setting
+            # Don't hash the filename if the path matches any of the patterns in
+            # the `MANIFEST_STATICFILES_IGNORE_PATTERNS` setting
             if any(
                 fnmatchcase(normalized_file_path, pattern)
                 for pattern in settings.MANIFEST_STATICFILES_IGNORE_PATTERNS

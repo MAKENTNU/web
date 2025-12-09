@@ -68,7 +68,8 @@ class ContentBoxUpdateView(
     narrow = False
 
     # Caches `get_absolute_url()`, as it will be called multiple times
-    # (`maxsize` need only be 1, since the cached value is not supposed to last longer than each request)
+    # (`maxsize` need only be 1, since the cached value is not supposed to last longer
+    # than each request)
     @lru_cache(maxsize=1)
     def _absolute_url(self, content_box: ContentBox):
         try:
@@ -81,7 +82,8 @@ class ContentBoxUpdateView(
             return super().dispatch(request, *args, **kwargs)
 
         content_box: ContentBox = super().get_object()
-        # Check if the requested host/subdomain has a registered URL for this content box
+        # Check if the requested host/subdomain has a registered URL for this content
+        # box
         try:
             django_reverse(content_box.url_name)
         except NoReverseMatch:
@@ -95,8 +97,9 @@ class ContentBoxUpdateView(
                 return HttpResponseRedirect(change_url)
             else:
                 # We don't know which permissions should be needed to view this page
-                # (since e.g. the content boxes on the internal subdomain has different change permissions than those on the main subdomain),
-                # so redirect to the Django admin site to be safe
+                # (since e.g. the content boxes on the internal subdomain has different
+                # change permissions than those on the main subdomain), so redirect to
+                # the Django admin site to be safe
                 return render(
                     request,
                     "contentbox/content_box_form__error_display_url_not_found.html",
@@ -118,14 +121,16 @@ class ContentBoxUpdateView(
         return self.permission_required + self.get_object().extra_change_perms_str_tuple
 
     # Cache this method, as it will be called multiple times
-    # (`maxsize` need only be 1, since the cached value is not supposed to last longer than each request)
+    # (`maxsize` need only be 1, since the cached value is not supposed to last longer
+    # than each request)
     @lru_cache(maxsize=1)
     def get_object(self, queryset=None):
         return super().get_object()
 
     def get_form_class(self):
         # Allow editing HTML source code if this permission is required by the view
-        # (not if the user has the permission or not, as that is handled by `PermissionRequiredMixin`):
+        # (not if the user has the permission or not, as that is handled by
+        # `PermissionRequiredMixin`):
         if "internal.can_change_rich_text_source" in self.get_permission_required():
             return EditSourceContentBoxForm
         return super().get_form_class()

@@ -76,7 +76,8 @@ class AdminPanelView(PermissionRequiredMixin, TemplateView):
         Committee,
         Announcement,
     ]
-    # Extra permissions that are not among the `add`, `change` or `delete` permissions of the models in `MODEL_LIST`
+    # Extra permissions that are not among the `add`, `change` or `delete` permissions
+    # of the models in `MODEL_LIST`
     EXTRA_PERMS = [
         "make_queue.can_create_event_reservation",
     ]

@@ -11,7 +11,8 @@ register = template.Library()
 @register.simple_tag
 def get_membership_statuses(member: Member):
     """
-    Returns a list of tuples (Membership status, Display color) of the statuses of the membership of the given member.
+    Returns a list of tuples (Membership status, Display color) of the statuses of
+    the membership of the given member.
 
     :param member: The member to retrieve statuses for
     :return: A list of one or two tuples (two if honorary member)
@@ -36,7 +37,8 @@ def get_membership_statuses(member: Member):
 @register.simple_tag
 def get_system_accesses(member: Member, user: User):
     """
-    Returns a list of tuples (Name of system, Has access) of the systems the member could have access to.
+    Returns a list of tuples (Name of system, Has access) of the systems the member
+    could have access to.
 
     :param member: The member to check accesses for
     :param user: The requesting user
@@ -79,7 +81,8 @@ def color_for_committee(
 @register.simple_tag
 def get_committees(member: Member):
     """
-    Returns a list of tuples (Committee name, Display color) of the committees the given member is a part of.
+    Returns a list of tuples (Committee name, Display color) of the committees the given
+    member is a part of.
 
     :param member: The member to find committees for
     :return: A list of committees with display color

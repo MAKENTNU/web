@@ -52,8 +52,9 @@ class SemanticDateTimeInput(forms.DateTimeInput):
 
 class SelectWithDataAttrsMixin(ChoiceWidget):
     """
-    An extension of the ``ChoiceWidget`` (which ``Select`` and ``SelectMultiple`` extends)
-    which allows adding data attributes to each option of the widget's generated ``<select>`` tag.
+    An extension of the ``ChoiceWidget`` (which ``Select`` and ``SelectMultiple``
+    extend), which allows adding data attributes to each option of the widget's
+    generated ``<select>`` tag.
     """
 
     def __init__(
@@ -63,9 +64,10 @@ class SelectWithDataAttrsMixin(ChoiceWidget):
         **kwargs,
     ):
         """
-        :param attr_name_to_attr_value_getter: A dictionary that maps from the name of the data attribute to add,
-                                               to a function that accepts the option's value and returns the value of the data attribute.
-                                               If the function returns ``None``, the data attribute will not be added.
+        :param attr_name_to_attr_value_getter: A dictionary that maps from the name of
+            the data attribute to add, to a function that accepts the option's value and
+            returns the value of the data attribute.
+            If the function returns ``None``, the data attribute will not be added.
         """
         super().__init__(*args, **kwargs)
 
@@ -219,7 +221,8 @@ class DirectionalCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
 
 class MazeMapSearchInput(forms.TextInput):
     """
-    Widget that enables MazeMap search functionality, including autofill of URL to MazeMap.
+    Widget that enables MazeMap search functionality, including autofill of URL to
+    MazeMap.
     """
 
     template_name = "web/forms/widgets/mazemap_search.html"
@@ -231,9 +234,11 @@ class MazeMapSearchInput(forms.TextInput):
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """
-        :param campus_id: Campus to search for points of interest on. Default: NTNU Gløshaugen
+        :param campus_id: Campus to search for points of interest on.
+            Default: NTNU Gløshaugen
         :param max_results: Maximum number of search results to return
-        :param url_field: Field to autofill with MazeMap URL. If None, autofill functionality is turned off
+        :param url_field: Field to autofill with MazeMap URL.
+            If ``None``, autofill functionality is turned off.
         :param attrs: HTML attributes for the <input> element
         """
         attrs = attrs or {}
@@ -250,10 +255,12 @@ class MazeMapSearchInput(forms.TextInput):
 
 class CKEditorWidget(ckeditor.widgets.CKEditorWidget):
     """
-    A subclass of CKEditor's base widget, which adds a linked JavaScript file that enables the user to change the HTML source code directly
-    (including adding ``script`` tags) through an added "Source" toolbar button.
+    A subclass of CKEditor's base widget, which adds a linked JavaScript file that
+    enables the user to change the HTML source code directly (including adding
+    ``script`` tags) through an added "Source" toolbar button.
 
-    NOTE: Make sure that the user has the ``internal.can_change_rich_text_source`` permission before using this widget.
+    NOTE: Make sure that the user has the ``internal.can_change_rich_text_source``
+          permission before using this widget.
     """
 
     def __init__(self, *args, **kwargs):

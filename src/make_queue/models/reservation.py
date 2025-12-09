@@ -105,7 +105,8 @@ class Quota(models.Model):
         by preferring non-diminishing quotas that do not ignore the rules.
 
         :param reservation: The reservation to check
-        :return: The best quota, that can handle the given reservation, or None if none can
+        :return: The best quota that can handle the given reservation, or ``None`` if
+            none can
         """
         valid_quotas = [
             quota
@@ -136,8 +137,8 @@ class Quota(models.Model):
 
 
 class Reservation(models.Model):
-    # The amount of time into the future that regular users are allowed to create reservations
-    # (applies to both `start_time` and `end_time`)
+    # The amount of time into the future that regular users are allowed to create
+    # reservations (applies to both `start_time` and `end_time`)
     FUTURE_LIMIT = timedelta(days=28)
     # It's allowed to set start/end times up to this amount of time in the past
     GRACE_PERIOD_FOR_SETTING_TIMES = timedelta(minutes=5)
@@ -180,12 +181,15 @@ class Reservation(models.Model):
     def __str__(self):
         start_time = short_datetime_format(self.start_time)
         end_time = short_datetime_format(self.end_time)
-        return f"{self.user.get_full_name()} har reservert {self.machine.name} fra {start_time} til {end_time}"
+        return (
+            f"{self.user.get_full_name()} har reservert {self.machine.name} fra"
+            f" {start_time} til {end_time}"
+        )
 
     def __bool__(self):
         # As long as the instance is not None, it should always return True.
-        # (Implementing this method explicitly, due to the below implementation of `__len__()`
-        # messing with Python's standard truth value testing.)
+        # (Implementing this method explicitly, due to the below implementation of
+        # `__len__()` messing with Python's standard truth value testing.)
         return True
 
     def __len__(self) -> timedelta:
@@ -213,7 +217,8 @@ class Reservation(models.Model):
         if not self.machine.can_user_use(self.user):
             return False
 
-        # Check if the printer is already reserved by another reservation for the given duration
+        # Check if the printer is already reserved by another reservation for the given
+        # duration
         if (
             self.machine.reservations_in_period(self.start_time, self.end_time)
             .exclude(pk=self.pk)
@@ -251,7 +256,8 @@ class Reservation(models.Model):
                     or self.start_time < earliest_allowed_time_to_set
                 ):
                     return False
-                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                # If the machine is out of order or on maintenance, only allow
+                # the change if the reserved period is made smaller
                 if (
                     machine_out_of_order_or_maintenance
                     and self.start_time < old_reservation.start_time
@@ -265,7 +271,8 @@ class Reservation(models.Model):
                     or self.end_time < earliest_allowed_time_to_set
                 ):
                     return False
-                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                # If the machine is out of order or on maintenance, only allow
+                # the change if the reserved period is made smaller
                 if (
                     machine_out_of_order_or_maintenance
                     and self.end_time > old_reservation.end_time
@@ -276,7 +283,8 @@ class Reservation(models.Model):
             if machine_out_of_order_or_maintenance:
                 return False
 
-            # Don't need to check `end_time`, as it's already been checked to be equal to or after `start_time`
+            # Don't need to check `end_time`, as it's already been checked to be equal
+            # to or after `start_time`
             if self.start_time < earliest_allowed_time_to_set:
                 return False
 
@@ -371,7 +379,10 @@ class ReservationRule(models.Model):
         end_time = time_format(self.end_time)
         # TODO: translate this and Reservation.__str__()
         days_str = f"{self.days_changed} {'dag' if self.days_changed == 1 else 'dager'}"
-        return f"Regel for {self.machine_type}: {start_time}-{end_time} på {self.start_days}; {days_str}"
+        return (
+            f"Regel for {self.machine_type}: {start_time}-{end_time} på"
+            f" {self.start_days}; {days_str}"
+        )
 
     @property
     def time_periods(self) -> list["Period"]:
@@ -411,7 +422,8 @@ class ReservationRule(models.Model):
         cls, start_time: datetime, end_time: datetime, machine_type: MachineType
     ) -> bool:
         """
-        Checks if a reservation in the supplied period is allowed by the rules for the machine type.
+        Checks if a reservation in the supplied period is allowed by the rules for
+        the machine type.
 
         :param start_time: The start time of the reservation
         :param end_time: The end time of the reservation
@@ -419,7 +431,8 @@ class ReservationRule(models.Model):
         :return: A boolean indicating if the reservation follows the rules
         """
         duration = timedelta_to_hours(end_time - start_time)
-        # Normal reservations (i.e. that do not ignore rules) will not be longer than 1 week
+        # Normal reservations (i.e. that do not ignore rules) will not be longer than
+        # 1 week
         if duration > (7 * 24):
             return False
 
@@ -428,10 +441,12 @@ class ReservationRule(models.Model):
         if not rules:
             return False
 
-        # If the reservation is longer than allowed for all covered rules, then it cannot be allowed
+        # If the reservation is longer than allowed for all covered rules, then it
+        # cannot be allowed
         if duration > max(rule.max_hours for rule in rules):
             return False
-        # If the reservation is shorter than allowed inside each of the covered rules, then it is always allowed
+        # If the reservation is shorter than allowed inside each of the covered rules,
+        # then it is always allowed
         if duration <= min(rule.max_hours for rule in rules):
             return True
 
@@ -461,7 +476,8 @@ class ReservationRule(models.Model):
         start_time: datetime, end_time: datetime, machine_type: MachineType
     ):
         """
-        Finds the rules for the given machine type that are covered by the indicated period.
+        Finds the rules for the given machine type that are covered by the indicated
+        period.
 
         :param start_time: The start time of the period
         :param end_time: The end time of the period
@@ -516,12 +532,15 @@ class ReservationRule(models.Model):
                 exact_weekday_to_day_name(self.exact_start_weekday)
             )
             end_day_name = exact_weekday_to_day_name(self.exact_end_weekday)
-            return f"{start_day_name} {time_format(self.start_time)} &ndash; {end_day_name} {time_format(self.end_time)}"
+            return (
+                f"{start_day_name} {time_format(self.start_time)} &ndash;"
+                f" {end_day_name} {time_format(self.end_time)}"
+            )
 
         def __bool__(self):
             # As long as the instance is not None, it should always return True.
-            # (Implementing this method explicitly, due to the below implementation of `__len__()`
-            # messing with Python's standard truth value testing.)
+            # (Implementing this method explicitly, due to the below implementation of
+            # `__len__()` messing with Python's standard truth value testing.)
             return True
 
         def __len__(self) -> float:

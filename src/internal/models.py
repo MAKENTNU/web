@@ -38,7 +38,8 @@ class Member(models.Model):
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("role"))
     contact_email = models.EmailField(blank=True, verbose_name=_("contact email"))
-    # The email address of a Google user can potentially belong to any host, not just "gmail.com"
+    # The email address of a Google user can potentially belong to any host, not just
+    # "gmail.com"
     google_email = models.EmailField(blank=True, verbose_name=_("Google email"))
     MAKE_email = models.EmailField(
         blank=True,
@@ -70,7 +71,8 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("honorary"))
-    # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
+    # Our code shouldn't have to keep track of these services' username length
+    # constraints, so we should not limit the length
     github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
     discord_username = UnlimitedCharField(
         blank=True, verbose_name=_("Discord username")
@@ -91,11 +93,12 @@ class Member(models.Model):
                 "can_edit_group_membership",
                 "Can edit the groups a member is part of, including (de)activation",
             ),
-            # WARNING: granting a user this permission enables them to carry out a stored XSS attack;
-            #          only give trusted users/groups this permission
+            # WARNING: granting a user this permission enables them to carry out
+            #     a stored XSS attack; only give trusted users/groups this permission
             (
                 "can_change_rich_text_source",
-                "Can change rich text fields' HTML source code directly (including adding <script> tags)",
+                "Can change rich text fields' HTML source code directly (including"
+                " adding <script> tags)",
             ),
         )
 
@@ -112,7 +115,8 @@ class Member(models.Model):
         if is_creation:
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
-                # All members will be registered on the website when added to the member list
+                # All members will be registered on the website when added to the member
+                # list
                 SystemAccess.objects.create(
                     name=property_name,
                     member=self,
@@ -196,7 +200,8 @@ class Member(models.Model):
         """
         Add or remove the user from all the committees of their membership.
 
-        :param membership_status: Indicates if the member should be a part of the commitees
+        :param membership_status: Indicates if the member should be a part of
+            the committees.
         """
         for committee in self.committees.all():
             if membership_status:
@@ -208,7 +213,8 @@ class Member(models.Model):
         """
         Set membership by removing/adding the member to the MAKE group (if it exists).
 
-        :param membership_status: True if the user should be a member of MAKE and false otherwise
+        :param membership_status: ``True`` if the user should be a member of MAKE and
+            ``False`` otherwise
         """
         make = Group.objects.filter(name="MAKE")
         if make.exists():
@@ -267,7 +273,8 @@ class SystemAccess(models.Model):
         """
         The URL to change the system access. Depends on the type of system.
 
-        :return: A URL for the page where the access can be changed. Is an empty string if it should not be changed
+        :return: A URL for the page where the access can be changed. Is an empty string
+            if it should not be changed.
         """
         if not self.should_be_changed():
             return ""
@@ -322,8 +329,8 @@ class Secret(models.Model):
         related_name="secrets_with_extra_view_perm",
         verbose_name=_("extra view permissions"),
         help_text=_(
-            "Extra permissions that are required for viewing the secret."
-            " If a user does not have all the chosen permissions, it will be hidden to them."
+            "Extra permissions that are required for viewing the secret. If a user does"
+            " not have all the chosen permissions, it will be hidden to them."
         ),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))

@@ -226,15 +226,18 @@ class UrlTests(NewsTestBase, TestCase):
             Get(reverse("event_create"), public=False),
             Get(reverse("admin_event_participants_search"), public=False),
             Get(
-                f"{reverse('admin_event_participants_search')}?search_string={self.user1.username}",
+                f"{reverse('admin_event_participants_search')}"
+                f"?search_string={self.user1.username}",
                 public=False,
             ),
             Get(
-                f"{reverse('admin_event_participants_search')}?search_string={self.user2.get_full_name()}",
+                f"{reverse('admin_event_participants_search')}"
+                f"?search_string={self.user2.get_full_name()}",
                 public=False,
             ),
             Get(
-                f"{reverse('admin_event_participants_search')}?search_string=stringthatdoesntmatchanything",
+                f"{reverse('admin_event_participants_search')}"
+                "?search_string=stringthatdoesntmatchanything",
                 public=False,
             ),
         ]

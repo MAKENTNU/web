@@ -15,7 +15,8 @@ class CategoryQuerySet(models.QuerySet):
     ) -> "CategoryQuerySet[Category]":
         """
         Returns a ``QuerySet`` where all the categories' questions have been prefetched
-        and can be accessed through the attribute with the same name as ``questions_attr_name``.
+        and can be accessed through the attribute with the same name as
+        ``questions_attr_name``.
         """
         return self.order_by("name").prefetch_related(
             Prefetch(
