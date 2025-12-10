@@ -294,15 +294,15 @@ wheels = [
 
 [[package]]
 name = "django-ckeditor"
-version = "6.7.0"
+version = "6.7.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-js-asset" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/0f/6b833acab77d6de98d81d6d576f2502e81ab02253bd53b78438aad2cd0ad/django-ckeditor-6.7.0.tar.gz", hash = "sha256:0489f7a6ae93360d328f77cea17c04891103cbdfa6c962af386bbe47e811671b", size = 1725612, upload-time = "2023-07-27T12:42:13.44Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/6e/7923d3932bcdc6df7deea3d0cc31552144444130e5a2bef669e88c4e8141/django_ckeditor-6.7.3.tar.gz", hash = "sha256:889fd80ee7d368e3c5b828c8dabf8907d56bcad6bf5881f3898416df4f2adfe7", size = 1726851, upload-time = "2025-06-06T10:16:35.748Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/82/8e09693d812dd1fb749515e074a6612f03a946d98c679fde861b28b96e92/django_ckeditor-6.7.0-py3-none-any.whl", hash = "sha256:73399fb8f56f565e7519b57adbd7c585623db2cdc8c75666f56918d3eecf7906", size = 2454063, upload-time = "2023-07-27T12:42:16.946Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/03/b2095f13b571ab78b2a3f55d30e2b3f126b3f4f350391037c37c418f7c2f/django_ckeditor-6.7.3-py3-none-any.whl", hash = "sha256:09771c9b8fb33b84bd2767dfc891a24b7fbdb0120910a7ec65b763a4ae6807bb", size = 2455696, upload-time = "2025-06-06T10:16:40.05Z" },
 ]
 
 [[package]]
@@ -1066,7 +1066,7 @@ requires-dist = [
     { name = "channels", extras = ["daphne"], specifier = "==4.1.0" },
     { name = "channels-redis", specifier = "==4.2.0" },
     { name = "django", specifier = "==5.0.2" },
-    { name = "django-ckeditor", specifier = "==6.7.0" },
+    { name = "django-ckeditor", specifier = "==6.7.3" },
     { name = "django-cleanup", specifier = "==8.1.0" },
     { name = "django-constance", specifier = "==3.1.0" },
     { name = "django-decorator-include", specifier = "==3.0" },
