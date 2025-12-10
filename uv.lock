@@ -400,14 +400,14 @@ wheels = [
 
 [[package]]
 name = "django-multiselectfield"
-version = "0.1.12"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b4/fe/1dad7fb9e9583bfbc5fea92b1c2760bdd21070e9da3a1c20ccf519324b58/django-multiselectfield-0.1.12.tar.gz", hash = "sha256:d0a4c71568fb2332c71478ffac9f8708e01314a35cf923dfd7a191343452f9f9", size = 11673, upload-time = "2020-02-20T06:13:17.672Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/04/9a/27060e8aa491ff2d286054df2e89df481a8dfe0e5e459fa36c0f48e3c10c/django_multiselectfield-1.0.1.tar.gz", hash = "sha256:3f8b4fff3e07d4a91c8bb4b809bc35caeb22b41769b606f4c9edc53b8d72a667", size = 22025, upload-time = "2025-06-12T14:41:21.599Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a2/e0/e1a0fa85b204e9af907d797c82a638717a3225d56f52a12a32a9f97e79d9/django_multiselectfield-0.1.12-py3-none-any.whl", hash = "sha256:c270faa7f80588214c55f2d68cbddb2add525c2aa830c216b8a198de914eb470", size = 15518, upload-time = "2020-02-20T06:13:15.688Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/10/23c0644cf67567bbe4e3a2eeeec0e9c79b701990c0e07c5ee4a4f8897f91/django_multiselectfield-1.0.1-py3-none-any.whl", hash = "sha256:18dc14801f7eca844a48e21cba6d8ec35b9b581f2373bbb2cb75e6994518259a", size = 20481, upload-time = "2025-06-12T14:41:20.107Z" },
 ]
 
 [[package]]
@@ -1073,7 +1073,7 @@ requires-dist = [
     { name = "django-extensions", specifier = "==3.2.3" },
     { name = "django-hosts", specifier = "==6.0" },
     { name = "django-ical", specifier = "==1.9.2" },
-    { name = "django-multiselectfield", specifier = "==0.1.12" },
+    { name = "django-multiselectfield", specifier = "==1.0.1" },
     { name = "django-phonenumber-field", extras = ["phonenumbers"], specifier = "==7.3.0" },
     { name = "django-simple-history", specifier = "==3.5.0" },
     { name = "pillow", specifier = "==11.3.0" },
