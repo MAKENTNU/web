@@ -31,10 +31,17 @@
                 {% translate "Find free reservation slots" %}
             </a>
         </div>
-
+        <div class="reservation-machine-shortcut-buttons">
+            <h4>{% translate "Shortcuts:" %}</h4>
+            {% for machine_type in machine_types %}
+                {% if machine_type.shown_machines %}
+                    <a class="ui primary button make-bg-yellow" href="#shortcut-{{ machine_type.name }}">{{ machine_type.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
         {% for machine_type in machine_types %}
             {% if machine_type.shown_machines %}
-                <div class="machine-type-title-field">
+                <div class="machine-type-title-field" id="shortcut-{{ machine_type.name }}">
                     <div class="word-breaking hyphenated machine-type-title ui large header">
                         {{ machine_type.name }}
                     </div>
