@@ -2,8 +2,8 @@
 changelog:
   exclude:
     authors:
-      - dependabot
-      - pre-commit-ci
+      - dependabot[bot]
+      - pre-commit-ci[bot]
   categories:
     - title: PRs with deployment notes
       labels:
