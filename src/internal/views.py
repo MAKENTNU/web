@@ -18,7 +18,7 @@ from .forms import (
     AddMemberForm, ChangeMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedChangeMemberForm, SecretsForm,
     SystemAccessValueForm,
 )
-from .models import Member, Quote, Secret, SystemAccess
+from .models import Member, Quote, Secret, SystemAccess, GuidanceHours
 
 
 class InternalContentBoxDetailView(ContentBoxDetailView):
@@ -332,3 +332,31 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
                 self.request.user.has_perm('internal.delete_quote')
                 or self.request.user == self.get_object().author
         )
+
+class GuidanceHoursView(ListView):
+    model = GuidanceHours
+    template_name = "internal/guidance_hours.html"
+    context_object_name = "hours"
+
+    def get_queryset(self):
+        return (
+            GuidanceHours.objects
+            .prefetch_related("members__user")
+            .order_by("weekday", "from_time")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        grouped = {}
+
+        for slot in context["hours"]:
+            weekday = slot.weekday
+
+            if weekday not in grouped:
+                grouped[weekday] = []
+
+            grouped[weekday].append(slot)
+
+        context["grouped_hours"] = grouped
+        return context

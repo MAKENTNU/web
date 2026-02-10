@@ -3242,6 +3242,10 @@ msgstr "Velg verdi"
 msgid "Search places"
 msgstr "Søk etter steder"
 
+#: src\internal\templates\internal\guidance_hours.html:10
+msgid "Guidance hours"
+msgstr "Veiledningstimer"
+
 #~ msgid "You have completed the Raise3D printer course"
 #~ msgstr "Du har fullført Raise3D-printerkurset"
 

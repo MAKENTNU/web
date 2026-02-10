@@ -71,6 +71,9 @@ quote_urlpatterns = [
     path("add/", views.QuoteCreateView.as_view(), name='quote_create'),
     path("<int:pk>/", include(specific_quote_urlpatterns)),
 ]
+guidance_hours_urlpatterns = [
+    path("", views.GuidanceHoursView.as_view(), name='guidance_hours'),
+]
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
@@ -82,6 +85,7 @@ internal_urlpatterns = [
     path("members/", decorator_include(permission_required_else_denied('internal.view_member'), member_urlpatterns)),
     path("secrets/", decorator_include(permission_required_else_denied('internal.view_secret'), secret_urlpatterns)),
     path("quotes/", decorator_include(permission_required_else_denied('internal.view_quote'), quote_urlpatterns)),
+    path("guidance-hours/", decorator_include(permission_required_else_denied('internal.view_member'), guidance_hours_urlpatterns)),
 ]
 
 urlpatterns += i18n_patterns(

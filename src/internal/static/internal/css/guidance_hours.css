@@ -1,0 +1,23 @@
+.guidance_hours_grey,
+.guidance_hours_yellow {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #0C426A;
+    color: white; 
+}
+
+.guidance_hours_grey td {
+    background-color: #DCDDDE;
+}
+
+.guidance_hours_yellow td {
+    background-color: #F8C811;
+}

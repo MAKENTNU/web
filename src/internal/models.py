@@ -313,3 +313,38 @@ class Quote(models.Model):
 
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
+
+class GuidanceHours(models.Model):
+    WEEKDAYS = [
+        (0, _("Monday")),
+        (1, _("Tuesday")),
+        (2, _("Wednesday")),
+        (3, _("Thursday")),
+        (4, _("Friday")),
+    ]
+
+    weekday = models.PositiveSmallIntegerField(
+        choices=WEEKDAYS,
+        verbose_name=_("weekday"),
+    )
+
+    from_time = models.TimeField(verbose_name=_("from time"))
+    to_time = models.TimeField(verbose_name=_("to time"))
+    max_slots = 4
+    members = models.ManyToManyField(
+        to=Member,
+        related_name='guidance_hours',
+        verbose_name=_("members"),
+    )
+
+    def add_member(self, member: Member):
+        self.members.add(member)
+
+    def get_members(self):
+        return [str(member.user.username) for member in self.members.all()]
+    
+    def __str__(self):
+        return "{weekday} {from_time}:{to_time}"
+    
+    def is_full(self):
+        return self.members.count() >= self.max_slots

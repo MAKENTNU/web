@@ -1,0 +1,56 @@
+{% extends 'internal/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load datetime_tags %}
+{% load html_tags %}
+{% load member %}
+{% load hosts %}
+
+
+{% block title %}{% translate "Guidance hours" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'internal/css/guidance_hours.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    <h1>{% translate "Guidance hours" %}</h1>
+    
+    {% for weekday, slots in grouped_hours.items %}
+        <table class="  {% if forloop.counter|divisibleby:2 %}
+                            guidance_hours_yellow   
+                        {% else %}
+                            guidance_hours_grey
+                        {% endif %}">
+            <thead>
+                <tr>
+                    <th colspan="6">{{ slots.0.get_weekday_display }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for slot in slots %}
+                <tr>
+                <th>
+                    {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}
+                </th>
+
+                {% for member in slot.members.all %}
+                    <td>{{ member.user.username }}</td>
+                {% empty %}
+                    <td>
+                    <button class="book_button">
+                        {% translate "book" %}
+                    </button>
+                    </td>
+                {% endfor %}
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+    {% endfor %}
+
+{% endblock body %}
