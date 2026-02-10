@@ -68,7 +68,7 @@ show-fixes = true
 format.docstring-code-format = true
 
 lint.select = [
-  "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
+  "E", # flake8/pycodestyle (Error)
 ]
 
 # Disable line length check in migrations
