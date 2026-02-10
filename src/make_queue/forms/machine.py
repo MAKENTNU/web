@@ -21,9 +21,9 @@ class MachineFormBase(forms.ModelForm):
         empty_label=_("Select machine type"),
         widget=SemanticChoiceInput(
             attr_name_to_attr_value_getter={
-                "has-stream": lambda iterator_value: iterator_value.instance.has_stream
-                if iterator_value
-                else None,
+                "has-stream": lambda iterator_value: (
+                    iterator_value.instance.has_stream if iterator_value else None
+                ),
             }
         ),
     )

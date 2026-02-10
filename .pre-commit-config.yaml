@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.1
+    rev: v0.15.4
     hooks:
       - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix]
@@ -19,6 +19,8 @@ repos:
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
       - id: mixed-line-ending
+        # Our `.gitattributes` file ensures that all checked out files have `\n`
+        # newlines, so this should only affect new/changed files
         args: [--fix=lf]
       - id: trailing-whitespace
 
