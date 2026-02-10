@@ -8,10 +8,12 @@ class SemesterField(forms.CharField):
     default_validators = [semester_string_validator]
 
     def __init__(self, **kwargs):
-        super().__init__(**{
-            'empty_value': None,
-            **kwargs,
-        })
+        super().__init__(
+            **{
+                "empty_value": None,
+                **kwargs,
+            }
+        )
 
     def clean(self, value):
         value = super().clean(value)

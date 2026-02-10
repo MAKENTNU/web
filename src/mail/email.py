@@ -28,7 +28,7 @@ class EmailConsumer(SyncConsumer):
     To send an asynchronous email, use ``async_to_sync(get_channel_layer().send)('email', message)``, where ``message`` is a
     message dictionary as described above. ``async_to_sync`` can be imported from ``asgiref.sync`` and ``get_channel_layer``
     can be imported from ``channels.layers``. The email consumer requires a worker to be run which can be started by the
-    command ``python manage.py runworker -v 2 email``. To run the worker, ``redis`` must be installed and running. Requires a
+    command ``uv run manage.py runworker -v 2 email``. To run the worker, ``redis`` must be installed and running. Requires a
     standard Django setup of email credentials to send emails.
     """
 
@@ -42,7 +42,9 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            get_request_logger().exception(f"Failed sending plain text email:\n{message}", exc_info=e)
+            get_request_logger().exception(
+                f"Failed sending plain text email:\n{message}", exc_info=e
+            )
 
     def send_html(self, message):
         """
@@ -55,7 +57,9 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            get_request_logger().exception(f"Failed sending HTML email:\n{message}", exc_info=e)
+            get_request_logger().exception(
+                f"Failed sending HTML email:\n{message}", exc_info=e
+            )
 
     @staticmethod
     def create_message(message):
@@ -65,7 +69,9 @@ class EmailConsumer(SyncConsumer):
         :param message: The message dictionary
         :return: A email message object
         """
-        msg = EmailMultiAlternatives(message["subject"], message["text"], message["from"], [message["to"]])
+        msg = EmailMultiAlternatives(
+            message["subject"], message["text"], message["from"], [message["to"]]
+        )
         if "reply_to" in message:
             msg.reply_to = message["reply_to"]
 
@@ -87,10 +93,12 @@ def render_html(request, context: dict, template_name: str):
     :param template_name: The name of the template file
     :return: A string representing the HTML content
     """
-    return get_template(template_name).render({
-        'request': request,
-        **context,
-    })
+    return get_template(template_name).render(
+        {
+            "request": request,
+            **context,
+        }
+    )
 
 
 def render_text(request, context: dict, template_name: str, strip=True):
@@ -104,10 +112,12 @@ def render_text(request, context: dict, template_name: str, strip=True):
     :param strip: If ``True``, the text rendered from the template will have leading and trailing whitespace removed before being returned.
     :return: A string representing the text content
     """
-    rendered_text = get_template(template_name).render({
-        'request': request,
-        **context,
-    })
+    rendered_text = get_template(template_name).render(
+        {
+            "request": request,
+            **context,
+        }
+    )
     return rendered_text.strip() if strip else rendered_text
 
 

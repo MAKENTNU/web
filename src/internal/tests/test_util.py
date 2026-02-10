@@ -6,7 +6,6 @@ from ..util import date_to_semester, semester_to_year, year_to_semester
 
 
 class UtilTests(StandardTestCase):
-
     def test_date_to_semester_returns_expected_result(self):
         self.assertEqual(date_to_semester(parse_date("2021-01-01")), "V21")
         self.assertEqual(date_to_semester(parse_date("2021-05-31")), "V21")

@@ -3,13 +3,16 @@ from django.test import TestCase
 from django_hosts import reverse
 
 from util.test_utils import (
-    CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
+    CleanUpTempFilesTestMixin,
+    Get,
+    MOCK_JPG_FILE,
+    assert_requesting_paths_succeeds,
+    generate_all_admin_urls_for_model_and_objs,
 )
 from ..models import Committee, InheritanceGroup
 
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
-
     def setUp(self):
         self.group1 = InheritanceGroup.objects.create(name="Group 1")
         self.committee1 = Committee.objects.create(
@@ -23,12 +26,11 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             # urlpatterns
-            Get(reverse('committee_list'), public=True),
-            Get(reverse('committee_detail', args=[self.committee1.pk]), public=True),
-
+            Get(reverse("committee_list"), public=True),
+            Get(reverse("committee_detail", args=[self.committee1.pk]), public=True),
             # adminpatterns
-            Get(reverse('admin_committee_list'), public=False),
-            Get(reverse('committee_update', args=[self.committee1.pk]), public=False),
+            Get(reverse("admin_committee_list"), public=False),
+            Get(reverse("committee_update", args=[self.committee1.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
@@ -36,15 +38,21 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         path_predicates = [
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(Group, [self.group1.group_ptr])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(
+                    Group, [self.group1.group_ptr]
+                )
             ],
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(InheritanceGroup, [self.group1])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(
+                    InheritanceGroup, [self.group1]
+                )
             ],
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(Committee, [self.committee1])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(
+                    Committee, [self.committee1]
+                )
             ],
         ]
-        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
+        assert_requesting_paths_succeeds(self, path_predicates, "admin")

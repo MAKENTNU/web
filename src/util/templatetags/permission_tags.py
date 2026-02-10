@@ -11,14 +11,20 @@ register = template.Library()
 
 
 @register.filter
-def has_any_permissions_for(user: User, model__or__app_and_model: Type[models.Model] | str):
+def has_any_permissions_for(
+    user: User, model__or__app_and_model: Type[models.Model] | str
+):
     """
     :param user: the user to check permissions for
     :param model__or__app_and_model: either a model type, a string with the name of a uniquely named model,
                                      or a string of the format "{app_label}.{model_name}"
     """
-    if not isinstance(model__or__app_and_model, str) and not isinstance(model__or__app_and_model, type(models.Model)):
-        raise ValueError(f"Expected an instance of {str} or {type(models.Model)}, but got '{model__or__app_and_model}'")
+    if not isinstance(model__or__app_and_model, str) and not isinstance(
+        model__or__app_and_model, type(models.Model)
+    ):
+        raise ValueError(
+            f"Expected an instance of {str} or {type(models.Model)}, but got '{model__or__app_and_model}'"
+        )
 
     if user.is_anonymous:
         return False
@@ -26,7 +32,9 @@ def has_any_permissions_for(user: User, model__or__app_and_model: Type[models.Mo
     if isinstance(model__or__app_and_model, str):
         if "." in model__or__app_and_model:
             app_label, model_name = model__or__app_and_model.split(".", maxsplit=1)
-            model = ContentType.objects.get_by_natural_key(app_label, model_name).model_class()
+            model = ContentType.objects.get_by_natural_key(
+                app_label, model_name
+            ).model_class()
         else:
             model_name = model__or__app_and_model.lower()
             model = ContentType.objects.get(model=model_name).model_class()
@@ -38,7 +46,6 @@ def has_any_permissions_for(user: User, model__or__app_and_model: Type[models.Mo
 
 @register.filter
 def can_view_admin_panel(user: User):
-    return (
-            any(user.has_any_permissions_for(model) for model in AdminPanelView.MODEL_LIST)
-            or any(user.has_perm(perm) for perm in AdminPanelView.EXTRA_PERMS)
-    )
+    return any(
+        user.has_any_permissions_for(model) for model in AdminPanelView.MODEL_LIST
+    ) or any(user.has_perm(perm) for perm in AdminPanelView.EXTRA_PERMS)

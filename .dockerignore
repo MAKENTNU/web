@@ -1,0 +1,11 @@
+# Virtual environments
+venv/
+.venv/
+
+# IDE files
+.idea/
+.vscode/
+
+# Caches
+**/__pycache__/
+.ruff_cache/

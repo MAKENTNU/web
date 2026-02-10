@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('makerspace', '0002_rename_tool_to_equipment'),
+        ("makerspace", "0002_rename_tool_to_equipment"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='equipment',
-            name='priority',
-            field=models.IntegerField(blank=True, help_text='If specified, the equipment is sorted ascending by this value.', null=True, verbose_name='priority'),
+            model_name="equipment",
+            name="priority",
+            field=models.IntegerField(
+                blank=True,
+                help_text="If specified, the equipment is sorted ascending by this value.",
+                null=True,
+                verbose_name="priority",
+            ),
         ),
     ]

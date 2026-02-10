@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0001_initial'),
+        ("checkin", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='card_id',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='kortnummer'),
+            model_name="profile",
+            name="card_id",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="kortnummer"
+            ),
         ),
     ]

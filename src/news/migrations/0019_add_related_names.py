@@ -6,31 +6,55 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('news', '0018_remove_fields_max_length'),
+        ("news", "0018_remove_fields_max_length"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='eventticket',
-            name='event',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.event', verbose_name='event'),
+            model_name="eventticket",
+            name="event",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tickets",
+                to="news.event",
+                verbose_name="event",
+            ),
         ),
         migrations.AlterField(
-            model_name='eventticket',
-            name='timeplace',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.timeplace', verbose_name='timeplace'),
+            model_name="eventticket",
+            name="timeplace",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tickets",
+                to="news.timeplace",
+                verbose_name="timeplace",
+            ),
         ),
         migrations.AlterField(
-            model_name='eventticket',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='event_tickets', to=settings.AUTH_USER_MODEL, verbose_name='user'),
+            model_name="eventticket",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="event_tickets",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="user",
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='timeplaces', to='news.event'),
+            model_name="timeplace",
+            name="event",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="timeplaces",
+                to="news.event",
+            ),
         ),
     ]

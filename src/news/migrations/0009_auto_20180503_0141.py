@@ -5,25 +5,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0008_auto_20180501_1240'),
+        ("news", "0008_auto_20180501_1240"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='pub_date',
-            field=models.DateField(default=datetime.date.today, verbose_name='publishing date'),
+            model_name="article",
+            name="pub_date",
+            field=models.DateField(
+                default=datetime.date.today, verbose_name="publishing date"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='pub_date',
-            field=models.DateField(default=datetime.date.today, verbose_name='publishing date'),
+            model_name="timeplace",
+            name="pub_date",
+            field=models.DateField(
+                default=datetime.date.today, verbose_name="publishing date"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='start_date',
-            field=models.DateField(default=datetime.date.today, verbose_name='start date'),
+            model_name="timeplace",
+            name="start_date",
+            field=models.DateField(
+                default=datetime.date.today, verbose_name="start date"
+            ),
         ),
     ]

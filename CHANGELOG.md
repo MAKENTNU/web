@@ -15,23 +15,46 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### New features
 
--
 
 ### Improvements
 
--
 
 ### Fixes
 
--
+
+### Other changes
+
+- Added custom front page logo on [makentnu.dev](https://makentnu.dev/) (MAKENTNU/web#781)
+
+
+## 2025-10-26 (MAKENTNU/web#779)
 
 ### Other changes
 
 - Deleted the `dev` branch; now, the `main` branch will be used as the (sole) default branch, and releases/tags will be used for deployments
   (MAKENTNU/web#758)
+- Prevented `compilemessages` from processing files outside the `src` folder (MAKENTNU/web#766)
+- Migrated project to use the more modern `pyproject.toml` and [uv](https://docs.astral.sh/uv/) instead of `requirements.txt` and pip
+  (MAKENTNU/web#766)
+- Replaced `local_settings.py` with `.env` (MAKENTNU/web#767)
+  - Developers must create a `.env` file locally - see the "Setup" section of the README
+- Renamed and added some more `make` commands (MAKENTNU/web#768)
+- Improved Docker setup (MAKENTNU/web#768)
+  - Environment variables specific to Docker can now be provided using a `.env.docker` file
+  - The image is now based on the latest stable Ubuntu release, like the prod server
+  - Static and media files are persisted between runs (through a volume)
+  - Added Docker-specific `make` commands, all prefixed with `d-`
+  - Stopped always running migrations when starting the container; it's more useful having manual control, using e.g. `make d-migrate`
+- Added pre-commit (MAKENTNU/web#778)
+  - ...with the following hooks:
+    - Several of the standard `pre-commit-hooks` and `meta` hooks
+    - `validate-pyproject`
+    - `yamllint`
+    - `ruff-format`
+- Formatted all Python code with Ruff (MAKENTNU/web#778)
 
 
-## 2025-05-03 ([#757](https://github.com/MAKENTNU/web/pull/757))
+## 2025-05-03 (MAKENTNU/web#757)
 
 ### New features
 
@@ -47,7 +70,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Added checkbox in pull_request_template.md for switching base from `main` to `dev` (MAKENTNU/web#753)
 
 
-## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
+## 2024-05-10 (MAKENTNU/web#730)
 
 ### New features
 
@@ -63,7 +86,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Updated a ridiculous amount of packages
 
 
-## 2023-05-10 ([#654](https://github.com/MAKENTNU/web/pull/654))
+## 2023-05-10 (MAKENTNU/web#654)
 
 ### New features
 
@@ -105,7 +128,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Changed multiple pages' URLs to use [query parameters](https://en.wikipedia.org/wiki/Query_string),
   instead of having multiple distinct paths for practically the same page
-  (see [#650](https://github.com/MAKENTNU/web/pull/650) for a list of all the URLs affected)
+  (see MAKENTNU/web#650 for a list of all the URLs affected)
   - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL; see [a list of the added URLs in
     the code](https://github.com/MAKENTNU/web/pull/650/files#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R111-R115)
 - Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
@@ -117,7 +140,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Code cleanup? Ye.
 
 
-## 2023-03-30 ([#615](https://github.com/MAKENTNU/web/pull/615))
+## 2023-03-30 (MAKENTNU/web#615)
 
 ### New features
 
@@ -201,7 +224,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Never-ending masses of code cleanup
 
 
-## 2022-10-28 ([#567](https://github.com/MAKENTNU/web/pull/567))
+## 2022-10-28 (MAKENTNU/web#567)
 
 ### New features
 
@@ -222,7 +245,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   - Which are - among other places - used in the "Add New Member" form
 
 
-## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
+## 2022-07-17 (MAKENTNU/web#478)
 
 ### New features
 
@@ -262,7 +285,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Much code cleanup, yes
 
 
-## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
+## 2022-06-07 (MAKENTNU/web#461)
 
 ### New features
 
@@ -306,7 +329,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
     (which can technically also be classified as an "advanced" course / "special" machine type)
 
 
-## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
+## 2022-05-20 (MAKENTNU/web#453)
 
 ### New features
 
@@ -335,7 +358,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Fixed server error when uploading an image to an object that had its previous image file deleted - without also updating the database
 
 
-## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
+## 2022-04-07 (MAKENTNU/web#434 and MAKENTNU/web#437)
 
 ### New features
 
@@ -381,7 +404,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Never-before-seen quanta of code cleanup
 
 
-## 2022-01-10 ([#402](https://github.com/MAKENTNU/web/pull/402))
+## 2022-01-10 (MAKENTNU/web#402)
 
 ### New features
 
@@ -397,7 +420,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Articles and events are now stored fully in their own separate tables, instead of storing the common fields in a third table
 - Small improvements to the design of the event and article pages
 - Improved using <kbd>Tab</kbd> for navigating the buttons in the header
-- SEO improvements (see [#401](https://github.com/MAKENTNU/web/pull/401))
+- SEO improvements (see MAKENTNU/web#401)
 
 ### Fixes
 
@@ -408,7 +431,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - A barely impressive volume of code cleanup
 
 
-## 2021-10-29 ([#389](https://github.com/MAKENTNU/web/pull/389))
+## 2021-10-29 (MAKENTNU/web#389)
 
 ### New features
 
@@ -435,7 +458,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - A respectable quantity of code cleanup
 
 
-## 2021-10-21 ([#383](https://github.com/MAKENTNU/web/pull/383) and [#385](https://github.com/MAKENTNU/web/pull/385))
+## 2021-10-21 (MAKENTNU/web#383 and MAKENTNU/web#385)
 
 ### New features
 
@@ -467,7 +490,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Added code style guide and guideline for code smells
 
 
-## 2021-05-11 ([#361](https://github.com/MAKENTNU/web/pull/361) and [#367](https://github.com/MAKENTNU/web/pull/367))
+## 2021-05-11 (MAKENTNU/web#361 and MAKENTNU/web#367)
 
 ### New features
 
@@ -501,7 +524,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Lots of code cleanup
 
 
-## 2021-04-13 ([#349](https://github.com/MAKENTNU/web/pull/349))
+## 2021-04-13 (MAKENTNU/web#349)
 
 ### New features
 
@@ -520,7 +543,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Both filtering and sorting the member list simultaneously does currently not work
 
 
-## 2021-03-10 ([#343](https://github.com/MAKENTNU/web/pull/343))
+## 2021-03-10 (MAKENTNU/web#343)
 
 ### New features
 
@@ -538,7 +561,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Code cleanup
 
 
-## 2020-11-20 ([#334](https://github.com/MAKENTNU/web/pull/334))
+## 2020-11-20 (MAKENTNU/web#334)
 
 ### New features
 
