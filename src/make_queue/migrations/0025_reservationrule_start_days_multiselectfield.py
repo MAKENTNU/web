@@ -5,7 +5,7 @@ import multiselectfield.db.fields
 
 
 def convert_start_days_from_bit_field_to_multiselect(apps, schema_editor):
-    ReservationRule = apps.get_model('make_queue', 'ReservationRule')
+    ReservationRule = apps.get_model("make_queue", "ReservationRule")
     for rule in ReservationRule.objects.all():
         start_days_bit_field = int(rule.start_days[0])
 
@@ -19,7 +19,7 @@ def convert_start_days_from_bit_field_to_multiselect(apps, schema_editor):
 
 
 def convert_start_days_from_multiselect_to_bit_field(apps, schema_editor):
-    ReservationRule = apps.get_model('make_queue', 'ReservationRule')
+    ReservationRule = apps.get_model("make_queue", "ReservationRule")
     for rule in ReservationRule.objects.all():
         start_days = 0
         for day_iso_index in rule.start_days:
@@ -31,16 +31,33 @@ def convert_start_days_from_multiselect_to_bit_field(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0024_machine_and_machineusagerule_and_printer3dcourse_and_reservationrule_last_modified'),
+        (
+            "make_queue",
+            "0024_machine_and_machineusagerule_and_printer3dcourse_and_reservationrule_last_modified",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='reservationrule',
-            name='start_days',
-            field=multiselectfield.db.fields.MultiSelectField(choices=[(1, 'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')], max_length=13, verbose_name='start days for rule periods'),
+            model_name="reservationrule",
+            name="start_days",
+            field=multiselectfield.db.fields.MultiSelectField(
+                choices=[
+                    (1, "Monday"),
+                    (2, "Tuesday"),
+                    (3, "Wednesday"),
+                    (4, "Thursday"),
+                    (5, "Friday"),
+                    (6, "Saturday"),
+                    (7, "Sunday"),
+                ],
+                max_length=13,
+                verbose_name="start days for rule periods",
+            ),
         ),
-        migrations.RunPython(convert_start_days_from_bit_field_to_multiselect, convert_start_days_from_multiselect_to_bit_field),
+        migrations.RunPython(
+            convert_start_days_from_bit_field_to_multiselect,
+            convert_start_days_from_multiselect_to_bit_field,
+        ),
     ]

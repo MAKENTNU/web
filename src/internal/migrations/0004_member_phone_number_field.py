@@ -5,15 +5,20 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0003_member_property_to_system_access'),
+        ("internal", "0003_member_property_to_system_access"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='member',
-            name='phone_number',
-            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, default='', max_length=32, region=None, verbose_name='phone number'),
+            model_name="member",
+            name="phone_number",
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                blank=True,
+                default="",
+                max_length=32,
+                region=None,
+                verbose_name="phone number",
+            ),
         ),
     ]

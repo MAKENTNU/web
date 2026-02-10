@@ -4,10 +4,14 @@ from collections import defaultdict
 from django.db import migrations, models
 
 
-def delete_tickets_that_have_been_duplicated_through_reactivation_by_user(apps, schema_editor):
-    EventTicket = apps.get_model('news', 'EventTicket')
+def delete_tickets_that_have_been_duplicated_through_reactivation_by_user(
+    apps, schema_editor
+):
+    EventTicket = apps.get_model("news", "EventTicket")
     ticket_dict = defaultdict(list)
-    for ticket in EventTicket.objects.select_related('user').prefetch_related('timeplace', 'event'):
+    for ticket in EventTicket.objects.select_related("user").prefetch_related(
+        "timeplace", "event"
+    ):
         ticket_key = (ticket.user, ticket.timeplace, ticket.event)
         ticket_dict[ticket_key].append(ticket)
 
@@ -22,23 +26,37 @@ def delete_tickets_that_have_been_duplicated_through_reactivation_by_user(apps, 
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0027_remove_eventticket__email_and__name'),
+        ("news", "0027_remove_eventticket__email_and__name"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='eventticket',
-            constraint=models.CheckConstraint(check=models.Q(models.Q(('event__isnull', True), ('timeplace__isnull', False)), models.Q(('event__isnull', False), ('timeplace__isnull', True)), _connector='OR'), name='eventticket_either_timeplace_or_event_is_set'),
+            model_name="eventticket",
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    models.Q(("event__isnull", True), ("timeplace__isnull", False)),
+                    models.Q(("event__isnull", False), ("timeplace__isnull", True)),
+                    _connector="OR",
+                ),
+                name="eventticket_either_timeplace_or_event_is_set",
+            ),
         ),
-        migrations.RunPython(delete_tickets_that_have_been_duplicated_through_reactivation_by_user, migrations.RunPython.noop),
-        migrations.AddConstraint(
-            model_name='eventticket',
-            constraint=models.UniqueConstraint(fields=('user', 'timeplace'), name='eventticket_unique_user_per_timeplace'),
+        migrations.RunPython(
+            delete_tickets_that_have_been_duplicated_through_reactivation_by_user,
+            migrations.RunPython.noop,
         ),
         migrations.AddConstraint(
-            model_name='eventticket',
-            constraint=models.UniqueConstraint(fields=('user', 'event'), name='eventticket_unique_user_per_event'),
+            model_name="eventticket",
+            constraint=models.UniqueConstraint(
+                fields=("user", "timeplace"),
+                name="eventticket_unique_user_per_timeplace",
+            ),
+        ),
+        migrations.AddConstraint(
+            model_name="eventticket",
+            constraint=models.UniqueConstraint(
+                fields=("user", "event"), name="eventticket_unique_user_per_event"
+            ),
         ),
     ]

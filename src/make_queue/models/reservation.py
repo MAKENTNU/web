@@ -14,7 +14,11 @@ from django.utils.translation import gettext_lazy as _
 
 from news.models import TimePlace
 from users.models import User
-from util.locale_utils import exact_weekday_to_day_name, short_datetime_format, timedelta_to_hours
+from util.locale_utils import (
+    exact_weekday_to_day_name,
+    short_datetime_format,
+    timedelta_to_hours,
+)
 from util.model_utils import ComparisonType, comparison_boilerplate
 from web.modelfields import UnlimitedCharField, MultiSelectField
 from .machine import Machine, MachineType
@@ -27,22 +31,24 @@ class Quota(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='quotas',
+        related_name="quotas",
         verbose_name=_("user"),
     )
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
-        related_name='quotas',
+        related_name="quotas",
         verbose_name=_("machine type"),
     )
-    number_of_reservations = models.IntegerField(default=1, verbose_name=_("number of reservations"))
+    number_of_reservations = models.IntegerField(
+        default=1, verbose_name=_("number of reservations")
+    )
     diminishing = models.BooleanField(default=False, verbose_name=_("diminishing"))
     ignore_rules = models.BooleanField(default=False, verbose_name=_("ignores rules"))
 
     class Meta:
         permissions = (
-            ('can_create_event_reservation', "Can create event reservation"),
+            ("can_create_event_reservation", "Can create event reservation"),
         )
         verbose_name = _("quota")
         verbose_name_plural = _("quotas")
@@ -52,34 +58,48 @@ class Quota(models.Model):
             user_str = _("<all users>")
         else:
             user_str = self.user.get_full_name() if self.user else _("<nobody>")
-        return _("Quota for {user} on {machine_type}").format(user=user_str, machine_type=self.machine_type)
+        return _("Quota for {user} on {machine_type}").format(
+            user=user_str, machine_type=self.machine_type
+        )
 
     def get_unfinished_reservations(self, user: User):
         if self.diminishing:
             return self.reservations.all()
-        reservations = self.reservations.filter(user=user) if self.all else self.reservations
+        reservations = (
+            self.reservations.filter(user=user) if self.all else self.reservations
+        )
         return reservations.filter(end_time__gte=timezone.now())
 
     def can_create_more_reservations(self, user: User):
-        return self.number_of_reservations != self.get_unfinished_reservations(user).count()
+        return (
+            self.number_of_reservations
+            != self.get_unfinished_reservations(user).count()
+        )
 
-    def is_valid_in(self, reservation: 'Reservation'):
-        reservation_exists_or_can_make_more = (self.reservations.filter(pk=reservation.pk).exists()
-                                               or self.can_create_more_reservations(reservation.user))
-        ignore_rules_or_valid_time = (self.ignore_rules
-                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
+    def is_valid_in(self, reservation: "Reservation"):
+        reservation_exists_or_can_make_more = self.reservations.filter(
+            pk=reservation.pk
+        ).exists() or self.can_create_more_reservations(reservation.user)
+        ignore_rules_or_valid_time = self.ignore_rules or ReservationRule.valid_time(
+            reservation.start_time,
+            reservation.end_time,
+            reservation.machine.machine_type,
+        )
         return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
     @classmethod
     def can_create_new_reservation(cls, user: User, machine_type: MachineType):
-        return any(quota.can_create_more_reservations(user) for quota in cls.get_user_quotas(user, machine_type))
+        return any(
+            quota.can_create_more_reservations(user)
+            for quota in cls.get_user_quotas(user, machine_type)
+        )
 
     @staticmethod
     def get_user_quotas(user: User, machine_type: MachineType):
         return machine_type.quotas.filter(Q(user=user) | Q(all=True))
 
     @classmethod
-    def get_best_quota(cls, reservation: 'Reservation') -> Optional['Quota']:
+    def get_best_quota(cls, reservation: "Reservation") -> Optional["Quota"]:
         """
         Selects the best quota for the given reservation,
         by preferring non-diminishing quotas that do not ignore the rules.
@@ -87,8 +107,13 @@ class Quota(models.Model):
         :param reservation: The reservation to check
         :return: The best quota, that can handle the given reservation, or None if none can
         """
-        valid_quotas = [quota for quota in cls.get_user_quotas(reservation.user, reservation.machine.machine_type) if
-                        quota.is_valid_in(reservation)]
+        valid_quotas = [
+            quota
+            for quota in cls.get_user_quotas(
+                reservation.user, reservation.machine.machine_type
+            )
+            if quota.is_valid_in(reservation)
+        ]
 
         if not valid_quotas:
             return None
@@ -96,7 +121,9 @@ class Quota(models.Model):
         best_quota = valid_quotas[0]
         for quota in valid_quotas[1:]:
             if best_quota.diminishing:
-                if not quota.diminishing or best_quota.ignore_rules and not quota.ignore_rules:
+                if not quota.diminishing or (
+                    best_quota.ignore_rules and not quota.ignore_rules
+                ):
                     best_quota = quota
             elif best_quota.ignore_rules and not quota.ignore_rules:
                 best_quota = quota
@@ -104,7 +131,7 @@ class Quota(models.Model):
         return best_quota
 
     @classmethod
-    def can_create_reservation(cls, reservation: 'Reservation'):
+    def can_create_reservation(cls, reservation: "Reservation"):
         return cls.get_best_quota(reservation) is not None
 
 
@@ -118,12 +145,12 @@ class Reservation(models.Model):
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
-        related_name='reservations',
+        related_name="reservations",
     )
     machine = models.ForeignKey(
         to=Machine,
         on_delete=models.CASCADE,
-        related_name='reservations',
+        related_name="reservations",
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -132,7 +159,7 @@ class Reservation(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='machine_reservations',
+        related_name="machine_reservations",
     )
     special = models.BooleanField(default=False)
     special_text = UnlimitedCharField(blank=True)
@@ -142,13 +169,13 @@ class Reservation(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='reservations',
+        related_name="reservations",
     )
 
     class Meta:
-        permissions = (
-            ('can_view_reservation_user', "Can view reservation user"),
-        )
+        permissions = [
+            ("can_view_reservation_user", "Can view reservation user"),
+        ]
 
     def __str__(self):
         start_time = short_datetime_format(self.start_time)
@@ -187,7 +214,11 @@ class Reservation(models.Model):
             return False
 
         # Check if the printer is already reserved by another reservation for the given duration
-        if self.machine.reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
+        if (
+            self.machine.reservations_in_period(self.start_time, self.end_time)
+            .exclude(pk=self.pk)
+            .exists()
+        ):
             return False
 
         # A reservation must have a valid time period
@@ -196,13 +227,15 @@ class Reservation(models.Model):
 
         # Event reservations are always valid, if the time is not already reserved
         if self.event or self.special:
-            return self.user.has_perm('make_queue.can_create_event_reservation')
+            return self.user.has_perm("make_queue.can_create_event_reservation")
 
         # Limit the amount of time forward in time a reservation can be made
         if not self.is_within_allowed_period():
             return False
 
-        machine_out_of_order_or_maintenance = self.check_machine_out_of_order() or self.check_machine_maintenance()
+        machine_out_of_order_or_maintenance = (
+            self.check_machine_out_of_order() or self.check_machine_maintenance()
+        )
         earliest_allowed_time_to_set = self.get_earliest_allowed_time_to_set()
         # If this reservation object already exists and is being changed:
         if self.pk:
@@ -213,18 +246,30 @@ class Reservation(models.Model):
             old_reservation = Reservation.objects.get(pk=self.pk)
             # If the start time has been changed:
             if self.start_time != old_reservation.start_time:
-                if not old_reservation.can_change_start_time() or self.start_time < earliest_allowed_time_to_set:
+                if (
+                    not old_reservation.can_change_start_time()
+                    or self.start_time < earliest_allowed_time_to_set
+                ):
                     return False
                 # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
-                if machine_out_of_order_or_maintenance and self.start_time < old_reservation.start_time:
+                if (
+                    machine_out_of_order_or_maintenance
+                    and self.start_time < old_reservation.start_time
+                ):
                     return False
 
             # If the end time has been changed:
             if self.end_time != old_reservation.end_time:
-                if not old_reservation.can_change_end_time() or self.end_time < earliest_allowed_time_to_set:
+                if (
+                    not old_reservation.can_change_end_time()
+                    or self.end_time < earliest_allowed_time_to_set
+                ):
                     return False
                 # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
-                if machine_out_of_order_or_maintenance and self.end_time > old_reservation.end_time:
+                if (
+                    machine_out_of_order_or_maintenance
+                    and self.end_time > old_reservation.end_time
+                ):
                     return False
         # If this reservation object is being created:
         else:
@@ -267,13 +312,14 @@ class Reservation(models.Model):
         return timezone.now() - cls.GRACE_PERIOD_FOR_SETTING_TIMES
 
     def can_be_deleted_by(self, user: User):
-        if user.has_perm('make_queue.delete_reservation'):
+        if user.has_perm("make_queue.delete_reservation"):
             return True
         return self.user == user and self.start_time > timezone.now()
 
     def can_be_changed_by(self, user: User):
-        if (user.has_perm('make_queue.can_create_event_reservation')
-                and (self.special or self.event)):
+        if user.has_perm("make_queue.can_create_event_reservation") and (
+            self.special or self.event
+        ):
             return True
         return self.user == user or user.is_superuser
 
@@ -300,14 +346,22 @@ class ReservationRule(models.Model):
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
-        related_name='reservation_rules',
+        related_name="reservation_rules",
         verbose_name=_("machine type"),
     )
     start_time = models.TimeField(verbose_name=_("start time"))
     end_time = models.TimeField(verbose_name=_("end time"))
-    days_changed = models.IntegerField(verbose_name=_("days"), help_text=_("Number of times midnight is passed between start and end time."))
+    days_changed = models.IntegerField(
+        verbose_name=_("days"),
+        help_text=_("Number of times midnight is passed between start and end time."),
+    )
     # TODO: remove the explicitly set `max_length` when https://github.com/goinnn/django-multiselectfield/issues/131 is resolved
-    start_days = MultiSelectField(choices=Day.choices, min_choices=1, max_length=13, verbose_name=_("start days for rule periods"))
+    start_days = MultiSelectField(
+        choices=Day.choices,
+        min_choices=1,
+        max_length=13,
+        verbose_name=_("start days for rule periods"),
+    )
     max_hours = models.FloatField(verbose_name=_("hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
@@ -320,10 +374,17 @@ class ReservationRule(models.Model):
         return f"Regel for {self.machine_type}: {start_time}-{end_time} på {self.start_days}; {days_str}"
 
     @property
-    def time_periods(self) -> list['Period']:
-        return self.Period.list_from_start_weekdays(self.get_start_day_indices(), self.start_time, self.end_time, self.days_changed)
+    def time_periods(self) -> list["Period"]:
+        return self.Period.list_from_start_weekdays(
+            self.get_start_day_indices(),
+            self.start_time,
+            self.end_time,
+            self.days_changed,
+        )
 
-    def get_exact_start_and_end_times_list(self, *, iso=True, wrap_using_modulo=False) -> list[tuple[float, float]]:
+    def get_exact_start_and_end_times_list(
+        self, *, iso=True, wrap_using_modulo=False
+    ) -> list[tuple[float, float]]:
         mod_divisor = 8 if iso else 7
 
         def mod(exact_weekday: float) -> float:
@@ -333,7 +394,12 @@ class ReservationRule(models.Model):
 
         return [
             (mod(p.exact_start_weekday), mod(p.exact_end_weekday))
-            for p in self.Period.list_from_start_weekdays(self.get_start_day_indices(iso=iso), self.start_time, self.end_time, self.days_changed)
+            for p in self.Period.list_from_start_weekdays(
+                self.get_start_day_indices(iso=iso),
+                self.start_time,
+                self.end_time,
+                self.days_changed,
+            )
         ]
 
     def get_start_day_indices(self, *, iso=True):
@@ -341,7 +407,9 @@ class ReservationRule(models.Model):
         return [int(day_index_str) + shift for day_index_str in self.start_days]
 
     @classmethod
-    def valid_time(cls, start_time: datetime, end_time: datetime, machine_type: MachineType) -> bool:
+    def valid_time(
+        cls, start_time: datetime, end_time: datetime, machine_type: MachineType
+    ) -> bool:
         """
         Checks if a reservation in the supplied period is allowed by the rules for the machine type.
 
@@ -368,18 +436,30 @@ class ReservationRule(models.Model):
             return True
 
         # Check if the reservation adheres to the inter-rule maxima
-        return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
+        return all(
+            rule.valid_time_in_rule(start_time, end_time, len(rules) > 1)
+            for rule in rules
+        )
 
-    def valid_time_in_rule(self, start_time: datetime, end_time: datetime, border_cross: bool) -> bool:
+    def valid_time_in_rule(
+        self, start_time: datetime, end_time: datetime, border_cross: bool
+    ) -> bool:
         if border_cross:
-            return self.hours_inside(start_time, end_time) <= self.max_inside_border_crossed
+            return (
+                self.hours_inside(start_time, end_time)
+                <= self.max_inside_border_crossed
+            )
         return timedelta_to_hours(end_time - start_time) <= self.max_hours
 
     def hours_inside(self, start_time: datetime, end_time: datetime) -> float:
-        return sum(period.hours_inside(start_time, end_time) for period in self.time_periods)
+        return sum(
+            period.hours_inside(start_time, end_time) for period in self.time_periods
+        )
 
     @staticmethod
-    def covered_rules(start_time: datetime, end_time: datetime, machine_type: MachineType):
+    def covered_rules(
+        start_time: datetime, end_time: datetime, machine_type: MachineType
+    ):
         """
         Finds the rules for the given machine type that are covered by the indicated period.
 
@@ -392,8 +472,11 @@ class ReservationRule(models.Model):
         if timedelta_to_hours(end_time - start_time) > 7 * 24:
             return machine_type.reservation_rules.all()
 
-        return [rule for rule in machine_type.reservation_rules.all()
-                if rule.hours_inside(start_time, end_time)]
+        return [
+            rule
+            for rule in machine_type.reservation_rules.all()
+            if rule.hours_inside(start_time, end_time)
+        ]
 
     @staticmethod
     def rule_set_has_gaps(machine_type: MachineType):
@@ -409,18 +492,29 @@ class ReservationRule(models.Model):
         return False
 
     class Period:
-
-        def __init__(self, start_weekday: int, start_time: time, end_time: time, days_changed: int):
+        def __init__(
+            self,
+            start_weekday: int,
+            start_time: time,
+            end_time: time,
+            days_changed: int,
+        ):
             self.start_time = start_time
             self.end_time = end_time
-            self.exact_start_weekday = start_weekday + self.to_exact_num_days(start_time)
-            self.exact_end_weekday = start_weekday + days_changed + self.to_exact_num_days(end_time)
+            self.exact_start_weekday = start_weekday + self.to_exact_num_days(
+                start_time
+            )
+            self.exact_end_weekday = (
+                start_weekday + days_changed + self.to_exact_num_days(end_time)
+            )
 
         def __repr__(self):
             return f"<{type(self).__name__}: {self}>"
 
         def __str__(self):
-            start_day_name = capfirst(exact_weekday_to_day_name(self.exact_start_weekday))
+            start_day_name = capfirst(
+                exact_weekday_to_day_name(self.exact_start_weekday)
+            )
             end_day_name = exact_weekday_to_day_name(self.exact_end_weekday)
             return f"{start_day_name} {time_format(self.start_time)} &ndash; {end_day_name} {time_format(self.end_time)}"
 
@@ -443,23 +537,39 @@ class ReservationRule(models.Model):
                 return self.exact_start_weekday + 7 - other.exact_end_weekday
 
         @classmethod
-        def from_rule(cls, start_weekday: int, rule: 'ReservationRule'):
+        def from_rule(cls, start_weekday: int, rule: "ReservationRule"):
             return cls(start_weekday, rule.start_time, rule.end_time, rule.days_changed)
 
         @classmethod
-        def list_from_start_weekdays(cls, start_weekdays: Collection[int], start_time: time, end_time: time, days_changed: int):
-            return [cls(start_weekday, start_time, end_time, days_changed) for start_weekday in start_weekdays]
+        def list_from_start_weekdays(
+            cls,
+            start_weekdays: Collection[int],
+            start_time: time,
+            end_time: time,
+            days_changed: int,
+        ):
+            return [
+                cls(start_weekday, start_time, end_time, days_changed)
+                for start_weekday in start_weekdays
+            ]
 
         def hours_inside(self, start_time: datetime, end_time: datetime) -> float:
-            exact_start_weekday = start_time.isoweekday() + self.to_exact_num_days(start_time.time())
-            exact_end_weekday = end_time.isoweekday() + self.to_exact_num_days(end_time.time())
+            exact_start_weekday = start_time.isoweekday() + self.to_exact_num_days(
+                start_time.time()
+            )
+            exact_end_weekday = end_time.isoweekday() + self.to_exact_num_days(
+                end_time.time()
+            )
             return self.hours_overlap(
                 (self.exact_start_weekday, self.exact_end_weekday),
-                (exact_start_weekday, exact_end_weekday)
+                (exact_start_weekday, exact_end_weekday),
             )
 
         @staticmethod
-        def hours_overlap(exact_weekday_range1: tuple[float, float], exact_weekday_range2: tuple[float, float]) -> float:
+        def hours_overlap(
+            exact_weekday_range1: tuple[float, float],
+            exact_weekday_range2: tuple[float, float],
+        ) -> float:
             start_weekday_1, end_weekday_1 = exact_weekday_range1
             start_weekday_2, end_weekday_2 = exact_weekday_range2
 
@@ -474,11 +584,15 @@ class ReservationRule(models.Model):
 
         @staticmethod
         def to_exact_num_days(time_: time) -> float:
-            return time_.hour / 24 + time_.minute / (24 * 60) + time_.second / (24 * 60 * 60)
+            return (
+                time_.hour / 24
+                + time_.minute / (24 * 60)
+                + time_.second / (24 * 60 * 60)
+            )
 
-        def overlap(self, other: 'ReservationRule.Period'):
+        def overlap(self, other: "ReservationRule.Period"):
             hours_overlap = self.hours_overlap(
                 (self.exact_start_weekday, self.exact_end_weekday),
-                (other.exact_start_weekday, other.exact_end_weekday)
+                (other.exact_start_weekday, other.exact_end_weekday),
             )
             return hours_overlap > 0

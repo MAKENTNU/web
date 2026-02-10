@@ -6,85 +6,126 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0008_remove_profile_card_id'),
+        ("checkin", "0008_remove_profile_card_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='image',
-            field=models.ImageField(blank=True, upload_to='profile', verbose_name='profile picture'),
+            model_name="profile",
+            name="image",
+            field=models.ImageField(
+                blank=True, upload_to="profile", verbose_name="profile picture"
+            ),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='last_checkin',
-            field=models.DateTimeField(auto_now=True, verbose_name='last checked in'),
+            model_name="profile",
+            name="last_checkin",
+            field=models.DateTimeField(auto_now=True, verbose_name="last checked in"),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='on_make',
-            field=models.BooleanField(default=False, verbose_name='checked in'),
+            model_name="profile",
+            name="on_make",
+            field=models.BooleanField(default=False, verbose_name="checked in"),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='user',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profile', to=settings.AUTH_USER_MODEL),
+            model_name="profile",
+            name="user",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="profile",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='registerprofile',
-            name='card_id',
-            field=models.CharField(max_length=100, verbose_name='card number'),
+            model_name="registerprofile",
+            name="card_id",
+            field=models.CharField(max_length=100, verbose_name="card number"),
         ),
         migrations.AlterField(
-            model_name='skill',
-            name='image',
-            field=models.ImageField(blank=True, upload_to='skills', verbose_name='illustration image'),
+            model_name="skill",
+            name="image",
+            field=models.ImageField(
+                blank=True, upload_to="skills", verbose_name="illustration image"
+            ),
         ),
         migrations.AlterField(
-            model_name='skill',
-            name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='title (Norwegian)'),
+            model_name="skill",
+            name="title",
+            field=models.CharField(
+                max_length=100, unique=True, verbose_name="title (Norwegian)"
+            ),
         ),
         migrations.AlterField(
-            model_name='skill',
-            name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='title (English)'),
+            model_name="skill",
+            name="title_en",
+            field=models.CharField(
+                blank=True,
+                max_length=100,
+                null=True,
+                unique=True,
+                verbose_name="title (English)",
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='creator',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='skill_suggestions', to='checkin.Profile'),
+            model_name="suggestskill",
+            name="creator",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="skill_suggestions",
+                to="checkin.Profile",
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='image',
-            field=models.ImageField(blank=True, upload_to='skills', verbose_name='illustration image'),
+            model_name="suggestskill",
+            name="image",
+            field=models.ImageField(
+                blank=True, upload_to="skills", verbose_name="illustration image"
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='title (Norwegian)'),
+            model_name="suggestskill",
+            name="title",
+            field=models.CharField(
+                max_length=100, unique=True, verbose_name="title (Norwegian)"
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='title (English)'),
+            model_name="suggestskill",
+            name="title_en",
+            field=models.CharField(
+                blank=True,
+                max_length=100,
+                null=True,
+                unique=True,
+                verbose_name="title (English)",
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='voters',
-            field=models.ManyToManyField(related_name='skill_suggestions_voted_for', to='checkin.Profile'),
+            model_name="suggestskill",
+            name="voters",
+            field=models.ManyToManyField(
+                related_name="skill_suggestions_voted_for", to="checkin.Profile"
+            ),
         ),
         migrations.AlterField(
-            model_name='userskill',
-            name='profile',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_skills', to='checkin.Profile'),
+            model_name="userskill",
+            name="profile",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="user_skills",
+                to="checkin.Profile",
+            ),
         ),
         migrations.AlterField(
-            model_name='userskill',
-            name='skill',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_skills', to='checkin.Skill'),
+            model_name="userskill",
+            name="skill",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="user_skills",
+                to="checkin.Skill",
+            ),
         ),
     ]

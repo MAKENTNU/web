@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+
 import os
 import sys
 
-sys.path.append('src')
+sys.path.append("src")
 
 
 def main():
@@ -11,7 +12,7 @@ def main():
     # IMPORTANT: Ensure this import is kept here, as it loads the envvars
     import env  # noqa: F401
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -23,5 +24,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

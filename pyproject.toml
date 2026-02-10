@@ -50,9 +50,14 @@ dependencies = [
 [dependency-groups]
 dev = [
   "django-debug-toolbar==6.0.0",
+  { include-group = "linting" },
 ]
 ci = [
   "coverage==7.10.6",
+  { include-group = "linting" },
+]
+linting = [
+  "pre-commit==4.3.0",
 ]
 
 [tool.uv]

@@ -10,22 +10,22 @@ from .models import Committee
 
 class CommitteeListView(ListView):
     model = Committee
-    queryset = Committee.objects.select_related('group')
-    template_name = 'groups/committee_list.html'
-    context_object_name = 'committees'
+    queryset = Committee.objects.select_related("group")
+    template_name = "groups/committee_list.html"
+    context_object_name = "committees"
 
 
 class CommitteeDetailView(DetailView):
     model = Committee
-    template_name = 'groups/committee_detail.html'
-    context_object_name = 'committee'
+    template_name = "groups/committee_detail.html"
+    context_object_name = "committee"
 
 
 class CommitteeUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
-    permission_required = ('groups.change_committee',)
+    permission_required = ("groups.change_committee",)
     model = Committee
     form_class = CommitteeForm
-    success_url = reverse_lazy('admin_committee_list')
+    success_url = reverse_lazy("admin_committee_list")
 
     back_button_link = success_url
     back_button_text = _("Admin page for committees")
@@ -35,8 +35,8 @@ class CommitteeUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, Upda
 
 
 class AdminCommitteeListView(PermissionRequiredMixin, ListView):
-    permission_required = ('groups.change_committee',)
+    permission_required = ("groups.change_committee",)
     model = Committee
-    queryset = Committee.objects.select_related('group')
-    template_name = 'groups/admin_committee_list.html'
-    context_object_name = 'committees'
+    queryset = Committee.objects.select_related("group")
+    template_name = "groups/admin_committee_list.html"
+    context_object_name = "committees"

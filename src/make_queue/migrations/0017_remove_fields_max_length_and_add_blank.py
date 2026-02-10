@@ -10,77 +10,104 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('make_queue', '0016_auto_20201103_1431'),
+        ("make_queue", "0016_auto_20201103_1431"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='machine',
-            name='location',
-            field=web.modelfields.UnlimitedCharField(verbose_name='location'),
+            model_name="machine",
+            name="location",
+            field=web.modelfields.UnlimitedCharField(verbose_name="location"),
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='location_url',
-            field=web.modelfields.URLTextField(verbose_name='location URL'),
+            model_name="machine",
+            name="location_url",
+            field=web.modelfields.URLTextField(verbose_name="location URL"),
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='machine_model',
-            field=web.modelfields.UnlimitedCharField(verbose_name='machine model'),
+            model_name="machine",
+            name="machine_model",
+            field=web.modelfields.UnlimitedCharField(verbose_name="machine model"),
         ),
         migrations.AlterField(
-            model_name='machine',
-            name='name',
-            field=web.modelfields.UnlimitedCharField(unique=True, verbose_name='name'),
+            model_name="machine",
+            name="name",
+            field=web.modelfields.UnlimitedCharField(unique=True, verbose_name="name"),
         ),
         migrations.AlterField(
-            model_name='machinetype',
-            name='name',
+            model_name="machinetype",
+            name="name",
             field=web.multilingual.modelfields.MultiLingualTextField(unique=True),
         ),
         migrations.AlterField(
-            model_name='printer3dcourse',
-            name='_card_number',
-            field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='card number'),
+            model_name="printer3dcourse",
+            name="_card_number",
+            field=card.modelfields.CardNumberField(
+                blank=True,
+                default="",
+                error_messages={"unique": "Card number already in use"},
+                max_length=10,
+                null=True,
+                unique=True,
+                verbose_name="card number",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='printer3dcourse',
-            name='name',
-            field=models.CharField(blank=True, max_length=256, verbose_name='full name'),
+            model_name="printer3dcourse",
+            name="name",
+            field=models.CharField(
+                blank=True, max_length=256, verbose_name="full name"
+            ),
         ),
         migrations.AlterField(
-            model_name='printer3dcourse',
-            name='username',
-            field=make_queue.models.fields.UsernameField(blank=True, max_length=32, unique=True, verbose_name='username'),
+            model_name="printer3dcourse",
+            name="username",
+            field=make_queue.models.fields.UsernameField(
+                blank=True, max_length=32, unique=True, verbose_name="username"
+            ),
         ),
         migrations.AlterField(
-            model_name='quota',
-            name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.machinetype', verbose_name='machine type'),
+            model_name="quota",
+            name="machine_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="quotas",
+                to="make_queue.machinetype",
+                verbose_name="machine type",
+            ),
         ),
         migrations.AlterField(
-            model_name='quota',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='user'),
+            model_name="quota",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="user",
+            ),
         ),
         migrations.AlterField(
-            model_name='reservation',
-            name='comment',
+            model_name="reservation",
+            name="comment",
             field=models.TextField(blank=True),
         ),
         migrations.AlterField(
-            model_name='reservation',
-            name='quota',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='make_queue.Quota'),
+            model_name="reservation",
+            name="quota",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="make_queue.Quota",
+            ),
         ),
         migrations.AlterField(
-            model_name='reservation',
-            name='special_text',
+            model_name="reservation",
+            name="special_text",
             field=web.modelfields.UnlimitedCharField(blank=True),
         ),
     ]

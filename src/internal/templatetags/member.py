@@ -42,17 +42,24 @@ def get_system_accesses(member: Member, user: User):
     :param user: The requesting user
     :return: A list of system accesses with their state
     """
-    return [(
-        access.get_name_display(),
-        access.value,
-        [_("No"), _("Yes")][access.value],
-        access.change_url if member.user == user or user.has_perm('internal.change_systemaccess') else "",
-    ) for access in member.system_accesses.all()]
+    return [
+        (
+            access.get_name_display(),
+            access.value,
+            [_("No"), _("Yes")][access.value],
+            access.change_url
+            if member.user == user or user.has_perm("internal.change_systemaccess")
+            else "",
+        )
+        for access in member.system_accesses.all()
+    ]
 
 
 # noinspection PyPep8Naming
 @register.simple_tag
-def color_for_committee(committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg_prefixed=False):
+def color_for_committee(
+    committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg_prefixed=False
+):
     prefix = ""
     if MAKE_col_prefixed:
         prefix = "make-col-"
@@ -60,11 +67,11 @@ def color_for_committee(committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg
         prefix = "make-bg-"
 
     committee_to_color = {
-        'dev': "green",
-        'event': "blue",
-        'mentor': "red",
-        'pr': f"{prefix}yellow",
-        'styret': "purple",
+        "dev": "green",
+        "event": "blue",
+        "mentor": "red",
+        "pr": f"{prefix}yellow",
+        "styret": "purple",
     }
     return committee_to_color.get(committee_name.lower(), "")
 
