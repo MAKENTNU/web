@@ -6,6 +6,7 @@ from js_asset import JS
 
 from users.models import User
 from web.widgets import SemanticChoiceInput, SemanticSearchableChoiceInput
+
 from ..formfields import UserModelChoiceField
 from ..models.machine import MachineType
 from ..models.reservation import Quota

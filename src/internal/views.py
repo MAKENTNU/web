@@ -14,6 +14,7 @@ from django.views.generic.detail import SingleObjectMixin
 from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+
 from .forms import (
     AddMemberForm,
     ChangeMemberForm,

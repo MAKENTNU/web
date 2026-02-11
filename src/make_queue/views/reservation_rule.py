@@ -12,6 +12,7 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     insert_form_field_values,
 )
+
 from ..forms.reservation_rule import ReservationRuleForm
 from ..models.reservation import Quota, ReservationRule
 from ..views.machine import MachineTypeRelatedViewMixin

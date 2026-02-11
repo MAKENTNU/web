@@ -10,7 +10,6 @@ from django_hosts import reverse
 
 from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
 
-
 urlpatterns = [
     path(
         "robots.txt",

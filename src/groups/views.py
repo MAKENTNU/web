@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin
+
 from .forms import CommitteeForm
 from .models import Committee
 

@@ -5,6 +5,7 @@ from django.test import TestCase
 from news.models import Article
 from users.models import User
 from util.auth_utils import perm_to_str
+
 from ..models import Committee, InheritanceGroup
 
 

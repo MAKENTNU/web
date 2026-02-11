@@ -11,8 +11,8 @@ from util.url_utils import (
     logout_urls,
     permission_required_else_denied,
 )
-from . import views
 
+from . import views
 
 urlpatterns = [
     path(

@@ -18,6 +18,7 @@ from util.admin_utils import (
 )
 from util.locale_utils import short_datetime_format
 from util.templatetags.html_tags import anchor_tag, urlize_target_blank
+
 from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 

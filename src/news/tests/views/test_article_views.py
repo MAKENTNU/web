@@ -7,7 +7,8 @@ from django.utils import timezone
 from django_hosts import reverse
 
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
+from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
+
 from ...models import Article
 
 

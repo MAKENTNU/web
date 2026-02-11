@@ -37,7 +37,7 @@ from util.view_utils import (
     QueryParameterFormMixin,
     insert_form_field_values,
 )
-from .article import NewsBaseFormMixin
+
 from ..forms import (
     EventForm,
     EventParticipantsSearchQueryForm,
@@ -45,6 +45,7 @@ from ..forms import (
     TimePlaceForm,
 )
 from ..models import Event, EventQuerySet, EventTicket, TimePlace, User
+from .article import NewsBaseFormMixin
 
 
 class EventListView(ListView):

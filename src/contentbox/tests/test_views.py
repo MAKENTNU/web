@@ -14,12 +14,13 @@ from util.test_utils import assertRedirectsWithPathPrefix
 from util.url_utils import reverse_admin
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
+
+from ..forms import ContentBoxForm, EditSourceContentBoxForm
+from ..models import ContentBox
 from .urls import hosts, urls_main
 from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
 from .urls.urls_internal import INTERNAL_TEST_URL_NAME, internal_change_perm
 from .urls.urls_main import TEST_MULTI_URL_NAMES, TEST_URL_NAME
-from ..forms import ContentBoxForm, EditSourceContentBoxForm
-from ..models import ContentBox
 
 
 @override_settings(

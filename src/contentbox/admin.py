@@ -4,6 +4,7 @@ from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import DefaultAdminWidgetsMixin, search_escaped_and_unescaped
+
 from .models import ContentBox
 
 

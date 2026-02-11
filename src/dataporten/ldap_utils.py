@@ -6,7 +6,6 @@ import ldap
 
 from users.models import User
 
-
 LDAP_HOST = "ldap://at.ntnu.no"
 LDAP_BASE = "dc=ntnu, dc=no"
 

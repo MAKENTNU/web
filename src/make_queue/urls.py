@@ -11,7 +11,6 @@ from .views import (
     reservation_rule as reservation_rule_views,
 )
 
-
 specific_machinetype_urlpatterns = [
     path(
         "reservationrules/",

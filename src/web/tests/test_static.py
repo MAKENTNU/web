@@ -5,7 +5,6 @@ from django.contrib.staticfiles import finders
 from django.templatetags.static import static
 from django.test import LiveServerTestCase, override_settings
 
-
 MANIFEST_HEX_SUFFIX_REGEX = r"\.[0-9a-f]{12}"
 
 

@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 
 from web.widgets import SemanticChoiceInput, SemanticDateTimeInput
+
 from .models import Announcement
 
 

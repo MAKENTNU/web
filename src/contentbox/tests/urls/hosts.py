@@ -15,8 +15,8 @@ settings.ALL_SUBDOMAINS = (
 settings.ALLOWED_REDIRECT_HOSTS = generate_all_hosts(settings.ALL_SUBDOMAINS)
 
 from web.hosts import host_patterns as base_host_patterns  # noqa: E402
-from . import urls_internal, urls_main  # noqa: E402
 
+from . import urls_internal, urls_main  # noqa: E402
 
 host_patterns = base_host_patterns + [
     host(r"test-internal", urls_internal.__name__, name="test_internal"),

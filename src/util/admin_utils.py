@@ -18,7 +18,7 @@ from card.widgets import CardNumberInput
 from users.models import User
 from util.html_utils import escape_to_named_characters
 from util.templatetags.html_tags import anchor_tag
-from web.modelfields import URLTextField, UnlimitedCharField
+from web.modelfields import UnlimitedCharField, URLTextField
 from web.multilingual.admin import create_multi_lingual_admin_formfield
 
 

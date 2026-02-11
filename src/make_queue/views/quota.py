@@ -21,6 +21,7 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
+
 from ..forms.quota import AdminQuotaPanelQueryForm, QuotaForm
 from ..models.reservation import Quota
 

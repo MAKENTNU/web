@@ -18,7 +18,6 @@ django_asgi_app = get_asgi_application()
 
 from mail.email import EmailConsumer  # noqa: E402
 
-
 channel_routes = {
     "email": EmailConsumer.as_asgi(),
 }

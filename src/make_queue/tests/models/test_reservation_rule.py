@@ -7,7 +7,6 @@ from ...forms.reservation_rule import ReservationRuleForm
 from ...models.machine import MachineType
 from ...models.reservation import ReservationRule
 
-
 Day = ReservationRule.Day
 Period = ReservationRule.Period
 

@@ -12,12 +12,12 @@ from django_hosts import reverse
 from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import parse_datetime_localized
+
 from ...api.views import APIReservationListView
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 from ...templatetags.reservation_extra import can_change_reservation
-
 
 Day = ReservationRule.Day
 

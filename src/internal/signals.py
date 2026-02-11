@@ -1,6 +1,7 @@
 from django.db.models.signals import m2m_changed
 
 from groups.models import Committee
+
 from .models import Member
 
 

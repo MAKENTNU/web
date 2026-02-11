@@ -8,8 +8,8 @@ from django_hosts import reverse
 from news.models import Event, TimePlace
 from users.models import User
 from util.test_utils import (
-    CleanUpTempFilesTestMixin,
     MOCK_JPG_FILE,
+    CleanUpTempFilesTestMixin,
     assertRedirectsWithPathPrefix,
 )
 from web.views import IndexPageView

@@ -13,9 +13,10 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from card.views import RFIDView
-from util.view_utils import PreventGetRequestsMixin
-from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 from make_queue.models.course import CoursePermission
+from util.view_utils import PreventGetRequestsMixin
+
+from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
 class AdminCheckInView(RFIDView):

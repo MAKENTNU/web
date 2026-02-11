@@ -18,6 +18,7 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
+
 from ..forms.machine import AddMachineForm, ChangeMachineForm, MachineDetailQueryForm
 from ..forms.reservation import ReservationListQueryForm
 from ..models.machine import Machine, MachineType, MachineUsageRule

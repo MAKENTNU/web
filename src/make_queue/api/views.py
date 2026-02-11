@@ -12,13 +12,14 @@ from util.view_utils import (
     QueryParameterFormMixin,
     UTF8JsonResponse,
 )
-from .forms import APIMachineDataQueryForm, APIReservationListQueryForm
+
 from ..models.reservation import Quota, Reservation, ReservationRule
 from ..templatetags.reservation_extra import (
     can_delete_reservation,
     can_mark_reservation_finished,
 )
 from ..views.machine import MachineRelatedViewMixin, MachineTypeRelatedViewMixin
+from .forms import APIMachineDataQueryForm, APIReservationListQueryForm
 
 
 class APIMachineDataView(

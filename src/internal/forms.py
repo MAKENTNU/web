@@ -10,6 +10,7 @@ from web.widgets import (
     SemanticMultipleSelectInput,
     SemanticSearchableChoiceInput,
 )
+
 from .models import Member, Quote, Secret, SystemAccess
 
 

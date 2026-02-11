@@ -3,12 +3,13 @@ from django.test import TestCase
 from django_hosts import reverse
 
 from util.test_utils import (
+    MOCK_JPG_FILE,
     CleanUpTempFilesTestMixin,
     Get,
-    MOCK_JPG_FILE,
     assert_requesting_paths_succeeds,
     generate_all_admin_urls_for_model_and_objs,
 )
+
 from ..models import Committee, InheritanceGroup
 
 

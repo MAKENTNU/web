@@ -8,6 +8,7 @@ from social_django.models import UserSocialAuth
 
 from users.models import User
 from util.test_utils import mock_module_attrs
+
 from .. import views
 from ..social import DataportenOAuth2
 

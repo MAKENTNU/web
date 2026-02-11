@@ -14,6 +14,7 @@ from django.views.generic import (
 from contentbox.views import ContentBoxDetailView
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+
 from .forms import EquipmentForm
 from .models import Equipment
 

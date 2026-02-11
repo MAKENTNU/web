@@ -7,14 +7,14 @@ from contentbox.models import ContentBox
 from users.models import User
 from util.test_utils import (
     Get,
-    assertRedirectsWithPathPrefix,
     assert_requesting_paths_succeeds,
+    assertRedirectsWithPathPrefix,
     generate_all_admin_urls_for_model_and_objs,
 )
 from util.url_utils import reverse_internal
+
 from ..forms import MemberStatusForm
 from ..models import Member, Quote, Secret, SystemAccess
-
 
 # Makes sure that the subdomain of all requests is `i`
 INTERNAL_CLIENT_DEFAULTS = {"SERVER_NAME": f"i.{settings.PARENT_HOST}"}

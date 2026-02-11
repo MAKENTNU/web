@@ -12,6 +12,7 @@ from django.views.generic import (
 )
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+
 from ..forms import ArticleForm, NewsBaseForm
 from ..models import Article, NewsBase
 

@@ -3,7 +3,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     # This path is currently not in use
     # path("", views.UserSkillListView.as_view(), name='user_skill_list'),

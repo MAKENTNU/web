@@ -3,7 +3,8 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
+from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
+
 from ...forms import TimePlaceForm
 from ...models import Event
 

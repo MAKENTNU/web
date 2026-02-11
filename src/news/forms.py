@@ -11,6 +11,7 @@ from web.widgets import (
     SemanticDateTimeInput,
     SemanticFileInput,
 )
+
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 

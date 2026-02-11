@@ -4,12 +4,13 @@ from django.contrib.auth.models import Group
 from django.test import TestCase
 
 from users.models import User
-from . import test_test_utils_helper_funcs
+
 from ..test_utils import (
     generate_all_admin_urls_for_model_and_objs,
     mock_module_attrs,
     set_without_duplicates,
 )
+from . import test_test_utils_helper_funcs
 
 
 def original_func_monkey_patched(arg):

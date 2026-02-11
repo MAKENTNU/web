@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from web.widgets import Direction, DirectionalCheckboxSelectMultiple, SemanticTimeInput
+
 from ..models.machine import MachineType
 from ..models.reservation import ReservationRule
 

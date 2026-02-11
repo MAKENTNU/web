@@ -160,17 +160,6 @@ For example:<br/>`_("{chant} Batman!").format(chant="NaN" * 15)` (where `gettext
 
 #### Imports
 
-Group imports in three "paragraphs" (separated by an empty line) in the following order:
-1. Modules from Python's standard library
-2. Third-party modules
-3. Modules part of this project
-
-Within each import group/paragraph, sort plain imports first, followed by `from` imports.
-Additionally, sort imports alphabetically, including names listed in `from` imports.
-<br/>*Tip: All of this can easily be done using PyCharm's
-[Optimize Imports feature](https://www.jetbrains.com/pycharm/guide/tips/optimize-imports/) (<kbd>Ctrl+Alt+O</kbd>/<kbd>⌃⌥O</kbd> by default) -
-possibly requiring some tweaking of the settings.*
-
 All imports in a file that are from the same app as the mentioned file, should be relative
 (e.g. `from .models import User` or `from .. import views`).
 

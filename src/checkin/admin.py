@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from util.admin_utils import DefaultAdminWidgetsMixin
+
 from .models import Profile, Skill, SuggestSkill, UserSkill
 
 

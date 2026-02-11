@@ -1,6 +1,7 @@
 from django import forms
 
 from web.widgets import SemanticFileInput
+
 from .models import Equipment
 
 

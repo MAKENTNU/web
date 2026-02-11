@@ -11,6 +11,7 @@ from util.test_utils import (
     assertRaisesIntegrityError_withRollback,
     set_without_duplicates,
 )
+
 from ...models import Article, Event, EventTicket, TimePlace
 
 

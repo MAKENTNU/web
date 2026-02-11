@@ -5,6 +5,7 @@ from django.views.generic import FormView
 from django.views.generic.detail import SingleObjectMixin
 
 from util.view_utils import PreventGetRequestsMixin, UTF8JsonResponse
+
 from ..forms import ToggleForm
 from ..models import Article, Event, TimePlace
 from ..views.event import TimePlaceRelatedViewMixin
