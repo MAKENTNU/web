@@ -677,7 +677,6 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
     - [Translations only differing in case](#translations-only-differing-in-case)
 * [Python](#python-1)
   + [For code in general](#for-code-in-general-4)
-    - [Unused imports](#unused-imports)
     - [Unnecessary `print` statements](#unnecessary-print-statements)
     - [Variable, function or class names shadowing built-in or imported names](#variable-function-or-class-names-shadowing-built-in-or-imported-names)
     - [Exception clause is too broad](#exception-clause-is-too-broad)
@@ -796,10 +795,6 @@ the latter instance can be replaced by `capfirst(_("event"))` in Python code, an
 ## Python
 
 ### For code in general
-
-#### Unused imports
-
-Unused imports should be removed.
 
 #### Unnecessary `print` statements
 

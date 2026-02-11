@@ -8,7 +8,6 @@ import django.db.models.deletion
 import internal.modelfields
 import internal.validators
 import phonenumber_field.modelfields
-import re
 import simple_history.models
 import web.modelfields
 

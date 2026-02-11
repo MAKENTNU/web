@@ -69,6 +69,7 @@ format.docstring-code-format = true
 
 lint.select = [
   "E", # flake8/pycodestyle (Error)
+  "F", # flake8/Pyflakes
 ]
 
 # Disable line length check in migrations

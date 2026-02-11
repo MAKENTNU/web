@@ -1,6 +1,6 @@
 from typing import Type
 
-from django.contrib.auth.models import AbstractUser, Permission
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Value
 from django.db.models.functions import Concat
