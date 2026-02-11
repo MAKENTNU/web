@@ -5,6 +5,7 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin
+
 from .models import User
 
 

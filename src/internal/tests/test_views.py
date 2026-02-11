@@ -15,8 +15,9 @@ from util.auth_utils import get_perms, perm_to_str
 from util.url_utils import reverse_admin, reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
-from .test_urls import INTERNAL_CLIENT_DEFAULTS
+
 from ..models import Secret
+from .test_urls import INTERNAL_CLIENT_DEFAULTS
 
 
 class InternalContentBoxTests(TestCase):

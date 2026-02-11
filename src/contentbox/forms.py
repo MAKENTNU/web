@@ -5,6 +5,7 @@ from web.multilingual.widgets import (
     MultiLingualRichTextUploading,
     MultiLingualTextInput,
 )
+
 from .models import ContentBox
 
 

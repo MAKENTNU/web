@@ -13,6 +13,7 @@ from django.views.generic import (
 
 from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+
 from .forms import CategoryForm, QuestionForm
 from .models import Category, Question
 

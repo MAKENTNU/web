@@ -22,13 +22,14 @@ from util.view_utils import (
     QueryParameterFormMixin,
     insert_form_field_values,
 )
+
 from .forms import (
     AddPageForm,
     ChangePageVersionForm,
     DocumentationPageSearchQueryForm,
     PageContentForm,
 )
-from .models import Content, MAIN_PAGE_TITLE, Page
+from .models import MAIN_PAGE_TITLE, Content, Page
 
 
 class DocumentationPageRelatedViewMixin:

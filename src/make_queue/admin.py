@@ -8,10 +8,11 @@ from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
     UserSearchFieldsMixin,
-    search_escaped_and_unescaped,
     link_to_admin_change_form,
+    search_escaped_and_unescaped,
 )
 from util.templatetags.html_tags import anchor_tag
+
 from .models.course import CoursePermission, Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule

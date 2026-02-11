@@ -18,8 +18,8 @@ from django.utils import translation
 from django.utils.dateparse import parse_time
 
 from users.models import User
-from .url_utils import reverse_admin
 
+from .url_utils import reverse_admin
 
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=models.Model)

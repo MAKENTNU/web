@@ -12,8 +12,8 @@ from django_hosts import reverse_lazy
 
 import env
 from env import DatabaseSystem
-from .static import serve_interpolated
 
+from .static import serve_interpolated
 
 is_testing = "test" in sys.argv
 # Disable logging when testing

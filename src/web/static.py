@@ -11,7 +11,6 @@ from django.contrib.staticfiles.storage import (
 from django.http import FileResponse
 from django.views.static import serve
 
-
 # The glob pattern for the files that should have their contents interpolated (as in
 # https://en.wikipedia.org/wiki/String_interpolation)
 INTERPOLATION_GLOB_PATTERN = "*.interpolated.*"

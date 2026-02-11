@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from news.models import TimePlace
 from web.widgets import SemanticChoiceInput
+
 from ..models.machine import Machine, MachineType
 
 

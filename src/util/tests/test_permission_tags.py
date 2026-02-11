@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group
 from django.test import TestCase
 
 from users.models import User
+
 from ..auth_utils import get_perm
 from ..templatetags.permission_tags import can_view_admin_panel, has_any_permissions_for
 

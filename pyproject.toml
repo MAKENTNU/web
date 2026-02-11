@@ -70,10 +70,13 @@ format.docstring-code-format = true
 lint.select = [
   "E", # flake8/pycodestyle (Error)
   "F", # flake8/Pyflakes
+  "I", # isort
 ]
 
 # Disable line length check in migrations
 lint.per-file-ignores."**/migrations/**" = [ "E501" ]
+
+lint.isort.combine-as-imports = true
 
 # Ignore E501 for comments starting with TODO, FIXME, etc.
 lint.pycodestyle.ignore-overlong-task-comments = true

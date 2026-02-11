@@ -12,11 +12,12 @@ from simple_history.models import HistoricalRecords
 
 from users.models import User
 from util.validators import lowercase_slug_validator
-from web.modelfields import URLTextField, UnlimitedCharField
+from web.modelfields import UnlimitedCharField, URLTextField
 from web.multilingual.modelfields import (
     MultiLingualRichTextUploadingField,
     MultiLingualTextField,
 )
+
 from .course import CoursePermission, Printer3DCourse
 
 

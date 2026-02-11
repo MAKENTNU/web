@@ -2,8 +2,8 @@
 
 import django.contrib.auth.models
 import django.contrib.auth.validators
-from django.db import migrations, models
 import django.utils.timezone
+from django.db import migrations, models
 
 """
 This migration will fail if the database is non-empty. One has to manually replace the default Django user model

@@ -11,8 +11,8 @@ from util.test_utils import (
     generate_all_admin_urls_for_model_and_objs,
 )
 from util.url_utils import reverse_docs
-from ..models import Content, Page
 
+from ..models import Content, Page
 
 # Makes sure that the subdomain of all requests is `docs`
 DOCS_CLIENT_DEFAULTS = {"SERVER_NAME": f"docs.{settings.PARENT_HOST}"}

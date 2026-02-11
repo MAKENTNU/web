@@ -4,6 +4,7 @@ import json
 import ckeditor_uploader.fields
 from django.conf import settings
 from django.db import migrations
+
 import web.modelfields
 from web.multilingual.data_structures import MultiLingualTextStructure
 

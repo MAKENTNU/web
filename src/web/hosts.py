@@ -1,7 +1,6 @@
 from django.conf import settings
 from django_hosts import host
 
-
 host_patterns = [
     host(r"(i|internal|internt)", "internal.urls", name="internal"),
     host(r"admin", "web.admin_urls", name="admin"),

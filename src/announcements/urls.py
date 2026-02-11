@@ -2,7 +2,6 @@ from django.urls import include, path
 
 from . import views
 
-
 urlpatterns = []
 
 # --- Admin URL patterns (imported in `web/urls.py`) ---

@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+
 from .forms import AnnouncementForm
 from .models import Announcement
 

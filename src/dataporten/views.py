@@ -8,6 +8,7 @@ from social_django.models import UserSocialAuth
 
 from users.models import User
 from util.logging_utils import log_request_exception
+
 from . import ldap_utils
 
 # Assign these functions to module-level variables, to facilitate testing (through

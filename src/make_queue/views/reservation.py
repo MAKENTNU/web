@@ -15,7 +15,7 @@ from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import QueryParameterFormMixin
-from .machine import MachineRelatedViewMixin
+
 from ..forms.reservation import (
     ReservationFindFreeSlotsForm,
     ReservationForm,
@@ -27,6 +27,7 @@ from ..templatetags.reservation_extra import (
     calendar_url_reservation,
     can_change_reservation,
 )
+from .machine import MachineRelatedViewMixin
 
 
 # TODO: rewrite this whole view (and everything that uses it), so that it's more

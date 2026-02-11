@@ -11,7 +11,7 @@ from users.models import User
 from util.locale_utils import short_date_format
 from util.modelfields import CompressedImageField
 from util.storage import OverwriteStorage, UploadToUtils
-from web.modelfields import URLTextField, UnlimitedCharField
+from web.modelfields import UnlimitedCharField, URLTextField
 from web.multilingual.modelfields import (
     MultiLingualRichTextUploadingField,
     MultiLingualTextField,

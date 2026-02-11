@@ -2,11 +2,11 @@ import os
 import sys
 from io import BytesIO
 
-from PIL import Image
 from django import forms
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.db.models.fields.files import ImageFieldFile
+from PIL import Image
 
 from util.file_utils import file_contents_equal, filenames_equal
 from util.logging_utils import get_request_logger

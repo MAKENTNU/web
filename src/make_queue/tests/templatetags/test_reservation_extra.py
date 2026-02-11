@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
+
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation

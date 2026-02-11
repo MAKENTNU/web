@@ -5,6 +5,7 @@ from django.test import SimpleTestCase
 from django.utils.dateparse import parse_datetime
 
 from make_queue.models.reservation import ReservationRule
+
 from ..locale_utils import (
     exact_weekday_to_day_name,
     timedelta_to_hours,

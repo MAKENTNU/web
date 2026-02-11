@@ -11,7 +11,6 @@ from django.utils.formats import time_format
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
-
 from news.models import TimePlace
 from users.models import User
 from util.locale_utils import (
@@ -20,7 +19,8 @@ from util.locale_utils import (
     timedelta_to_hours,
 )
 from util.model_utils import ComparisonType, comparison_boilerplate
-from web.modelfields import UnlimitedCharField, MultiSelectField
+from web.modelfields import MultiSelectField, UnlimitedCharField
+
 from .machine import Machine, MachineType
 
 

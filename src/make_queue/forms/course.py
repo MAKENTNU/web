@@ -10,6 +10,7 @@ from web.widgets import (
     SemanticDateInput,
     SemanticSearchableChoiceInput,
 )
+
 from ..models.course import CoursePermission, Printer3DCourse
 
 

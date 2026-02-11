@@ -6,7 +6,6 @@ from django.utils.formats import date_format
 from django.utils.timezone import make_aware
 from django.utils.translation import ngettext_lazy
 
-
 DEFAULT_TIMEZONE = timezone.get_default_timezone()
 # Code based on https://github.com/django/django/blob/9736596bce4f711ccf2914284938d85748838c94/django/utils/timesince.py#L8-L15
 TIME_STRINGS = {

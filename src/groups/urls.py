@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path("", views.CommitteeListView.as_view(), name="committee_list"),
     path("<int:pk>/", views.CommitteeDetailView.as_view(), name="committee_detail"),

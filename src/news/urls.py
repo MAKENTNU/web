@@ -5,7 +5,6 @@ from .api import views as api_views
 from .ical import SingleTimePlaceFeed
 from .views import article as article_views, event as event_views
 
-
 article_urlpatterns = [
     path("", article_views.ArticleListView.as_view(), name="article_list"),
     path("<int:pk>/", article_views.ArticleDetailView.as_view(), name="article_detail"),

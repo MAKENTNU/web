@@ -12,8 +12,9 @@ from django_hosts import reverse
 
 from users.models import User
 from util.model_utils import duplicate
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
+from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
 from web.multilingual.data_structures import MultiLingualTextStructure
+
 from ...models import Event, EventTicket, TimePlace
 
 

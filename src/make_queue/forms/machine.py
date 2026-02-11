@@ -10,6 +10,7 @@ from js_asset import JS
 from util.locale_utils import last_week_of_year, year_and_week_to_monday
 from util.templatetags.datetime_tags import long_datetime
 from web.widgets import MazeMapSearchInput, SemanticChoiceInput
+
 from ..models.machine import Machine, MachineType
 
 

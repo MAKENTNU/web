@@ -9,6 +9,7 @@ from util.admin_utils import (
     UserSearchFieldsMixin,
     search_escaped_and_unescaped,
 )
+
 from .models import Member, Quote, Secret, SystemAccess
 
 

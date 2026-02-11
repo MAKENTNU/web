@@ -25,6 +25,7 @@ from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
+
 from ..models import ContentBox
 from ..views import ContentBoxDetailView
 

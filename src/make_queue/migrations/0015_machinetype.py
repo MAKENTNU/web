@@ -2,8 +2,8 @@
 import json
 from typing import Union
 
-from django.db import migrations, models
 import django.db.models.deletion
+from django.db import migrations, models
 
 import web.multilingual.modelfields
 from web.multilingual.data_structures import MultiLingualTextStructure

@@ -11,8 +11,8 @@ from util.url_utils import (
     logout_urls,
     permission_required_else_denied,
 )
-from . import converters, views
 
+from . import converters, views
 
 register_converter(converters.SpecificPageByTitle, "PageTitle")
 
