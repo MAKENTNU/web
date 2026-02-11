@@ -12,10 +12,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
 from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
-from make_queue.models.course import Printer3DCourse
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-
-from .forms import (
+from internal.forms import (
     AddMemberForm,
     ChangeMemberForm,
     MemberQuitForm,
@@ -26,7 +23,9 @@ from .forms import (
     SecretsForm,
     SystemAccessValueForm,
 )
-from .models import Member, Quote, Secret, SystemAccess
+from internal.models import Member, Quote, Secret, SystemAccess
+from make_queue.models.course import Printer3DCourse
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 
 
 class InternalContentBoxDetailView(ContentBoxDetailView):

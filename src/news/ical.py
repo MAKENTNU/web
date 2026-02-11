@@ -1,7 +1,7 @@
 from django.conf import settings
 from django_ical.views import ICalFeed
 
-from .models import TimePlace
+from news.models import TimePlace
 
 
 class EventFeed(ICalFeed):

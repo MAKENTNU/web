@@ -4,11 +4,10 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.utils import timezone
 
+from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.machine import Machine, MachineType
+from make_queue.models.reservation import Quota, Reservation
 from users.models import User
-
-from ...models.course import CoursePermission, Printer3DCourse
-from ...models.machine import Machine, MachineType
-from ...models.reservation import Quota, Reservation
 
 
 class TestGenericMachine(TestCase):

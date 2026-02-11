@@ -6,11 +6,10 @@ from django.test import TestCase
 from django_hosts import reverse
 from social_django.models import UserSocialAuth
 
+from dataporten import views
+from dataporten.social import DataportenOAuth2
 from users.models import User
 from util.test_utils import mock_module_attrs
-
-from .. import views
-from ..social import DataportenOAuth2
 
 
 def mock_complete(*args, **kwargs):

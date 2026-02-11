@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django_hosts import reverse
 
+from makerspace.models import Equipment
 from util.test_utils import (
     MOCK_JPG_FILE,
     CleanUpTempFilesTestMixin,
@@ -8,8 +9,6 @@ from util.test_utils import (
     assert_requesting_paths_succeeds,
     generate_all_admin_urls_for_model_and_objs,
 )
-
-from ..models import Equipment
 
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):

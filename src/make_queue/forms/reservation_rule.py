@@ -1,10 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.machine import MachineType
+from make_queue.models.reservation import ReservationRule
 from web.widgets import Direction, DirectionalCheckboxSelectMultiple, SemanticTimeInput
-
-from ..models.machine import MachineType
-from ..models.reservation import ReservationRule
 
 
 class ReservationRuleForm(forms.ModelForm):

@@ -6,10 +6,9 @@ from django.test import TestCase
 from django.utils import timezone
 from django_hosts import reverse
 
+from news.models import Article
 from users.models import User
 from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
-
-from ...models import Article
 
 
 class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):

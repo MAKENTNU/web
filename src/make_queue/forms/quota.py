@@ -4,12 +4,11 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from js_asset import JS
 
+from make_queue.formfields import UserModelChoiceField
+from make_queue.models.machine import MachineType
+from make_queue.models.reservation import Quota
 from users.models import User
 from web.widgets import SemanticChoiceInput, SemanticSearchableChoiceInput
-
-from ..formfields import UserModelChoiceField
-from ..models.machine import MachineType
-from ..models.reservation import Quota
 
 
 class QuotaForm(forms.ModelForm):

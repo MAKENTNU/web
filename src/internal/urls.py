@@ -5,14 +5,13 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from internal import views
 from util.url_utils import (
     ckeditor_uploader_urls,
     debug_toolbar_urls,
     logout_urls,
     permission_required_else_denied,
 )
-
-from . import views
 
 urlpatterns = [
     path(

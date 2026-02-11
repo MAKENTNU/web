@@ -2,8 +2,8 @@ from unittest import mock
 
 from django.test import TestCase
 
-from ..locale_utils import parse_datetime_localized
-from ..templatetags.datetime_tags import formatted_localtime
+from util.locale_utils import parse_datetime_localized
+from util.templatetags.datetime_tags import formatted_localtime
 
 
 class TemplateTagTestCases(TestCase):

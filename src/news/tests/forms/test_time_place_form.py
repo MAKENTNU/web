@@ -3,10 +3,9 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
+from news.forms import TimePlaceForm
+from news.models import Event
 from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
-
-from ...forms import TimePlaceForm
-from ...models import Event
 
 
 class FormTestCase(CleanUpTempFilesTestMixin, TestCase):

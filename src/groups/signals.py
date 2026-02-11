@@ -1,6 +1,6 @@
 from django.db.models.signals import m2m_changed
 
-from .models import InheritanceGroup
+from groups.models import InheritanceGroup
 
 
 def update_permissions(instance: InheritanceGroup, action, reverse, **kwargs):

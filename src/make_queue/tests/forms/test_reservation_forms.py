@@ -3,10 +3,9 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
+from make_queue.forms.reservation import ReservationForm
+from make_queue.models.machine import Machine, MachineType
 from news.models import Event, TimePlace
-
-from ...forms.reservation import ReservationForm
-from ...models.machine import Machine, MachineType
 
 
 class TestReservationForm(TestCase):

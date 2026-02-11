@@ -11,6 +11,7 @@ from django.utils.formats import time_format
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.machine import Machine, MachineType
 from news.models import TimePlace
 from users.models import User
 from util.locale_utils import (
@@ -20,8 +21,6 @@ from util.locale_utils import (
 )
 from util.model_utils import ComparisonType, comparison_boilerplate
 from web.modelfields import MultiSelectField, UnlimitedCharField
-
-from .machine import Machine, MachineType
 
 
 class Quota(models.Model):

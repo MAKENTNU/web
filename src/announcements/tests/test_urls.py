@@ -2,13 +2,12 @@ from django.test import TestCase
 from django.utils import timezone
 from django_hosts import reverse
 
+from announcements.models import Announcement
 from util.test_utils import (
     Get,
     assert_requesting_paths_succeeds,
     generate_all_admin_urls_for_model_and_objs,
 )
-
-from ..models import Announcement
 
 
 class UrlTests(TestCase):

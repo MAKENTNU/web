@@ -4,6 +4,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
 
+from docs.models import Content, Page
 from users.models import User
 from util.test_utils import (
     Get,
@@ -11,8 +12,6 @@ from util.test_utils import (
     generate_all_admin_urls_for_model_and_objs,
 )
 from util.url_utils import reverse_docs
-
-from ..models import Content, Page
 
 # Makes sure that the subdomain of all requests is `docs`
 DOCS_CLIENT_DEFAULTS = {"SERVER_NAME": f"docs.{settings.PARENT_HOST}"}

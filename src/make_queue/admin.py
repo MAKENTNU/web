@@ -4,6 +4,9 @@ from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.machine import Machine, MachineType, MachineUsageRule
+from make_queue.models.reservation import Quota, Reservation, ReservationRule
 from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
@@ -12,10 +15,6 @@ from util.admin_utils import (
     search_escaped_and_unescaped,
 )
 from util.templatetags.html_tags import anchor_tag
-
-from .models.course import CoursePermission, Printer3DCourse
-from .models.machine import Machine, MachineType, MachineUsageRule
-from .models.reservation import Quota, Reservation, ReservationRule
 
 
 class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):

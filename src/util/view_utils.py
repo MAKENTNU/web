@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import RedirectView, TemplateResponseMixin, View
 from django.views.generic.edit import FormMixin
 
-from .url_utils import urljoin_query
+from util.url_utils import urljoin_query
 
 
 def insert_form_field_values(form_kwargs: dict, field_name_to_value: dict[str, Any]):

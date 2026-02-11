@@ -3,11 +3,10 @@ from unittest import mock
 
 from django.test import TestCase
 
+from make_queue.forms.machine import AddMachineForm, ChangeMachineForm
+from make_queue.models.machine import Machine, MachineType
 from util.locale_utils import parse_datetime_localized
 from util.test_utils import with_time
-
-from ...forms.machine import AddMachineForm, ChangeMachineForm
-from ...models.machine import Machine, MachineType
 
 
 class TestCreateMachineForm(TestCase):

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .api import views as api_views
+from users.api import views as api_views
 
 # --- Admin API URL patterns (imported in `web/urls.py`) ---
 

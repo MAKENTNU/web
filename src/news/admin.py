@@ -8,6 +8,8 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from news.forms import ArticleForm, EventForm, NewsBaseForm
+from news.models import Article, Event, EventTicket, NewsBase, TimePlace
 from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
@@ -18,9 +20,6 @@ from util.admin_utils import (
 )
 from util.locale_utils import short_datetime_format
 from util.templatetags.html_tags import anchor_tag, urlize_target_blank
-
-from .forms import ArticleForm, EventForm, NewsBaseForm
-from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class NewsBaseAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):

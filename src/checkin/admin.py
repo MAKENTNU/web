@@ -1,8 +1,7 @@
 from django.contrib import admin
 
+from checkin.models import Profile, Skill, SuggestSkill, UserSkill
 from util.admin_utils import DefaultAdminWidgetsMixin
-
-from .models import Profile, Skill, SuggestSkill, UserSkill
 
 
 class ProfileAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):

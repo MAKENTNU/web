@@ -3,8 +3,8 @@ import copy
 import ckeditor.widgets
 from django.conf import settings
 
-from .modelfields import MultiLingualTextField
-from .widgets import MultiLingualTextEdit
+from web.multilingual.modelfields import MultiLingualTextField
+from web.multilingual.widgets import MultiLingualTextEdit
 
 
 def create_multi_lingual_admin_formfield(

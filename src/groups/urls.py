@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from groups import views
 
 urlpatterns = [
     path("", views.CommitteeListView.as_view(), name="committee_list"),

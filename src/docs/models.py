@@ -3,9 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 
+from docs.validators import page_title_validator
 from users.models import User
-
-from .validators import page_title_validator
 
 MAIN_PAGE_TITLE = "Documentation"
 

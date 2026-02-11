@@ -3,14 +3,13 @@ from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from internal.models import Member, Quote, Secret, SystemAccess
 from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
     UserSearchFieldsMixin,
     search_escaped_and_unescaped,
 )
-
-from .models import Member, Quote, Secret, SystemAccess
 
 
 class MemberAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):

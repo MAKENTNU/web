@@ -8,14 +8,13 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
 
+from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.machine import Machine, MachineType
+from make_queue.models.reservation import Quota, Reservation, ReservationRule
+from make_queue.templatetags.reservation_extra import can_change_reservation
 from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import parse_datetime_localized
-
-from ...models.course import CoursePermission, Printer3DCourse
-from ...models.machine import Machine, MachineType
-from ...models.reservation import Quota, Reservation, ReservationRule
-from ...templatetags.reservation_extra import can_change_reservation
 
 Day = ReservationRule.Day
 

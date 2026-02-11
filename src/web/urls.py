@@ -28,8 +28,7 @@ from util.url_utils import (
     permission_required_else_denied,
 )
 from util.view_utils import RedirectViewWithStaticQuery
-
-from . import views
+from web import views
 
 extra = "/" if getattr(settings, setting_name("TRAILING_SLASH"), True) else ""
 

@@ -5,14 +5,13 @@ from unittest import mock
 from django.test import TestCase
 from django.utils import timezone
 
+from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
 from util.locale_utils import parse_datetime_localized
 from util.test_utils import (
     assertRaisesIntegrityError_withRollback,
     set_without_duplicates,
 )
-
-from ...models import Article, Event, EventTicket, TimePlace
 
 
 class ArticleEventAndTimePlaceTests(TestCase):

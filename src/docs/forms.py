@@ -1,9 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from docs.models import Content, Page
 from web.widgets import CKEditorUploadingWidget
-
-from .models import Content, Page
 
 
 class AddPageForm(forms.ModelForm):

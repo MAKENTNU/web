@@ -2,9 +2,8 @@ from django import template
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from internal.models import Member
 from users.models import User
-
-from ..models import Member
 
 register = template.Library()
 

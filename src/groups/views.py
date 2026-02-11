@@ -3,10 +3,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView, UpdateView
 
+from groups.forms import CommitteeForm
+from groups.models import Committee
 from util.view_utils import CustomFieldsetFormMixin
-
-from .forms import CommitteeForm
-from .models import Committee
 
 
 class CommitteeListView(ListView):

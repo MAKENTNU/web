@@ -4,14 +4,13 @@ from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
+from internal.models import Member, Quote, Secret, SystemAccess
 from users.models import User
 from web.widgets import (
     SemanticDateInput,
     SemanticMultipleSelectInput,
     SemanticSearchableChoiceInput,
 )
-
-from .models import Member, Quote, Secret, SystemAccess
 
 
 class AddMemberForm(forms.ModelForm):

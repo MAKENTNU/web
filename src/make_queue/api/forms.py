@@ -1,6 +1,6 @@
 from django import forms
 
-from ..models.reservation import Reservation
+from make_queue.models.reservation import Reservation
 
 
 class APIMachineDataQueryForm(forms.Form):

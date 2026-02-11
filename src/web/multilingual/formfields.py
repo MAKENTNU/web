@@ -7,9 +7,8 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from util.logging_utils import get_request_logger
-
-from ..widgets import CKEditorWidget
-from .data_structures import MultiLingualTextStructure
+from web.multilingual.data_structures import MultiLingualTextStructure
+from web.widgets import CKEditorWidget
 
 
 class MultiLingualFormField(forms.MultiValueField):

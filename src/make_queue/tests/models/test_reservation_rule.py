@@ -3,9 +3,9 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime, parse_time
 
-from ...forms.reservation_rule import ReservationRuleForm
-from ...models.machine import MachineType
-from ...models.reservation import ReservationRule
+from make_queue.forms.reservation_rule import ReservationRuleForm
+from make_queue.models.machine import MachineType
+from make_queue.models.reservation import ReservationRule
 
 Day = ReservationRule.Day
 Period = ReservationRule.Period

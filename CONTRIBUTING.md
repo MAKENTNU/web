@@ -22,7 +22,6 @@
   + [For code in general](#for-code-in-general)
     - [Quotation marks inside strings](#quotation-marks-inside-strings)
     - [String concatenation](#string-concatenation)
-    - [Imports](#imports)
   + [For each module (file)](#for-each-module-file)
     - [Folder/directory location](#folderdirectory-location)
     - [Filename](#filename)
@@ -157,11 +156,6 @@ if an f-string is hard to read, extract inserted code to variables, and insert t
 
 For translation strings (using `gettext` or `gettext_lazy`), use the standard `format()` method for concatenation.
 For example:<br/>`_("{chant} Batman!").format(chant="NaN" * 15)` (where `gettext_lazy` is imported as `_`).
-
-#### Imports
-
-All imports in a file that are from the same app as the mentioned file, should be relative
-(e.g. `from .models import User` or `from .. import views`).
 
 
 ### For each module (file)

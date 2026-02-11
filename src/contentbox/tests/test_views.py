@@ -8,19 +8,21 @@ from django.forms import BaseForm
 from django.test import Client, TestCase, override_settings
 from django_hosts import reverse
 
+from contentbox.forms import ContentBoxForm, EditSourceContentBoxForm
+from contentbox.models import ContentBox
+from contentbox.tests.urls import hosts, urls_main
+from contentbox.tests.urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
+from contentbox.tests.urls.urls_internal import (
+    INTERNAL_TEST_URL_NAME,
+    internal_change_perm,
+)
+from contentbox.tests.urls.urls_main import TEST_MULTI_URL_NAMES, TEST_URL_NAME
 from users.models import User
 from util.auth_utils import get_perm
 from util.test_utils import assertRedirectsWithPathPrefix
 from util.url_utils import reverse_admin
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
-
-from ..forms import ContentBoxForm, EditSourceContentBoxForm
-from ..models import ContentBox
-from .urls import hosts, urls_main
-from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
-from .urls.urls_internal import INTERNAL_TEST_URL_NAME, internal_change_perm
-from .urls.urls_main import TEST_MULTI_URL_NAMES, TEST_URL_NAME
 
 
 @override_settings(

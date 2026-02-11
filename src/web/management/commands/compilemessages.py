@@ -1,6 +1,6 @@
 from django.core.management.commands import compilemessages
 
-from .makemessages import Command as MakeMessagesCommand
+from web.management.commands.makemessages import Command as MakeMessagesCommand
 
 
 class Command(compilemessages.Command):

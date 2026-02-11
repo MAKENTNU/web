@@ -1,9 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from faq.models import Category, Question
 from web.widgets import SemanticMultipleSelectInput
-
-from .models import Category, Question
 
 
 class QuestionForm(forms.ModelForm):

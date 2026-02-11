@@ -2,7 +2,7 @@ import re
 import string
 from unittest import TestCase
 
-from ..html_utils import ESCAPE_UNICODE_TO_HTML5, escape_to_named_characters
+from util.html_utils import ESCAPE_UNICODE_TO_HTML5, escape_to_named_characters
 
 
 class Test(TestCase):

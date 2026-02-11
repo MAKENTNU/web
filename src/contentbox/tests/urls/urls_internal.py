@@ -1,9 +1,8 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.urls import path
 
+from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from internal.urls import urlpatterns as internal_urlpatterns
-
-from ...views import ContentBoxDetailView, ContentBoxUpdateView
 
 INTERNAL_TEST_URL_NAME = "internal_test_url_name"
 internal_change_perm = "contentbox.perm1"

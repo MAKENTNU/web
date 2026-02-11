@@ -10,11 +10,10 @@ from django.utils.translation import gettext as _, pgettext
 from django.views.generic import DetailView, UpdateView
 from django_hosts import reverse
 
+from contentbox.forms import ContentBoxForm, EditSourceContentBoxForm
+from contentbox.models import ContentBox
 from util.url_utils import get_reverse_host_kwargs_from_url, reverse_admin
 from util.view_utils import CustomFieldsetFormMixin
-
-from .forms import ContentBoxForm, EditSourceContentBoxForm
-from .models import ContentBox
 
 
 class ContentBoxDetailView(DetailView):

@@ -11,11 +11,10 @@ from django.views.generic import (
     UpdateView,
 )
 
+from faq.forms import CategoryForm, QuestionForm
+from faq.models import Category, Question
 from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-
-from .forms import CategoryForm, QuestionForm
-from .models import Category, Question
 
 
 class FAQListView(ListView):

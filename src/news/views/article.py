@@ -11,10 +11,9 @@ from django.views.generic import (
     UpdateView,
 )
 
+from news.forms import ArticleForm, NewsBaseForm
+from news.models import Article, NewsBase
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-
-from ..forms import ArticleForm, NewsBaseForm
-from ..models import Article, NewsBase
 
 
 class ArticleListView(ListView):

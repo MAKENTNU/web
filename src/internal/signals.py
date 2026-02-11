@@ -1,8 +1,7 @@
 from django.db.models.signals import m2m_changed
 
 from groups.models import Committee
-
-from .models import Member
+from internal.models import Member
 
 
 def member_update_user_groups(instance: Member, action, pk_set=None, **kwargs):

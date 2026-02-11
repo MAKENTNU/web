@@ -6,16 +6,15 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
+from make_queue.forms.reservation_rule import ReservationRuleForm
+from make_queue.models.reservation import Quota, ReservationRule
+from make_queue.views.machine import MachineTypeRelatedViewMixin
 from users.models import User
 from util.view_utils import (
     CustomFieldsetFormMixin,
     PreventGetRequestsMixin,
     insert_form_field_values,
 )
-
-from ..forms.reservation_rule import ReservationRuleForm
-from ..models.reservation import Quota, ReservationRule
-from ..views.machine import MachineTypeRelatedViewMixin
 
 
 class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):

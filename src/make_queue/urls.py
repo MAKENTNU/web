@@ -2,8 +2,8 @@ from decorator_include import decorator_include
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 
-from .api import views as api_views
-from .views import (
+from make_queue.api import views as api_views
+from make_queue.views import (
     course as course_views,
     machine as machine_views,
     quota as quota_views,

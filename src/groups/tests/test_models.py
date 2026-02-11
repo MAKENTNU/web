@@ -2,11 +2,10 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
+from groups.models import Committee, InheritanceGroup
 from news.models import Article
 from users.models import User
 from util.auth_utils import perm_to_str
-
-from ..models import Committee, InheritanceGroup
 
 
 class PermGroupTestCase(TestCase):
