@@ -7,11 +7,10 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django_hosts import reverse
 
+from make_queue.forms.machine import AddMachineForm, ChangeMachineForm
+from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.machine import Machine, MachineType
 from users.models import User
-
-from ...forms.machine import AddMachineForm, ChangeMachineForm
-from ...models.course import CoursePermission, Printer3DCourse
-from ...models.machine import Machine, MachineType
 
 
 class TestMachineListView(TestCase):

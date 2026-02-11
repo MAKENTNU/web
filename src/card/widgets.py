@@ -1,6 +1,6 @@
 from django import forms
 
-from .modelfields import CardNumber
+from card.modelfields import CardNumber
 
 
 class CardNumberInput(forms.TextInput):

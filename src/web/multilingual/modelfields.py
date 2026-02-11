@@ -2,13 +2,13 @@ import json
 
 from django.db import models
 
-from .data_structures import MultiLingualTextStructure
-from .formfields import (
+from web.multilingual.data_structures import MultiLingualTextStructure
+from web.multilingual.formfields import (
     MultiLingualFormField,
     MultiLingualRichTextFormField,
     MultiLingualRichTextUploadingFormField,
 )
-from .widgets import (
+from web.multilingual.widgets import (
     MultiLingualRichText,
     MultiLingualRichTextUploading,
     MultiLingualTextEdit,

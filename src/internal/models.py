@@ -13,14 +13,13 @@ from phonenumbers.phonenumberutil import region_code_for_number
 from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
+from internal.modelfields import SemesterField
+from internal.util import date_to_semester, year_to_semester
+from internal.validators import WhitelistedEmailValidator
 from users.models import User
 from util.auth_utils import perm_to_str, perms_to_str
 from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
-
-from .modelfields import SemesterField
-from .util import date_to_semester, year_to_semester
-from .validators import WhitelistedEmailValidator
 
 
 class Member(models.Model):

@@ -5,6 +5,16 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, ListView, TemplateView, UpdateView
 
+from make_queue.api.forms import APIMachineDataQueryForm, APIReservationListQueryForm
+from make_queue.models.reservation import Quota, Reservation, ReservationRule
+from make_queue.templatetags.reservation_extra import (
+    can_delete_reservation,
+    can_mark_reservation_finished,
+)
+from make_queue.views.machine import (
+    MachineRelatedViewMixin,
+    MachineTypeRelatedViewMixin,
+)
 from users.models import User
 from util.locale_utils import iso_datetime_format
 from util.view_utils import (
@@ -12,14 +22,6 @@ from util.view_utils import (
     QueryParameterFormMixin,
     UTF8JsonResponse,
 )
-
-from ..models.reservation import Quota, Reservation, ReservationRule
-from ..templatetags.reservation_extra import (
-    can_delete_reservation,
-    can_mark_reservation_finished,
-)
-from ..views.machine import MachineRelatedViewMixin, MachineTypeRelatedViewMixin
-from .forms import APIMachineDataQueryForm, APIReservationListQueryForm
 
 
 class APIMachineDataView(

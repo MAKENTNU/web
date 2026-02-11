@@ -68,13 +68,16 @@ show-fixes = true
 format.docstring-code-format = true
 
 lint.select = [
-  "E", # flake8/pycodestyle (Error)
-  "F", # flake8/Pyflakes
-  "I", # isort
+  "E",      # flake8/pycodestyle (Error)
+  "F",      # flake8/Pyflakes
+  "I",      # isort
+  "TID252", # https://docs.astral.sh/ruff/rules/relative-imports/#relative-imports-tid252
 ]
 
 # Disable line length check in migrations
 lint.per-file-ignores."**/migrations/**" = [ "E501" ]
+
+lint.flake8-tidy-imports.ban-relative-imports = "all"
 
 lint.isort.combine-as-imports = true
 

@@ -3,10 +3,9 @@ from django.db.models import TextChoices
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.machine import Machine, MachineType
 from news.models import TimePlace
 from web.widgets import SemanticChoiceInput
-
-from ..models.machine import Machine, MachineType
 
 
 class ReservationForm(forms.Form):

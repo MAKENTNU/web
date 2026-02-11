@@ -1,8 +1,7 @@
 from django import template
 
+from news.models import Event, TimePlace
 from users.models import User
-
-from ..models import Event, TimePlace
 
 register = template.Library()
 

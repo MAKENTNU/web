@@ -2,8 +2,8 @@ from django import forms
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
-from .validators import card_number_input_validator
-from .widgets import CardNumberInput
+from card.validators import card_number_input_validator
+from card.widgets import CardNumberInput
 
 
 class CardNumberField(forms.CharField):

@@ -2,14 +2,13 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from faq.models import Category, Question
 from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
     link_to_admin_change_form,
     search_escaped_and_unescaped,
 )
-
-from .models import Category, Question
 
 
 class QuestionAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):

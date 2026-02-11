@@ -2,7 +2,7 @@ from datetime import date
 
 from django.utils import timezone
 
-from .validators import semester_string_regex
+from internal.validators import semester_string_regex
 
 
 def date_to_semester(date_: date) -> str:

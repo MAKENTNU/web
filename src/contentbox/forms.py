@@ -1,12 +1,11 @@
 from django import forms
 from django.conf import settings
 
+from contentbox.models import ContentBox
 from web.multilingual.widgets import (
     MultiLingualRichTextUploading,
     MultiLingualTextInput,
 )
-
-from .models import ContentBox
 
 
 class ContentBoxForm(forms.ModelForm):

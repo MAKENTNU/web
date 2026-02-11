@@ -1,6 +1,6 @@
 from django import template
 
-from ..models import Announcement
+from announcements.models import Announcement
 
 register = template.Library()
 

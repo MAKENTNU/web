@@ -11,6 +11,8 @@ from django.test import Client, TestCase
 from django.urls import URLPattern, URLResolver
 from django_hosts import reverse
 
+from contentbox.models import ContentBox
+from contentbox.views import ContentBoxDetailView
 from docs.tests.test_urls import DOCS_CLIENT_DEFAULTS
 from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 from users.models import User
@@ -25,9 +27,6 @@ from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
-
-from ..models import ContentBox
-from ..views import ContentBoxDetailView
 
 
 class ReverseCallable(Protocol):

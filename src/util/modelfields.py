@@ -1,6 +1,6 @@
 from django.db import models
 
-from . import formfields
+from util import formfields
 
 
 class CompressedImageField(models.ImageField):

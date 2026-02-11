@@ -1,9 +1,8 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 
+from groups.models import Committee, InheritanceGroup
 from util.admin_utils import DefaultAdminWidgetsMixin
-
-from .models import Committee, InheritanceGroup
 
 
 class InheritanceGroupAdmin(SimpleHistoryAdmin):

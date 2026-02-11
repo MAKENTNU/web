@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ..modelfields import CardNumber, CardNumberField
+from card.modelfields import CardNumber, CardNumberField
 
 
 class CardNumberModelFieldTest(TestCase):

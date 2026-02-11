@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .validators import card_number_validator
+from card.validators import card_number_validator
 
 
 class CardNumberField(models.CharField):
@@ -25,7 +25,7 @@ class CardNumberField(models.CharField):
         )
 
     def formfield(self, **kwargs):
-        from . import formfields  # Avoids circular importing
+        from card import formfields  # Avoids circular importing
 
         return super().formfield(
             **{

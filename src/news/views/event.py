@@ -28,6 +28,14 @@ from django.views.generic.edit import ModelFormMixin
 from django_hosts import reverse as django_hosts_reverse
 
 from mail import email
+from news.forms import (
+    EventForm,
+    EventParticipantsSearchQueryForm,
+    EventTicketForm,
+    TimePlaceForm,
+)
+from news.models import Event, EventQuerySet, EventTicket, TimePlace, User
+from news.views.article import NewsBaseFormMixin
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import (
@@ -37,15 +45,6 @@ from util.view_utils import (
     QueryParameterFormMixin,
     insert_form_field_values,
 )
-
-from ..forms import (
-    EventForm,
-    EventParticipantsSearchQueryForm,
-    EventTicketForm,
-    TimePlaceForm,
-)
-from ..models import Event, EventQuerySet, EventTicket, TimePlace, User
-from .article import NewsBaseFormMixin
 
 
 class EventListView(ListView):

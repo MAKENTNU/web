@@ -10,12 +10,11 @@ from django.urls import reverse as django_reverse
 from django.utils import lorem_ipsum, timezone
 from django_hosts import reverse
 
+from news.models import Event, EventTicket, TimePlace
 from users.models import User
 from util.model_utils import duplicate
 from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
 from web.multilingual.data_structures import MultiLingualTextStructure
-
-from ...models import Event, EventTicket, TimePlace
 
 
 class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):

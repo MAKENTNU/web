@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 
-from ..templatetags.html_tags import anchor_tag, urlize_target_blank
+from util.templatetags.html_tags import anchor_tag, urlize_target_blank
 
 
 # noinspection HttpUrlsUsage

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import SimpleTestCase
 
-from ..url_utils import get_reverse_host_kwargs_from_url, urljoin_query
+from util.url_utils import get_reverse_host_kwargs_from_url, urljoin_query
 
 
 class UrlUtilsTests(SimpleTestCase):

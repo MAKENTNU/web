@@ -1,7 +1,7 @@
 from django import forms
 
-from .util import semester_to_year, year_to_semester
-from .validators import semester_string_validator
+from internal.util import semester_to_year, year_to_semester
+from internal.validators import semester_string_validator
 
 
 class SemesterField(forms.CharField):

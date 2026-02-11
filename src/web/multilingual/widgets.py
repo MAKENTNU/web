@@ -3,8 +3,8 @@ from typing import Any
 from django import forms
 from js_asset import JS
 
-from ..widgets import CKEditorUploadingWidget, CKEditorWidget
-from .data_structures import MultiLingualTextStructure
+from web.multilingual.data_structures import MultiLingualTextStructure
+from web.widgets import CKEditorUploadingWidget, CKEditorWidget
 
 
 class MultiLingualTextEdit(forms.MultiWidget):

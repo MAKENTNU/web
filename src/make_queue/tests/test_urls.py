@@ -7,6 +7,10 @@ from django.utils.dateparse import parse_time
 from django.utils.http import urlencode
 from django_hosts import reverse
 
+from make_queue.forms.reservation import ReservationListQueryForm
+from make_queue.models.course import Printer3DCourse
+from make_queue.models.machine import Machine, MachineType, MachineUsageRule
+from make_queue.models.reservation import Quota, Reservation, ReservationRule
 from news.models import Event, TimePlace
 from users.models import User
 from util.test_utils import (
@@ -16,11 +20,6 @@ from util.test_utils import (
     assert_requesting_paths_succeeds,
     generate_all_admin_urls_for_model_and_objs,
 )
-
-from ..forms.reservation import ReservationListQueryForm
-from ..models.course import Printer3DCourse
-from ..models.machine import Machine, MachineType, MachineUsageRule
-from ..models.reservation import Quota, Reservation, ReservationRule
 
 Day = ReservationRule.Day
 

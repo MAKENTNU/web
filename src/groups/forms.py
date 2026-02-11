@@ -1,8 +1,7 @@
 from django import forms
 
+from groups.models import Committee
 from web.widgets import SemanticFileInput
-
-from .models import Committee
 
 
 class CommitteeForm(forms.ModelForm):

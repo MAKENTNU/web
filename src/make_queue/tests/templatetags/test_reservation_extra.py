@@ -6,17 +6,16 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from users.models import User
-from util.locale_utils import parse_datetime_localized
-
-from ...models.course import Printer3DCourse
-from ...models.machine import Machine, MachineType
-from ...models.reservation import Quota, Reservation
-from ...templatetags.reservation_extra import (
+from make_queue.models.course import Printer3DCourse
+from make_queue.models.machine import Machine, MachineType
+from make_queue.models.reservation import Quota, Reservation
+from make_queue.templatetags.reservation_extra import (
     calendar_url_reservation,
     current_calendar_url,
     get_stream_image_path,
 )
+from users.models import User
+from util.locale_utils import parse_datetime_localized
 
 
 class TestReservationExtra(TestCase):

@@ -10,17 +10,16 @@ from django.test import Client, TestCase
 from django.utils import timezone
 from django_hosts import reverse
 
+from make_queue.forms.reservation import ReservationForm, ReservationListQueryForm
+from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.machine import Machine, MachineType
+from make_queue.models.reservation import Quota, Reservation
+from make_queue.tests.utility import post_request_with_user, request_with_user
+from make_queue.views.reservation import ReservationCreateView, ReservationUpdateView
 from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import iso_datetime_format, parse_datetime_localized
 from util.test_utils import set_without_duplicates
-
-from ...forms.reservation import ReservationForm, ReservationListQueryForm
-from ...models.course import CoursePermission, Printer3DCourse
-from ...models.machine import Machine, MachineType
-from ...models.reservation import Quota, Reservation
-from ...views.reservation import ReservationCreateView, ReservationUpdateView
-from ..utility import post_request_with_user, request_with_user
 
 
 class ReservationCreateOrUpdateViewTestBase(TestCase, ABC):

@@ -1,9 +1,8 @@
 from django.test import Client, TestCase
 
+from make_queue.forms.course import Printer3DCourseForm
+from make_queue.models.course import Printer3DCourse
 from users.models import User
-
-from ...forms.course import Printer3DCourseForm
-from ...models.course import Printer3DCourse
 
 
 class TestPrinter3DCourseForm(TestCase):

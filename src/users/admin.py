@@ -4,9 +4,8 @@ from django.template.defaultfilters import urlize
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin
-
-from .models import User
 
 
 class UserAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, DjangoUserAdmin):

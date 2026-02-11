@@ -4,11 +4,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import FormView
 from django.views.generic.detail import SingleObjectMixin
 
+from news.forms import ToggleForm
+from news.models import Article, Event, TimePlace
+from news.views.event import TimePlaceRelatedViewMixin
 from util.view_utils import PreventGetRequestsMixin, UTF8JsonResponse
-
-from ..forms import ToggleForm
-from ..models import Article, Event, TimePlace
-from ..views.event import TimePlaceRelatedViewMixin
 
 
 class AdminAPINewsBaseToggleView(

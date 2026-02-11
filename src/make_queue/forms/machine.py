@@ -7,11 +7,10 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from js_asset import JS
 
+from make_queue.models.machine import Machine, MachineType
 from util.locale_utils import last_week_of_year, year_and_week_to_monday
 from util.templatetags.datetime_tags import long_datetime
 from web.widgets import MazeMapSearchInput, SemanticChoiceInput
-
-from ..models.machine import Machine, MachineType
 
 
 class MachineFormBase(forms.ModelForm):

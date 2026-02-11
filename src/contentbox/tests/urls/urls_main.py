@@ -1,8 +1,7 @@
 from django.conf.urls.i18n import i18n_patterns
 
+from contentbox.views import ContentBoxDetailView
 from web.urls import urlpatterns as base_urlpatterns
-
-from ...views import ContentBoxDetailView
 
 TEST_URL_NAME = "test_url_name"
 TEST_MULTI_URL_NAMES = ("test_main", "test_alt1", "test_alt2")

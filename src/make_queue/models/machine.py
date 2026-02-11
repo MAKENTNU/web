@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
+from make_queue.models.course import CoursePermission, Printer3DCourse
 from users.models import User
 from util.validators import lowercase_slug_validator
 from web.modelfields import UnlimitedCharField, URLTextField
@@ -17,8 +18,6 @@ from web.multilingual.modelfields import (
     MultiLingualRichTextUploadingField,
     MultiLingualTextField,
 )
-
-from .course import CoursePermission, Printer3DCourse
 
 
 class MachineTypeQuerySet(models.QuerySet):

@@ -7,9 +7,8 @@ from django.utils import timezone
 from django.views.generic import DeleteView, TemplateView
 
 from card import utils as card_utils
+from checkin.models import RegisterProfile, Skill, SuggestSkill
 from util.view_utils import PreventGetRequestsMixin, UTF8JsonResponse
-
-from ..models import RegisterProfile, Skill, SuggestSkill
 
 
 class AdminAPISuggestSkillVoteView(

@@ -4,9 +4,9 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 from django.utils import translation
 
-from ..multilingual.data_structures import MultiLingualTextStructure
-from ..multilingual.formfields import MultiLingualFormField
-from ..multilingual.modelfields import MultiLingualTextField
+from web.multilingual.data_structures import MultiLingualTextStructure
+from web.multilingual.formfields import MultiLingualFormField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 # Ensure the settings are as expected by the tests below

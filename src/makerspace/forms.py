@@ -1,8 +1,7 @@
 from django import forms
 
+from makerspace.models import Equipment
 from web.widgets import SemanticFileInput
-
-from .models import Equipment
 
 
 class EquipmentForm(forms.ModelForm):

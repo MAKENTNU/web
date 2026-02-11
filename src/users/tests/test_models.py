@@ -1,8 +1,7 @@
 from django.test import TestCase
 
 from card.modelfields import CardNumber
-
-from ..models import User
+from users.models import User
 
 
 class UserModelTests(TestCase):

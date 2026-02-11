@@ -15,6 +15,13 @@ from django.views.generic import (
 )
 from django.views.generic.edit import ModelFormMixin
 
+from docs.forms import (
+    AddPageForm,
+    ChangePageVersionForm,
+    DocumentationPageSearchQueryForm,
+    PageContentForm,
+)
+from docs.models import MAIN_PAGE_TITLE, Content, Page
 from util.templatetags.string_tags import title_en
 from util.view_utils import (
     CustomFieldsetFormMixin,
@@ -22,14 +29,6 @@ from util.view_utils import (
     QueryParameterFormMixin,
     insert_form_field_values,
 )
-
-from .forms import (
-    AddPageForm,
-    ChangePageVersionForm,
-    DocumentationPageSearchQueryForm,
-    PageContentForm,
-)
-from .models import MAIN_PAGE_TITLE, Content, Page
 
 
 class DocumentationPageRelatedViewMixin:

@@ -6,9 +6,8 @@ from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
 
 from card.modelfields import CardNumberField
+from make_queue.models.fields import UsernameField
 from users.models import User
-
-from .fields import UsernameField
 
 
 class CoursePermission(models.Model):

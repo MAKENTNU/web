@@ -7,7 +7,7 @@ from django.utils.html import escape
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from . import utils
+from card import utils
 
 
 @method_decorator(csrf_exempt, name="dispatch")

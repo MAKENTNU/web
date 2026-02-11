@@ -4,14 +4,13 @@ from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
+from make_queue.models.course import CoursePermission, Printer3DCourse
 from users.models import User
 from web.widgets import (
     SemanticChoiceInput,
     SemanticDateInput,
     SemanticSearchableChoiceInput,
 )
-
-from ..models.course import CoursePermission, Printer3DCourse
 
 
 class Printer3DCourseForm(forms.ModelForm):

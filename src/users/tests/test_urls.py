@@ -1,13 +1,12 @@
 from django.test import TestCase
 from django_hosts import reverse
 
+from users.models import User
 from util.test_utils import (
     Get,
     assert_requesting_paths_succeeds,
     generate_all_admin_urls_for_model_and_objs,
 )
-
-from ..models import User
 
 
 class UrlTests(TestCase):

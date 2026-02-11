@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from . import views
+from checkin import views
 
 urlpatterns = [
     # This path is currently not in use

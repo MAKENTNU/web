@@ -15,15 +15,14 @@ from django.views.generic import (
 )
 from django.views.generic.edit import ModelFormMixin
 
+from make_queue.forms.quota import AdminQuotaPanelQueryForm, QuotaForm
+from make_queue.models.reservation import Quota
 from users.models import User
 from util.view_utils import (
     CustomFieldsetFormMixin,
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
-
-from ..forms.quota import AdminQuotaPanelQueryForm, QuotaForm
-from ..models.reservation import Quota
 
 
 class AdminQuotaPanelView(

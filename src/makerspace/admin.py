@@ -2,10 +2,9 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from makerspace.models import Equipment
 from util import html_utils
 from util.admin_utils import DefaultAdminWidgetsMixin, search_escaped_and_unescaped
-
-from .models import Equipment
 
 
 class EquipmentAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):

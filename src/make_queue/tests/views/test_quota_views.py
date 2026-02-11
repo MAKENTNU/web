@@ -3,11 +3,10 @@ from http import HTTPStatus
 from django.test import Client, TestCase
 from django_hosts import reverse
 
+from make_queue.models.machine import MachineType
+from make_queue.models.reservation import Quota
+from make_queue.views.quota import AdminQuotaPanelView
 from users.models import User
-
-from ...models.machine import MachineType
-from ...models.reservation import Quota
-from ...views.quota import AdminQuotaPanelView
 
 
 class TestAdminUserQuotaListView(TestCase):

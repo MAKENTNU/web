@@ -1,8 +1,8 @@
 from django.db import models
 
-from . import formfields
-from .util import semester_to_year
-from .validators import validate_semester_float
+from internal import formfields
+from internal.util import semester_to_year
+from internal.validators import validate_semester_float
 
 
 class SemesterField(models.FloatField):

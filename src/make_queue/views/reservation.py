@@ -11,23 +11,22 @@ from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, ListView, TemplateView
 from django_hosts import reverse
 
-from news.models import TimePlace
-from util.locale_utils import timedelta_to_hours
-from util.logging_utils import log_request_exception
-from util.view_utils import QueryParameterFormMixin
-
-from ..forms.reservation import (
+from make_queue.forms.reservation import (
     ReservationFindFreeSlotsForm,
     ReservationForm,
     ReservationListQueryForm,
 )
-from ..models.machine import Machine, MachineType
-from ..models.reservation import Reservation, ReservationRule
-from ..templatetags.reservation_extra import (
+from make_queue.models.machine import Machine, MachineType
+from make_queue.models.reservation import Reservation, ReservationRule
+from make_queue.templatetags.reservation_extra import (
     calendar_url_reservation,
     can_change_reservation,
 )
-from .machine import MachineRelatedViewMixin
+from make_queue.views.machine import MachineRelatedViewMixin
+from news.models import TimePlace
+from util.locale_utils import timedelta_to_hours
+from util.logging_utils import log_request_exception
+from util.view_utils import QueryParameterFormMixin
 
 
 # TODO: rewrite this whole view (and everything that uses it), so that it's more

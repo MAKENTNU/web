@@ -8,11 +8,10 @@ from django.utils.http import urlencode
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.machine import Machine
+from make_queue.models.reservation import Quota, Reservation
 from users.models import User
 from util.locale_utils import TIME_STRINGS, get_current_year_and_week, get_year_and_week
-
-from ..models.machine import Machine
-from ..models.reservation import Quota, Reservation
 
 register = template.Library()
 

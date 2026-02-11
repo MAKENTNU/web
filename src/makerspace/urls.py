@@ -1,8 +1,7 @@
 from django.urls import include, path
 
 from contentbox.views import ContentBoxDetailView
-
-from . import views
+from makerspace import views
 
 equipment_urlpatterns = [
     path("", views.EquipmentListView.as_view(), name="equipment_list"),

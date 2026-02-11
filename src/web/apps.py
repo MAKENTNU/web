@@ -9,7 +9,7 @@ class WebConfig(AppConfig):
     def ready(self):
         # Importing models (which is done in the `signals` module) should not be done in
         # the global scope, as it would have caused an `AppRegistryNotReady` error
-        from . import signals
+        from web import signals
 
         # Register / connect to the signals here when the app starts
         signals.connect()

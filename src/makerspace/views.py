@@ -12,11 +12,10 @@ from django.views.generic import (
 )
 
 from contentbox.views import ContentBoxDetailView
+from makerspace.forms import EquipmentForm
+from makerspace.models import Equipment
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-
-from .forms import EquipmentForm
-from .models import Equipment
 
 
 class MakerspaceView(ContentBoxDetailView):

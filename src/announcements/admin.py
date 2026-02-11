@@ -2,13 +2,12 @@ from django.contrib import admin
 from django.template.defaultfilters import urlize
 from django.utils.translation import gettext_lazy as _
 
+from announcements.models import Announcement
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
     list_filter_factory,
     search_escaped_and_unescaped,
 )
-
-from .models import Announcement
 
 
 class AnnouncementAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):

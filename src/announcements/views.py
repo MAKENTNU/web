@@ -5,10 +5,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from announcements.forms import AnnouncementForm
+from announcements.models import Announcement
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-
-from .forms import AnnouncementForm
-from .models import Announcement
 
 
 class AdminAnnouncementListView(PermissionRequiredMixin, ListView):

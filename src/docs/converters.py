@@ -1,5 +1,5 @@
-from .models import Page
-from .validators import page_title_regex
+from docs.models import Page
+from docs.validators import page_title_regex
 
 
 class SpecificPageByTitle:

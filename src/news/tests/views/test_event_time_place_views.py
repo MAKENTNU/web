@@ -6,10 +6,9 @@ from django.urls import reverse as django_reverse
 from django.utils import timezone
 from django_hosts import reverse
 
+from news.models import Event, EventTicket, TimePlace
 from users.models import User
 from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
-
-from ...models import Event, EventTicket, TimePlace
 
 
 class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):

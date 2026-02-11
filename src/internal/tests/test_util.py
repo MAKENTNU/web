@@ -2,7 +2,7 @@ from unittest import TestCase as StandardTestCase
 
 from django.utils.dateparse import parse_date
 
-from ..util import date_to_semester, semester_to_year, year_to_semester
+from internal.util import date_to_semester, semester_to_year, year_to_semester
 
 
 class UtilTests(StandardTestCase):

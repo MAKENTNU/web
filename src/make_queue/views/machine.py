@@ -12,18 +12,21 @@ from django.views.generic import (
     UpdateView,
 )
 
+from make_queue.forms.machine import (
+    AddMachineForm,
+    ChangeMachineForm,
+    MachineDetailQueryForm,
+)
+from make_queue.forms.reservation import ReservationListQueryForm
+from make_queue.models.machine import Machine, MachineType, MachineUsageRule
+from make_queue.models.reservation import Quota
+from make_queue.templatetags.reservation_extra import reservation_denied_message
 from util.locale_utils import get_current_year_and_week, year_and_week_to_monday
 from util.view_utils import (
     CustomFieldsetFormMixin,
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
-
-from ..forms.machine import AddMachineForm, ChangeMachineForm, MachineDetailQueryForm
-from ..forms.reservation import ReservationListQueryForm
-from ..models.machine import Machine, MachineType, MachineUsageRule
-from ..models.reservation import Quota
-from ..templatetags.reservation_extra import reservation_denied_message
 
 
 # noinspection PyUnresolvedReferences

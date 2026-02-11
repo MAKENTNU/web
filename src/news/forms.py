@@ -5,14 +5,13 @@ from django import forms
 from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
+from news.models import Article, Event, EventTicket, NewsBase, TimePlace
 from web.widgets import (
     MazeMapSearchInput,
     SemanticChoiceInput,
     SemanticDateTimeInput,
     SemanticFileInput,
 )
-
-from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class TimePlaceForm(forms.ModelForm):
