@@ -7,7 +7,6 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import Client, TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
-from django.utils.http import urlencode
 from django_hosts import reverse
 
 from news.models import Event, TimePlace
@@ -395,7 +394,7 @@ class TestAPIReservationMarkFinishedView(TestCase):
             start_time=self.now + timedelta(minutes=1),
             end_time=self.now + timedelta(hours=6),
         )
-        reservation3 = Reservation.objects.create(
+        Reservation.objects.create(
             machine=self.machine,
             user=User.objects.create_user("test2"),
             start_time=self.now + timedelta(hours=6),

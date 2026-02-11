@@ -65,8 +65,8 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
         now = timezone.now()
 
         # Events with no time places should not be shown
-        empty_standalone = self.create_event(event_type=Event.Type.STANDALONE)
-        empty_repeating = self.create_event(event_type=Event.Type.REPEATING)
+        _empty_standalone = self.create_event(event_type=Event.Type.STANDALONE)
+        _empty_repeating = self.create_event(event_type=Event.Type.REPEATING)
         assert_context_event_dicts_equal([])
 
         # Events with only past time places should not be shown
@@ -81,14 +81,14 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
         # Events with future time places should be shown, even if they also have past
         # time places
         future_standalone = self.create_event(event_type=Event.Type.STANDALONE)
-        future_standalone__past = self.create_time_place(
+        _future_standalone__past = self.create_time_place(
             start_time=now + timedelta(days=-2), event=future_standalone
         )
         future_standalone__2_days = self.create_time_place(
             start_time=now + timedelta(days=2), event=future_standalone
         )
         future_repeating = self.create_event(event_type=Event.Type.REPEATING)
-        future_repeating__past = self.create_time_place(
+        _future_repeating__past = self.create_time_place(
             start_time=now + timedelta(days=-3), event=future_repeating
         )
         future_repeating__3_days = self.create_time_place(
@@ -121,7 +121,7 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
 
         # Adding a time place that occurs between the two existing ones for that event,
         # should not change the first occurrence
-        future_repeating__2_days = self.create_time_place(
+        _future_repeating__2_days = self.create_time_place(
             start_time=now + timedelta(days=2), event=future_repeating
         )
         future_repeating_dict["number_of_occurrences"] = 3

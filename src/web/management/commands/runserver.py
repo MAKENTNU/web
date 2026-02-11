@@ -40,7 +40,7 @@ class Command(runserver.Command):
                     )
                 except Exception:
                     self.stderr.write(
-                        f"Error while parsing development server address string:"
+                        "Error while parsing development server address string:"
                     )
                     self.stderr.write(traceback.format_exc())
                 # Reset the write function, which prevents this function from
