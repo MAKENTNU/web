@@ -7,7 +7,7 @@ from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import (
     SemanticDateInput,
-    SemanticDateTimeInput, 
+    SemanticDateTimeInput,
     SemanticMultipleSelectInput,
     SemanticSearchableChoiceInput,
 )
