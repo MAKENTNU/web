@@ -34,9 +34,11 @@ def news_subclass_directory_path(instance: "NewsBase", filename: str):
 
 class NewsBase(models.Model):
     """
-    The abstract class that contains the common fields and methods of ``Article`` and ``Event``.
+    The abstract class that contains the common fields and methods of ``Article`` and
+    ``Event``.
 
-    (Several of the fields' ``help_text`` arguments are defined in ``NewsBaseForm``, to facilitate customizing them to fit the two subclasses.)
+    (Several of the fields' ``help_text`` arguments are defined in ``NewsBaseForm``, to
+    facilitate customizing them to fit the two subclasses.)
     """
 
     title = MultiLingualTextField(verbose_name=_("title"))
@@ -120,13 +122,16 @@ class EventQuerySet(NewsBaseQuerySet):
         now = timezone.localtime()
         return (
             self.filter(
-                # Any repeating event with at least one timeplace that's already ended...
+                # Any repeating event with at least one timeplace that's already
+                # ended...
                 Q(event_type=Event.Type.REPEATING, timeplaces__end_time__lte=now)
-                # ...or any standalone event with timeplaces [this predicate is completed by the `exclude()` call below]...
+                # ...or any standalone event with timeplaces [this predicate is
+                # completed by the `exclude()` call below]...
                 | Q(event_type=Event.Type.STANDALONE, timeplaces__isnull=False)
             )
             .exclude(
-                # ...but exclude standalone events with at least one timeplace that has not ended
+                # ...but exclude standalone events with at least one timeplace that has
+                # not ended
                 Q(event_type=Event.Type.STANDALONE, timeplaces__end_time__gt=now)
             )
             # Remove duplicates that can appear when filtering on values across tables
@@ -136,9 +141,11 @@ class EventQuerySet(NewsBaseQuerySet):
 
 class Event(NewsBase):
     class Type(models.TextChoices):
-        # TODO: remove the "repeating" and "standalone" parentheses and rename the choice variables to `STANDARD` and `MULTIPART`,
-        #       after a grace period (a couple months?) where old users have time to learn that the choices are simply getting new names
-        #       (See https://github.com/MAKENTNU/web/issues/563 for more details)
+        # TODO: remove the "repeating" and "standalone" parentheses and rename
+        #       the choice variables to `STANDARD` and `MULTIPART`, after a grace period
+        #       (a couple months?) where old users have time to learn that the choices
+        #       are simply getting new names (See
+        #       https://github.com/MAKENTNU/web/issues/563 for more details)
         REPEATING = "R", _("Standard (repeating)")
         STANDALONE = "S", _("Multipart (standalone)")
 
@@ -187,7 +194,8 @@ class Event(NewsBase):
         return self.event_type == self.Type.STANDALONE
 
     def can_register(self, user: User, *, fail_if_not_standalone):
-        # Registering for an event with no time places should never be allowed - no matter the `event_type`
+        # Registering for an event with no time places should never be allowed - no
+        # matter the `event_type`
         if not self.timeplaces.exists():
             return False
 
@@ -200,12 +208,13 @@ class Event(NewsBase):
             self.hidden
             # Registration for private events is never allowed for non-members
             or (self.private and not user.has_perm("news.can_view_private"))
-            # If there are no future occurrences, there is never anything to register for
+            # If there are no future occurrences, there isn't anything to register for
             or not self.get_future_occurrences().exists()
         ):
             return False
 
-        # If the event is standalone, the ability to register is dependent on if there are any more available tickets
+        # If the event is standalone, the ability to register is dependent on if there
+        # are any more available tickets
         if self.standalone:
             return self.number_of_active_tickets < self.number_of_tickets
         else:
@@ -255,7 +264,8 @@ class TimePlace(models.Model):
         default=False,
         verbose_name=_("hidden"),
         help_text=_(
-            "If selected, the occurrence will be hidden, even after the publication date."
+            "If selected, the occurrence will be hidden, even after the publication"
+            " date."
         ),
     )
     number_of_tickets = models.IntegerField(
@@ -306,8 +316,8 @@ class EventTicket(models.Model):
         related_name="event_tickets",
         verbose_name=_("user"),
     )
-    # Since timeplaces can be added/removed from standalone events, it is easier to use two foreign keys, instead of
-    # using a many-to-many field for timeplaces
+    # Since timeplaces can be added/removed from standalone events, it is easier to use
+    # two foreign keys, instead of using a many-to-many field for timeplaces
     timeplace = models.ForeignKey(
         to=TimePlace,
         on_delete=models.CASCADE,
@@ -367,8 +377,9 @@ class EventTicket(models.Model):
         super().save(*args, **kwargs)
 
         if adding:
-            # When creating the ticket object, make these timestamps equal (for comparison in templates and views)
-            # - this has to be done after the object is created above, so that the `creation_date` is set
+            # When creating the ticket object, make these timestamps equal (for
+            # comparison in templates and views) - this has to be done after the object
+            # is created above, so that the `creation_date` is set
             self.active_last_modified = self.creation_date
             super().save(update_fields=["active_last_modified"])
 

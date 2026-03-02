@@ -28,7 +28,8 @@ Day = ReservationRule.Day
 class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
     # noinspection PyAttributeOutsideInit
     def init_objs(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
         self.printer1 = Machine.objects.create(
@@ -224,7 +225,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             *[
                 Get(
-                    f"{reverse('machine_detail', args=[machine.pk])}?calendar_year={year}&calendar_week={week_number}",
+                    f"{reverse('machine_detail', args=[machine.pk])}"
+                    f"?calendar_year={year}&calendar_week={week_number}",
                     public=True,
                 )
                 for machine in self.machines
@@ -244,11 +246,13 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             # reservation_urlpatterns
             Get(
-                f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.ME}",
+                f"{reverse('reservation_list')}"
+                f"?owner={ReservationListQueryForm.Owner.ME}",
                 public=False,
             ),
             Get(
-                f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.MAKE}",
+                f"{reverse('reservation_list')}"
+                f"?owner={ReservationListQueryForm.Owner.MAKE}",
                 public=False,
             ),
             Get(reverse("reservation_find_free_slots"), public=False),
@@ -272,14 +276,16 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             *[
                 Get(
-                    f"{reverse('api_machine_data', args=[reservation.machine.pk])}?exclude_reservation={reservation.pk}",
+                    f"{reverse('api_machine_data', args=[reservation.machine.pk])}"
+                    f"?exclude_reservation={reservation.pk}",
                     public=False,
                 )
                 for reservation in self.reservations
             ],
             *[
                 Get(
-                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_params}",
+                    f"{reverse('api_reservation_list', args=[machine.pk])}"
+                    f"?{api_reservation_list_params}",
                     public=True,
                 )
                 for machine in self.machines

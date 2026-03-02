@@ -6,11 +6,12 @@ from django.conf import settings
 
 
 class Command(runserver.Command):
-    """
-    Overrides the ``runserver`` management command.
-    It's currently extending ``daphne``'s command, as it's the one we would normally be using.
+    """Overrides the ``runserver`` management command.
+    It's currently extending ``daphne``'s command, as it's the one we would normally be
+    using.
 
-    This requires that ``web.apps.WebConfig`` is listed before other apps that override ``runserver``, in the ``INSTALLED_APPS`` setting.
+    This requires that ``web.apps.WebConfig`` is listed before other apps that override
+    ``runserver``, in the ``INSTALLED_APPS`` setting.
     """
 
     def inner_run(self, *args, **options):
@@ -42,7 +43,8 @@ class Command(runserver.Command):
                         f"Error while parsing development server address string:"
                     )
                     self.stderr.write(traceback.format_exc())
-                # Reset the write function, which prevents this function from unnecessarily doing regex matching
+                # Reset the write function, which prevents this function from
+                # unnecessarily doing regex matching
                 self.stdout.write = original_write_func
 
             original_write_func(msg=msg, *args_, **kwargs_)

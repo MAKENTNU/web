@@ -15,7 +15,8 @@ class User(AbstractUser):
         max_length=150, blank=True, verbose_name=_("full name from LDAP")
     )
 
-    # Set `null=True` even when it's a string-based field, as `null` is the only value not checked by the unique constraint
+    # Set `null=True` even when it's a string-based field, as `null` is the only value
+    # not checked by the unique constraint
     card_number = CardNumberField(null=True, blank=True, unique=True)
 
     def get_short_full_name(self):

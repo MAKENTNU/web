@@ -77,8 +77,8 @@ class UrlTests(NewsTestBase, TestCase):
             *[
                 Get(reverse_admin("app_list", args=[app_label]), public=False)
                 for app_label in [
-                    # The apps are listed in order of appearance on the admin index page,
-                    # which is controlled by `web.admin.WebAdminSite`
+                    # The apps are listed in order of appearance on the admin index
+                    # page, which is controlled by `web.admin.WebAdminSite`
                     "constance",
                     # Apps belonging on the main site
                     "users",
@@ -133,7 +133,8 @@ class UrlTests(NewsTestBase, TestCase):
         response = self.user_client.post(reverse("set_language"), {"language": "nb"})
         self.assertRedirects(response, "/")
 
-        # Previously indirectly caused decorating "set_language" with "permission_required" (see https://github.com/MAKENTNU/web/pull/297).
+        # Previously indirectly caused decorating "set_language" with
+        # "permission_required" (see https://github.com/MAKENTNU/web/pull/297).
         # [This test can potentially be removed]
         self.user_client.get(
             reverse("home", host="internal", host_args=["internal"]),
@@ -165,6 +166,7 @@ class UrlTests(NewsTestBase, TestCase):
             for path in ckeditor_paths:
                 with self.subTest(subdomain=subdomain, path=path):
                     response = client.get(upload_path)
-                    # A redirect (to the login page) status code implies that the path exists
+                    # A redirect (to the login page) status code implies that the path
+                    # exists
                     self.assertEqual(response.status_code, HTTPStatus.FOUND)
                     self.assertEqual(response.wsgi_request.urlconf, expected_urlconf)

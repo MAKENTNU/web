@@ -9,7 +9,8 @@ from web.multilingual.modelfields import MultiLingualTextField
 
 class AnnouncementQuerySet(models.QuerySet):
     def shown(self) -> "AnnouncementQuerySet[Announcement]":
-        """Returns a ``QuerySet`` with only the announcements that are currently shown."""
+        """Returns a ``QuerySet`` with only the announcements that are currently
+        shown."""
         now = timezone.localtime()
         return self.filter(
             Q(display_from__lte=now)
@@ -17,25 +18,29 @@ class AnnouncementQuerySet(models.QuerySet):
         )
 
     def not_shown(self) -> "AnnouncementQuerySet[Announcement]":
-        """Returns a ``QuerySet`` with only the announcements that are currently not shown."""
+        """Returns a ``QuerySet`` with only the announcements that are currently not
+        shown."""
         now = timezone.localtime()
         return self.filter(
             Q(display_from__lte=now) & Q(display_to__lte=now) | Q(display_from__gt=now)
         )
 
     def site_wide(self) -> "AnnouncementQuerySet[Announcement]":
-        """Returns a ``QuerySet`` with only the announcements that should be displayed site-wide."""
+        """Returns a ``QuerySet`` with only the announcements that should be displayed
+        site-wide."""
         return self.filter(site_wide=True)
 
     def non_site_wide(self) -> "AnnouncementQuerySet[Announcement]":
-        """Returns a ``QuerySet`` with only the announcements that should not be displayed site-wide."""
+        """Returns a ``QuerySet`` with only the announcements that should not be
+        displayed site-wide."""
         return self.filter(site_wide=False)
 
 
 class Announcement(models.Model):
-    """
-    Model for general announcements. All announcements are time-based, but can be shown for an indefinite time period if
-    there is no end time given. An announcement may also link to another page with more information.
+    """Model for general announcements.
+    All announcements are time-based, but can be shown for an indefinite time period if
+    there is no end time given. An announcement may also link to another page with more
+    information.
     """
 
     class Type(models.TextChoices):

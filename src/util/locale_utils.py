@@ -28,7 +28,8 @@ def localize_lazy_string(lazy_string_or_func, *, language_code: str):
             if callable(lazy_string_or_func)
             else lazy_string_or_func
         )
-        # Un-lazify the string before returning - while the language activated above is still active
+        # Un-lazify the string before returning - while the language activated above is
+        # still active
         return str(lazy_string)
     finally:
         translation.activate(previous_language)
@@ -47,7 +48,8 @@ def attempt_as_local(value):
         try:
             value = value.astimezone(DEFAULT_TIMEZONE)
         except OSError:
-            # `value` is probably either too low (Unix epoch or before) or too high (around year 3000 or higher, it seems)
+            # `value` is probably either too low (Unix epoch or before) or too high
+            # (around year 3000 or higher, it seems)
             pass
     return value
 
@@ -126,7 +128,8 @@ def year_and_week_to_monday(year: int, week: int) -> datetime:
 
 def timedelta_to_hours(timedelta_obj: timedelta) -> float:
     """
-    Converts ``timedelta_obj`` into a ``float`` indicating the number of hours the ``timedelta`` object covers.
+    Converts ``timedelta_obj`` into a ``float`` indicating the number of hours
+    the ``timedelta`` object covers.
 
     :param timedelta_obj: The ``timedelta`` object
     :return: The number of hours it covers

@@ -50,10 +50,9 @@ class UserSkillListView(TemplateView):
     def get_context_data(self, **kwargs):
         """
         Creates dict with skill titles as keys and
-        the highest corresponding skill level as its pair value (quick fix) to show on website.
+        the highest corresponding skill level as its pair value (quick fix) to show on
+        website.
         """
-        # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
-
         skill_dict = {}
 
         for profile in Profile.objects.filter(on_make=True):
@@ -130,7 +129,8 @@ class ProfileDetailView(TemplateView):
                     else _("You have not taken the 3D printer course")
                 ),
                 usage_hint=_(
-                    "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page."
+                    "To use a 3D printer, make a reservation in the calendar of one of"
+                    " the 3D printers on the “Reservations” page."
                 )
                 if completed_3d_printer
                 else None,
@@ -146,7 +146,8 @@ class ProfileDetailView(TemplateView):
                     ).exists()
                     else _("You have not taken the {} course").format(c.name),
                     usage_hint=_(
-                        "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
+                        "To use a {}, make a reservation in the calendar of one of"
+                        " the {}s on the “Reservations” page."
                     ).format(c.name, c.name)
                     if user.printer_3d_course.course_permissions.filter(
                         short_name=c.short_name
@@ -158,7 +159,9 @@ class ProfileDetailView(TemplateView):
             ),
         ]
 
-        """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
+        # Commented out because it's currently not in use; see the template code in
+        # `profile_detail_internal.html`
+        """
         user_skills = profile.user_skills.all()
         skill_dict = {}
         for user_skill in user_skills:

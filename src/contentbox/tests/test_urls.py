@@ -65,7 +65,8 @@ class UrlTests(TestCase):
             self.admin_client,
             self.docs_client,
         )
-        # Should update this code if any content box change URLs are added under other subdomains
+        # Should update this code if any content box change URLs are added under other
+        # subdomains
         self.clients_for_all_hosts_with_content_box_change_urls = {
             self.main_client,
             self.internal_client,
@@ -114,7 +115,8 @@ class UrlTests(TestCase):
             len(self.content_box_assertion_structs)
             # + `/søk/` and `/sok/`
             + 2,
-            "One or more ContentBox URLs have not been added to `content_box_assertion_structs`, or it contains duplicate URLs",
+            "One or more ContentBox URLs have not been added to"
+            " `content_box_assertion_structs`, or it contains duplicate URLs",
         )
 
     # Code based on https://stackoverflow.com/a/19162337
@@ -158,7 +160,7 @@ class UrlTests(TestCase):
         ]
         assert_requesting_paths_succeeds(self, path_predicates, "admin")
 
-    def test_change_pages_can_only_be_reached_on_the_same_subdomain_as_the_display_pages(
+    def test_change_pages_can_only_be_reached_on_same_subdomain_as_the_display_pages(
         self,
     ):
         for client in self.all_clients:
@@ -174,8 +176,9 @@ class UrlTests(TestCase):
                         "content_box_update", content_box.pk
                     )
                     response = client.get(change_url)
-                    # Change pages should only be reachable on the same subdomain as the content box's display page is defined on;
-                    # other subdomains should redirect to that subdomain
+                    # Change pages should only be reachable on the same subdomain as
+                    # the content box's display page is defined on; other subdomains
+                    # should redirect to that subdomain
                     same_subdomain = client == struct.client
                     if same_subdomain:
                         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -198,7 +201,7 @@ class UrlTests(TestCase):
                     else:
                         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
-    def test_change_page_for_content_box_without_registered_url_redirects_to_django_admin(
+    def test_change_page_for_content_box_without_valid_url_redirects_to_django_admin(
         self,
     ):
         for client in self.all_clients:
@@ -235,7 +238,8 @@ class UrlTests(TestCase):
                         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_form_input_is_properly_bleached(self):
-        # Facilitates printing the whole diff if the tests fail, which is useful due to the long strings in this test case
+        # Facilitates printing the whole diff if the tests fail, which is useful due to
+        # the long strings in this test case
         self.maxDiff = None
 
         def unchanged(s: str):
@@ -261,87 +265,94 @@ class UrlTests(TestCase):
                 unchanged,
             ),
             (
-                # Attributes with optional values (like `download`) should be assigned to an empty value (like `""`), or the tests might fail
+                # Attributes with optional values (like `download`) should be assigned
+                # to an empty value (like `""`), or the tests might fail
                 """
-                    <a href="https://makentnu.dev" target="_blank" name="link" download="">LINK</a>
-                    <a id="anchor" href="#anchor" name="anchor">Scroll to anchor</a>
-                    <a href="mailto:styret@makentnu.no" style="text-decoration: none;"></a>
-                    <a href="tel:+47 123 45 678"></a>
+                <a href="https://makentnu.dev" target="_blank" name="link" download="">
+                    LINK
+                </a>
+                <a id="anchor" href="#anchor" name="anchor">Scroll to anchor</a>
+                <a href="mailto:styret@makentnu.no" style="text-decoration: none;"></a>
+                <a href="tel:+47 123 45 678"></a>
 
-                    <div style="text-align: center;">
-                        <figure class="image" style="display: inline-block;">
-                            <img src="/media/image.jpg" width="100" height="100" alt="An image :)"/>
-                            <figcaption>Some caption</figcaption>
-                        </figure>
-                    </div>
+                <div style="text-align: center;">
+                    <figure class="image" style="display: inline-block;">
+                        <img src="/media/image.jpg" width="100" height="100"
+                             alt="An image :)"/>
+                        <figcaption>Some caption</figcaption>
+                    </figure>
+                </div>
 
-                    <p style="margin-left: 40px; text-align: right;"></p>
-                    <p style="text-align: center;">
-                        <span style="color: #2ecc71; background-color: #e74c3c;"></span>
-                    </p>
+                <p style="margin-left: 40px; text-align: right;"></p>
+                <p style="text-align: center;">
+                    <span style="color: #2ecc71; background-color: #e74c3c;"></span>
+                </p>
 
-                    <br/>
-                    <hr/>
+                <br/>
+                <hr/>
 
-                    &lt;script&gt; alert("hey"); &lt;/script&gt;
+                &lt;script&gt; alert("hey"); &lt;/script&gt;
                 """,
                 unchanged,
             ),
             (
                 """
-                    <script> alert("hey"); </script>
-                    <style type="text/javascript"> alert("hey"); </style>
-                    <script defer src="/static/script.js"></script>
+                <script> alert("hey"); </script>
+                <style type="text/javascript"> alert("hey"); </style>
+                <script defer src="/static/script.js"></script>
 
-                    <form></form>
-                    <input/>
+                <form></form>
+                <input/>
 
-                    <applet></applet>
-                    <iframe src="https://calendar.google.com/calendar/embed"></iframe>
+                <applet></applet>
+                <iframe src="https://calendar.google.com/calendar/embed"></iframe>
 
-                    <html lang="en">
-                    <head>
-                        <title>Some title</title>
-                        <meta charset="UTF-8">
-                        <link href="/static/style.css"/>
-                    </head>
-                    <body></body>
-                    </html>
+                <html lang="en">
+                <head>
+                    <title>Some title</title>
+                    <meta charset="UTF-8">
+                    <link href="/static/style.css"/>
+                </head>
+                <body></body>
+                </html>
 
-                    <customtagname></customtagname>
+                <customtagname></customtagname>
                 """,
                 escaped,
             ),
             (
                 """
-                    <!-- Comment -->
+                <!-- Comment -->
                 """,
                 "",
             ),
             (
                 # From https://stackoverflow.com/q/29906775
                 """
-                    <img src="javascript:alert('hey');"/>
-                    <img src="java&#010;script:alert('hey');"/>
-                    <img src="java&#X0A;script:alert('hey');"/>
+                <img src="javascript:alert('hey');"/>
+                <img src="java&#010;script:alert('hey');"/>
+                <img src="java&#X0A;script:alert('hey');"/>
                 """,
                 """
-                    <img/>
-                    <img/>
-                    <img/>
+                <img/>
+                <img/>
+                <img/>
                 """,
             ),
             (
                 # From https://html5sec.org/#144
                 """
-                    <a href="javascript:&apos;<svg onload&equals;alert&lpar;1&rpar;&nvgt;&apos;">CLICK</a>
+                <a href="
+                   javascript:&apos;<svg onload&equals;alert&lpar;1&rpar;&nvgt;&apos;
+                ">CLICK</a>
                 """,
                 """
-                    <a>CLICK</a>
+                <a>CLICK</a>
                 """,
             ),
         ]
-        # Replace the functions with their return values, which imitate how the original content will be bleached
+        # Replace the functions with their return values, which imitate how the original
+        # content will be bleached
         for i, (original_content, bleached_content) in enumerate(
             original_content__bleached_content__tuples
         ):
@@ -356,7 +367,8 @@ class UrlTests(TestCase):
             with self.subTest(url=struct.url):
                 content_box = self.get_content_box_from_url(struct.url, struct.client)
                 if not struct.should_be_bleached:
-                    # Add the permission that is expected for non-bleached content boxes to have
+                    # Add the permission that is expected for non-bleached content boxes
+                    # to have
                     content_box.extra_change_permissions.add(
                         get_perm("internal.can_change_rich_text_source")
                     )

@@ -26,10 +26,12 @@ def ldap_search(
     search_field: str, search_value: str
 ) -> list[tuple[str, dict[str, list[bytes]]]]:
     """
-    Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
+    Searches the LDAP server given by LDAP_HOST with the filter
+    ``search_field=search_value``.
 
-    :return: List of results returned by the LDAP server. Each item in the list is a tuple with distinguished name
-             and a dictionary with the attributes of the user.
+    :return: List of results returned by the LDAP server. Each item in the list is
+        a tuple with distinguished name and a dictionary with the attributes of
+        the user.
     """
     ldap_obj = ldap.initialize(LDAP_HOST, bytes_mode=False)
     ldap_obj.simple_bind()
@@ -43,7 +45,8 @@ def get_ldap_field(
     """
     Retrieves the value of a field in ``ldap_data``.
 
-    :param ldap_data: Results from ldap_search(). List of tuples with distinguished name and dictionary of attributes.
+    :param ldap_data: Results from ldap_search(). List of tuples with distinguished name
+        and dictionary of attributes.
     :param field: Field in ldap_data whose value is to be returned.
     :return: Value of field in ldap_data. Empty string if the field does not exist.
     """
@@ -53,7 +56,8 @@ def get_ldap_field(
 def get_user_details_from_ldap(search_field: str, search_value: str) -> dict[str, str]:
     """
     Retrieves all relevant user details from LDAP.
-    Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
+    Searches the LDAP server given by LDAP_HOST with the filter
+    ``search_field=search_value``.
 
     :return: Dictionary with user details. (full name, username, email)
     """

@@ -22,7 +22,8 @@ def is_valid(card_number):
 
 def is_duplicate(card_number, username):
     """
-    Checks if given card number is a duplicate. Excludes card number connected to user with given username.
+    Checks if given card number is a duplicate. Excludes card number connected to user
+    with given username.
 
     :param card_number: card number to check if duplicate
     :param username: username of user to exclude

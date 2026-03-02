@@ -40,8 +40,8 @@ class MultiSelectField(MSField):
         flat_choices = super(models.CharField, self).flatchoices
 
         class MSFFlatchoices(list):
-            # Used to trick django.contrib.admin.utils.display_for_field into not treating the list of values as a
-            # dictionary key (which errors out)
+            # Used to trick django.contrib.admin.utils.display_for_field into not
+            # treating the list of values as a dictionary key (which errors out)
             def __bool__(self):
                 return False
 

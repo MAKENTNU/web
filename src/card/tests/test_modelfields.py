@@ -29,7 +29,8 @@ class CardNumberModelFieldTest(TestCase):
         self.assertEqual(
             field.get_prep_value("EM 1234567890"),
             "1234567890",
-            "The prep value of an EM number prefixed by EM should be the EM number without the prefix",
+            "The prep value of an EM number prefixed by EM should be the EM number"
+            " without the prefix",
         )
         self.assertEqual(
             field.get_prep_value(CardNumber("1234567890")),

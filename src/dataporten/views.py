@@ -10,7 +10,8 @@ from users.models import User
 from util.logging_utils import log_request_exception
 from . import ldap_utils
 
-# Assign these functions to module-level variables, to facilitate testing (through monkey patching)
+# Assign these functions to module-level variables, to facilitate testing (through
+# monkey patching)
 complete = social_views.complete
 get_user_details_from_email = ldap_utils.get_user_details_from_email
 
@@ -28,8 +29,10 @@ class Logout(View):
         # See https://docs.feide.no/service_providers/manage/openid_connect/redir_etter_logout.html
         url_parameter_string = urlencode(
             {
-                # NOTE: This can be either the Norwegian or the English URL depending on the user visiting, so both of those URLs must be registered
-                # as allowed "Redirect URI[s] for logout" in the OpenID Connect configuration in Feide's customer portal!
+                # NOTE: This can be either the Norwegian or the English URL depending on
+                #       the user visiting, so both of those URLs must be registered as
+                #       allowed "Redirect URI[s] for logout" in the OpenID Connect
+                #       configuration in Feide's customer portal!
                 "post_logout_redirect_uri": request.build_absolute_uri(
                     settings.LOGOUT_REDIRECT_URL
                 ),
@@ -43,12 +46,15 @@ class Logout(View):
 
 def login_wrapper(request, backend, *args, **kwargs):
     """
-    Handles the callback from the social django login. Updating the full name of the user, and possibly their username.
-    Usernames are found in NTNUs LDAP server using the email to search. For some reason, some users do not have their
-    email in the NTNU LDAP system. For these users we derive their username from the local part of their email. This
-    will be the correct NTNU username for all students. We have yet to find an employee without their email in LDAP.
+    Handles the callback from the social django login. Updating the full name of
+    the user, and possibly their username. Usernames are found in NTNUs LDAP server
+    using the email to search. For some reason, some users do not have their email in
+    the NTNU LDAP system. For these users we derive their username from the local part
+    of their email. This will be the correct NTNU username for all students. We have yet
+    to find an employee without their email in LDAP.
 
-    :return: The landing page after login, as defined by the social django configuration.
+    :return: The landing page after login, as defined by the social django
+        configuration.
     """
     try:
         response = complete(request, backend, *args, **kwargs)
@@ -66,11 +72,13 @@ def login_wrapper(request, backend, *args, **kwargs):
     ):
         _update_full_name_if_different(user, social_data)
     # Update the LDAP name after the full name has (potentially) been set.
-    # This is only important if the user has not logged in before, as the full name has not yet been set.
+    # This is only important if the user has not logged in before, as the full name has
+    # not yet been set.
     _update_ldap_full_name_if_different(user, social_data)
 
     try:
-        # Try to retrieve username from NTNUs LDAP server. Otherwise, use the first part of the email as the username
+        # Try to retrieve username from NTNUs LDAP server. Otherwise, use the first part
+        # of the email as the username
         ldap_data = get_user_details_from_email(user.email, use_cached=False)
     except Exception as e:
         log_request_exception(

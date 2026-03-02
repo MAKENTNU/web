@@ -180,7 +180,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
             expected_context_ticket_emails,
         )
 
-    def test_time_place_context_ticket_emails_returns_tickets_email_after_reregistration(
+    def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(
         self,
     ):
         url_name = "admin_time_place_ticket_list"
@@ -204,15 +204,19 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         username_and_ticket_state_tuples: list[tuple[str, bool]],
         expected_context_ticket_emails: str,
     ):
-        """
-        Asserts that the ``ticket_emails`` in context at ``url_name`` equals ``expected_context_ticket_emails``.
+        """Asserts that the ``ticket_emails`` in context at ``url_name`` equals
+        ``expected_context_ticket_emails``.
 
         :param url_name: Name of URL path
         :param event: Event or TimePlace that the tickets belong to
-        :param username_and_ticket_state_tuples: List of tuples in the format ``(username: str, ticket_state: boolean)``
-        :param expected_context_ticket_emails: The expected string of comma separated ticket emails
+        :param username_and_ticket_state_tuples: List of tuples in the format
+            ``(username: str, ticket_state: boolean)``
+        :param expected_context_ticket_emails: The expected string of comma-separated
+            ticket emails
 
-        :return: Boolean based on whether ``context['ticket_emails'] == expected_context_ticket_emails`` and status code is 200
+        :return: Boolean based on whether
+            ``context['ticket_emails'] == expected_context_ticket_emails`` and status
+            code is 200
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
@@ -233,12 +237,15 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         username_and_ticket_state_tuples: list[tuple[str, bool]],
     ):
         """
-        Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
+        Creates a list of active and inactive tickets for the provided ``event`` from
+        ``username_and_ticket_state_tuples``.
 
         :param event: Event or TimePlace model that the ticket belongs to
-        :param username_and_ticket_state_tuples: List of tuples in the format ``(username: str, ticket_state: boolean)``
+        :param username_and_ticket_state_tuples: List of tuples in the format
+            ``(username: str, ticket_state: boolean)``
 
-        :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
+        :return: List of tickets to ``event`` with the details from
+            ``username_and_ticket_state_tuples``
         """
 
         event_arg_name = "timeplace" if isinstance(event, TimePlace) else "event"

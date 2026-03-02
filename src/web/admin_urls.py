@@ -33,7 +33,8 @@ urlpatterns = [
 urlpatterns += logout_urls()
 
 urlpatterns += i18n_patterns(
-    # Including `admin.site.urls` must be done last, to prevent other paths being "hidden" behind Django admin's catch-all path
+    # Including `admin.site.urls` must be done last, to prevent other paths being
+    # "hidden" behind Django admin's catch-all path
     path("", admin.site.urls),
     prefix_default_language=False,
 )
@@ -45,7 +46,8 @@ if settings.USE_DATAPORTEN_AUTH:
         path(
             "login/",
             RedirectView.as_view(
-                url=f"{reverse('login', host='main')}?next=//admin.{settings.PARENT_HOST}"
+                url=f"{reverse('login', host='main')}"
+                f"?next=//admin.{settings.PARENT_HOST}"
             ),
         ),
         *urlpatterns,

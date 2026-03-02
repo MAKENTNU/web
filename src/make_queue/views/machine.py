@@ -28,9 +28,11 @@ from ..templatetags.reservation_extra import reservation_denied_message
 # noinspection PyUnresolvedReferences
 class MachineTypeRelatedViewMixin:
     """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
-    which will be used to query the database for the machine type that the object(s) are related to.
-    If found, the machine type will be assigned to a ``machine_type`` field on the view, otherwise, a 404 error will be raised.
+    NOTE: When extending this mixin class, it's required to have an ``int`` path
+          converter named ``pk`` as part of the view's path, which will be used to query
+          the database for the machine type that the object(s) are related to.
+          If found, the machine type will be assigned to a ``machine_type`` field on
+          the view, otherwise, a 404 error will be raised.
     """
 
     machine_type: MachineType
@@ -63,8 +65,9 @@ class MachineUsageRuleDetailView(MachineTypeRelatedViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(
             **{
-                # This translation is here instead of in the template, to avoid two translation entries
-                # differing only in format syntax (`{var}` vs `%(var)s`)
+                # This translation is here instead of in the template, to avoid two
+                # translation entries differing only in format syntax
+                # (`{var}` vs `%(var)s`)
                 "title": _("Usage rules for {machine_type}").format(
                     machine_type=self.machine_type,
                 ),
@@ -142,7 +145,8 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         """
-        Create the context required for the controls and the information to be displayed.
+        Create the context required for the controls and the information to be
+        displayed.
 
         :return: context required to show the reservation calendar with controls
         """
@@ -251,9 +255,11 @@ class MachineDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, Delete
 # noinspection PyUnresolvedReferences
 class MachineRelatedViewMixin:
     """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
-    which will be used to query the database for the machine that the object(s) are related to.
-    If found, the machine will be assigned to a ``machine`` field on the view, otherwise, a 404 error will be raised.
+    NOTE: When extending this mixin class, it's required to have an ``int`` path
+          converter named ``pk`` as part of the view's path, which will be used to query
+          the database for the machine that the object(s) are related to.
+          If found, the machine will be assigned to a ``machine`` field on the view,
+          otherwise, a 404 error will be raised.
     """
 
     machine: Machine

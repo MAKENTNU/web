@@ -13,9 +13,10 @@ from util.logging_utils import get_request_logger
 
 
 class CompressedImageField(forms.ImageField):
-    """
-    An image form field that compresses images during cleaning, by reducing the quality of the image.
-    This only applies to JPEG images; images of all other formats will be left unchanged.
+    """An image form field that compresses images during cleaning, by reducing
+    the quality of the image.
+    This only applies to JPEG images; images of all other formats will be left
+    unchanged.
     """
 
     def clean(
@@ -28,10 +29,12 @@ class CompressedImageField(forms.ImageField):
             try:
                 if initial and file_contents_equal(cleaned_data, initial):
                     if not filenames_equal(cleaned_data, initial):
-                        # Return the cleaned data, so that the image will get the name of the uploaded file
+                        # Return the cleaned data, so that the image will get the name
+                        # of the uploaded file
                         return cleaned_data
                     # Don't change the field at all
-                    # (unlike returning `False`, which would clear the image field (and delete the existing file through `django-cleanup`))
+                    # (unlike returning `False`, which would clear the image field (and
+                    # delete the existing file through `django-cleanup`))
                     return None
             except FileNotFoundError:
                 pass
@@ -66,17 +69,20 @@ class CompressedImageField(forms.ImageField):
                                 new_size = os.path.getsize(new_file.file.name)
                             case _:
                                 raise forms.ValidationError(
-                                    f"Unexpected type of uploaded file: {type(cleaned_data)}"
+                                    "Unexpected type of uploaded file:"
+                                    f" {type(cleaned_data)}"
                                 )
 
-                        # Only use the reduced image if its size is actually smaller (for some image files, this wil not be the case)
+                        # Only use the reduced image if its size is actually smaller
+                        # (for some image files, this wil not be the case)
                         if new_size < original_size:
                             return new_file
                         else:
                             new_file.close()
 
             except IOError as e:
-                # Pillow (PIL) will throw an IOError if it cannot open the image, or does not support the given format
+                # Pillow (PIL) will throw an IOError if it cannot open the image, or
+                # does not support the given format
                 get_request_logger().exception(e)
 
         return cleaned_data

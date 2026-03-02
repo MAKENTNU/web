@@ -29,8 +29,9 @@ from ..templatetags.reservation_extra import (
 )
 
 
-# TODO: rewrite this whole view (and everything that uses it), so that it's more extendable,
-#       and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
+# TODO: rewrite this whole view (and everything that uses it), so that it's more
+#       extendable, and makes more use of the functionality of forms and Django's
+#       `CreateView` and `UpdateView`
 class ReservationCreateOrUpdateView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
 
@@ -73,7 +74,8 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             reservation.machine.machine_type,
         ):
             return _(
-                "It is not possible to reserve the machine during these hours. Check the rules for when the machine is reservable"
+                "It is not possible to reserve the machine during these hours."
+                " Check the rules for when the machine is reservable"
             )
         if not reservation.quota_can_create_reservation():
             return _("The reservation exceeds your quota")
@@ -89,8 +91,8 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
 
         :param reservation: The reservation to validate and save
         :param form: The form used to create/change the reservation
-        :return: Either a redirect to the new/changed reservation in the calendar or an error message indicating why
-                 the reservation cannot be validated
+        :return: Either a redirect to the new/changed reservation in the calendar or
+            an error message indicating why the reservation cannot be validated
         """
         if not reservation.validate():
             # Hack to "simulate" `ReservationUpdateView`
@@ -105,7 +107,8 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
     def get_context_data(self, **kwargs):
         """
         Creates the context data required for the make reservation template.
-        If reservation is given as a keyword argument, the view is made for that reservation.
+        If reservation is given as a keyword argument, the view is made for that
+        reservation.
 
         :param kwargs: The request arguments for creating the context data
         :return: The context data needed for the template
@@ -114,6 +117,12 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         machine_queryset = Machine.objects.visible_to(
             self.request.user
         ).default_order_by()
+        machine_type_queryset = (
+            MachineType.objects.default_order_by().prefetch_machines(
+                machine_queryset=machine_queryset,
+                machines_attr_name="instances",
+            )
+        )
         # Always include a list of events and machines to populate the dropdown lists
         context_data = {
             "new_reservation": self.new_reservation,
@@ -122,16 +131,14 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             ),
             "machine_types": [
                 machine_type
-                for machine_type in MachineType.objects.default_order_by().prefetch_machines(
-                    machine_queryset=machine_queryset,
-                    machines_attr_name="instances",
-                )
+                for machine_type in machine_type_queryset
                 if machine_type.can_user_use(self.request.user)
             ],
             "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
         }
 
-        # If we are updating an existing reservation, populate the information relevant to that reservation
+        # If we are updating an existing reservation, populate the information relevant
+        # to that reservation
         if not self.new_reservation or self.reservation:
             # noinspection PyUnresolvedReferences
             reservation = self.reservation  # Defined in `ReservationUpdateView`
@@ -151,7 +158,8 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
                 # Set in `ReservationCreateView`
                 selected_machine = self.machine
             else:
-                # `machine_pk` is only set in `test_get_context_data_non_reservation()` 🙃🔥
+                # `machine_pk` is only set in `test_get_context_data_non_reservation()`
+                # (should rework that test)
                 selected_machine = get_object_or_404(Machine, pk=kwargs["machine_pk"])
             context_data["selected_machine"] = selected_machine
             if "start_time" in kwargs:
@@ -224,7 +232,8 @@ class ReservationCreateView(
 
 
 class ReservationUpdateView(ReservationCreateOrUpdateView):
-    """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
+    """View for changing a reservation (Cannot be UpdateView due to the abstract
+    inheritance of reservations)."""
 
     new_reservation = False
     reservation: Reservation
@@ -241,7 +250,8 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         """
-        Redirects the user to its reservation page if the given reservation cannot be changed.
+        Redirects the user to its reservation page if the given reservation cannot be
+        changed.
 
         :param request: The HTTP request
         """
@@ -254,7 +264,8 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
 
     def form_valid(self, form, **kwargs):
         """
-        Handles updating the reservation if the form is valid, otherwise render the form view with an error code.
+        Handles updating the reservation if the form is valid, otherwise render the form
+        view with an error code.
 
         :param form: The valid form
         :return: HTTP Response

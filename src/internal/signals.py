@@ -6,7 +6,8 @@ from .models import Member
 
 def member_update_user_groups(instance: Member, action, pk_set=None, **kwargs):
     """
-    Makes sure that the member is added/removed from the correct groups as their committee membership changes.
+    Makes sure that the member is added/removed from the correct groups as their
+    committee membership changes.
     """
     if action in {"pre_add", "pre_remove"}:
         committees = Committee.objects.filter(pk__in=pk_set)

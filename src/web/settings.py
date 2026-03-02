@@ -18,7 +18,8 @@ from .static import serve_interpolated
 is_testing = "test" in sys.argv
 # Disable logging when testing
 if is_testing:
-    # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
+    # Disable calls with severity level equal to or less than `CRITICAL` (i.e.
+    # everything)
     logging.disable(logging.CRITICAL)
 
 # Build paths inside the project like this: BASE_DIR / ...
@@ -26,10 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 REPO_DIR = BASE_DIR.parent
 TESTS_DIR = BASE_DIR
 
-# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
-# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
-# (due to Daphne - seemingly - not supporting HTTPS)
-# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether
+# the request is actually over HTTPS, as the connection between Nginx (the proxy we're
+# using) and Django (run by Channel's Daphne server) is currently always over HTTP (due
+# to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes
+# the `X-Forwarded-Proto` header !!!
 # (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -53,8 +56,9 @@ SOCIAL_AUTH_DATAPORTEN_KEY = env.SOCIAL_AUTH_DATAPORTEN_KEY
 # "Client Secret" in the same configuration
 SOCIAL_AUTH_DATAPORTEN_SECRET = env.SOCIAL_AUTH_DATAPORTEN_SECRET
 
-# These will be internationalized since `reverse_lazy()` is used
-# (i.e. these will be English URLs when the user is on the English version of the website, and vice versa for Norwegian)
+# These will be internationalized since `reverse_lazy()` is used (i.e. these will be
+# English URLs when the user is on the English version of the website, and vice versa
+# for Norwegian)
 LOGIN_URL = reverse_lazy("login")
 LOGIN_REDIRECT_URL = reverse_lazy("index_page")
 LOGOUT_REDIRECT_URL = reverse_lazy("index_page")
@@ -64,12 +68,15 @@ CHECKIN_KEY = env.CHECKIN_KEY  # (custom setting)
 # Converting MiB to bytes
 FILE_MAX_SIZE = env.MEDIA_FILE_MAX_SIZE__MB * 2**20  # (custom setting)
 
-# The `SESSION_COOKIE_DOMAIN`, `CSRF_COOKIE_DOMAIN` and `LANGUAGE_COOKIE_DOMAIN` will be set to this value
+# The `SESSION_COOKIE_DOMAIN`, `CSRF_COOKIE_DOMAIN` and `LANGUAGE_COOKIE_DOMAIN` will be
+# set to this value
 COOKIE_DOMAIN = env.COOKIE_DOMAIN  # (custom setting)
-# The `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` and `LANGUAGE_COOKIE_SECURE` will be set to this value
+# The `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` and `LANGUAGE_COOKIE_SECURE` will be
+# set to this value
 COOKIE_SECURE = env.COOKIE_SECURE  # (custom setting)
 
-# For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
+# For `django-hosts` to redirect correctly across subdomains, we have to specify
+# the host we are running on.
 PARENT_HOST = env.PARENT_HOST
 
 IS_DEV_ENV = PARENT_HOST == "makentnu.dev"  # (custom setting)
@@ -77,50 +84,58 @@ IS_DEV_ENV = PARENT_HOST == "makentnu.dev"  # (custom setting)
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 
 
-# When using more than one subdomain, the session cookie domain has to be set so that the subdomains can use the same session
-# (Cannot use only ".localhost", as domains for cookies are required to have two dots in them)
+# When using more than one subdomain, the session cookie domain has to be set so that
+# the subdomains can use the same session
+# (Cannot use only ".localhost", as domains for cookies are required to have two dots in
+# them)
 SESSION_COOKIE_DOMAIN = COOKIE_DOMAIN
-# Whether browsers may ensure that the session cookie is only sent under an HTTPS connection
+# Whether browsers may ensure that the session cookie is only sent under an HTTPS
+# connection
 SESSION_COOKIE_SECURE = COOKIE_SECURE
-# The domain to be used when setting the CSRF cookie, which *must* start with a dot (.) to allow cross-subdomain POST/PUT/etc. requests
+# The domain to be used when setting the CSRF cookie, which *must* start with a dot (.)
+# to allow cross-subdomain POST/PUT/etc. requests
 CSRF_COOKIE_DOMAIN = COOKIE_DOMAIN
-# Whether browsers may ensure that the CSRF cookie is only sent under an HTTPS connection
+# Whether browsers may ensure that the CSRF cookie is only sent under an HTTPS
+# connection
 CSRF_COOKIE_SECURE = COOKIE_SECURE
 # The domain to use for the language cookie
 LANGUAGE_COOKIE_DOMAIN = COOKIE_DOMAIN
-# Whether browsers may ensure that the language cookie is only sent under an HTTPS connection
+# Whether browsers may ensure that the language cookie is only sent under an HTTPS
+# connection
 LANGUAGE_COOKIE_SECURE = COOKIE_SECURE
 
-# The call to `find_spec()` returns something other than `None` only if `django-debug-toolbar` is installed
+# The call to `find_spec()` returns something other than `None` only if
+# `django-debug-toolbar` is installed
 USE_DEBUG_TOOLBAR = DEBUG and find_spec("debug_toolbar") is not None  # (custom setting)
 
 INSTALLED_APPS = [
-    # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
+    # `django-constance` should be listed before project apps - see https://django-constance.readthedocs.io/en/stable/#configuration
     "constance",
     # App used for things regarding the whole project or across other apps
     # (Should be listed first, to be able to override things like management commands)
     "web.apps.WebConfig",
-    # Should be listed before `django.contrib.staticfiles`
-    # (see https://channels.readthedocs.io/en/stable/releases/4.0.0.html#decoupling-of-the-daphne-application-server)
+    # Should be listed before `django.contrib.staticfiles` - see https://channels.readthedocs.io/en/stable/releases/4.0.0.html#decoupling-of-the-daphne-application-server
     "daphne",
-    # Built-in Django apps
+    # --- Built-in Django apps ---
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "web.apps.WebAdminConfig",  # Replaces 'django.contrib.admin'
-    # Third-party packages with significant effect on Django's functionality
+    # --- Third-party packages with significant effect on Django's functionality ---
     "django_hosts",
     "channels",
-    # Other third-party packages
+    # --- Other third-party packages ---
     "social_django",
-    "ckeditor",  # Must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js` apply
+    # Must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js`
+    # apply
+    "ckeditor",
     "ckeditor_uploader",
     "phonenumber_field",
     "simple_history",
     "sorl.thumbnail",
-    # Project apps, listed alphabetically
+    # --- Project apps, listed alphabetically ---
     "announcements",
     "card",
     "checkin",
@@ -135,18 +150,19 @@ INSTALLED_APPS = [
     "news",
     "users",
     "util",
-    # Contains a lot of useful management commands, but is not strictly necessary for the project.
+    # Contains a lot of useful management commands, but is not strictly necessary for
+    # the project.
     # See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html
     "django_extensions",
     *(["debug_toolbar"] if USE_DEBUG_TOOLBAR else []),
-    # Should be placed last,
-    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    # Should be placed last, "to ensure that exceptions inside other apps' signal
+    # handlers do not affect the integrity of file deletions within transactions"
     "django_cleanup.apps.CleanupConfig",
 ]
 
 
 MIDDLEWARE = [
-    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
+    # Must be the first entry - see https://django-hosts.readthedocs.io/en/latest/#installation
     "django_hosts.middleware.HostsRequestMiddleware",
     *(["debug_toolbar.middleware.DebugToolbarMiddleware"] if USE_DEBUG_TOOLBAR else []),
     # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
@@ -159,7 +175,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
-    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
+    # Must be the last entry - see https://django-hosts.readthedocs.io/en/latest/#installation
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
@@ -257,7 +273,7 @@ match env.DATABASE_SYSTEM:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -290,7 +306,8 @@ CONSTANCE_CONFIG = {
     "SHOW_APPLY_BUTTON_IN_HEADER_NAV": (
         True,
         _(
-            "Determines whether the “Apply to MAKE” button in the navigation menu in the header is visible."
+            "Determines whether the “Apply to MAKE” button in the navigation menu in"
+            " the header is visible."
         ),
     ),
     "ENROLL_MEMBERS_GUIDE_LINK": (
@@ -393,8 +410,9 @@ nb_formats.DECIMAL_SEPARATOR = "."
 STATIC_ROOT = STATIC_AND_MEDIA_FILES__PARENT_DIR / "static"
 STATIC_URL = "/static/"
 
-# This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
-# which avoids waiting for browsers' cache to update if a file's contents change
+# This is based on Django's ManifestStaticFilesStorage, which appends every static
+# file's MD5 hash to its filename, which avoids waiting for browsers' cache to update if
+# a file's contents change
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -404,14 +422,17 @@ STORAGES = {
     },
 }
 # Ignores adding a hash to the files whose paths match these glob patterns:
-# NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
-#       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
-#       if the files were not ignored.
-#       For example: placing ignored files inside a folder with a version number as its name.
+# NOTE: Ignored files should be named so that it's obvious that they should be renamed
+#       when their contents update, to avoid being "stuck" in browsers' cache - which is
+#       what `ManifestStaticFilesStorage` would have prevented if the files were not
+#       ignored.
+#       For example: placing ignored files inside a folder with a version number as its
+#       name.
 MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
     "ckeditor/mathjax/*",
 ]
-# Monkey patch view used for serving static files (for development only; Nginx is used in production)
+# Monkey-patch view used for serving static files (for development only; Nginx is used
+# in production)
 django.views.static.serve = serve_interpolated
 
 
@@ -429,7 +450,8 @@ CKEDITOR_IMAGE_BACKEND = "ckeditor_uploader.backends.PillowBackend"
 # Group files by directories when browsing uploaded files
 CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_FILENAME_GENERATOR = "util.ckeditor_utils.get_filename"
-# Don't place uploaded files in directories per date (placement is decided in `ckeditor_utils.py`)
+# Don't place uploaded files in directories per date (placement is decided in
+# `ckeditor_utils.py`)
 CKEDITOR_RESTRICT_BY_DATE = False
 
 CKEDITOR_CONFIGS = {
@@ -494,7 +516,8 @@ CKEDITOR_CONFIGS = {
         ),
     }
 }
-# This config should only be used for a rich text widget if the user has the `internal.can_change_rich_text_source` permission
+# This config should only be used for a rich text widget if the user has
+# the `internal.can_change_rich_text_source` permission
 CKEDITOR_EDIT_SOURCE_CONFIG_NAME = "edit_source"  # (custom setting)
 CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME] = copy.deepcopy(
     CKEDITOR_CONFIGS["default"]
@@ -594,7 +617,8 @@ LOGGING = {
             f"django.{disabled_logger_name}": {"propagate": False}
             for disabled_logger_name in ["db", "template", "utils"]
         },
-        # Prevent deluge of "X of X channels over capacity in group stream_XXX" INFO messages from `channels_redis`
+        # Prevent deluge of "X of X channels over capacity in group stream_XXX" INFO
+        # messages from `channels_redis`
         "channels_redis": {
             "handlers": ["console"],
             "level": "WARNING",
@@ -603,8 +627,8 @@ LOGGING = {
 }
 
 """
-Uncomment to print all database queries to the console;
-useful for checking e.g. that a request doesn't query the database more times than necessary.
+Uncomment to print all database queries to the console; useful for checking e.g. that
+a request doesn't query the database more times than necessary.
 """
 # LOGGING["loggers"]["django.db"] = {
 #     "level": "DEBUG",

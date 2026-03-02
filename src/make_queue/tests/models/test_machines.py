@@ -79,7 +79,8 @@ class TestGenericMachine(TestCase):
 
 class TestCanUse3DPrinter(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_can_user_3d_printer_not_authenticated(self):

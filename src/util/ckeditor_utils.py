@@ -20,8 +20,9 @@ from web import admin_urls
 
 def get_filename(upload_name: str, request):
     """
-    This function is used by the ``CKEDITOR_FILENAME_GENERATOR`` setting
-    to set the name (incl. prefixed names of containing folders) of files uploaded using the CKEditor uploader widget.
+    This function is used by the ``CKEDITOR_FILENAME_GENERATOR`` setting to set the name
+    (incl. prefixed names of containing folders) of files uploaded using the CKEditor
+    uploader widget.
     """
     filename = utils.slugify_filename(upload_name)
     date_prefix = timezone.localdate().strftime("%Y/%m/%d")
@@ -30,7 +31,8 @@ def get_filename(upload_name: str, request):
         folder_name = get_folder_name(request)
     except Exception as e:
         log_request_exception(
-            f"Failed to determine the proper folder name for the file with name '{upload_name}'",
+            "Failed to determine the proper folder name for the file with name"
+            f" '{upload_name}'",
             e,
             request,
         )
@@ -47,8 +49,9 @@ def get_folder_name(request):
         raise Exception("Could not find HTTP_REFERER among the request's headers")
 
     origin_path = urlparse(origin_full_url).path
-    # Replace `%xx` escapes with their single-character equivalent, to prevent errors in `resolve()` below
-    # - which could happen if resolving e.g. the path of a documentation page, which can contain `%xx` characters (like `%20` for space)
+    # Replace `%xx` escapes with their single-character equivalent, to prevent errors in
+    # `resolve()` below - which could happen if resolving e.g. the path of
+    # a documentation page, which can contain `%xx` characters (like `%20` for space)
     origin_path = unquote(origin_path)
 
     view_func, _args, _kwargs = resolve(origin_path, request.urlconf)

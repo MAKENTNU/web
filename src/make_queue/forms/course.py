@@ -63,7 +63,8 @@ class Printer3DCourseForm(forms.ModelForm):
                 # a translation of "Building security":
                 # https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
                 message = _(
-                    "The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number."
+                    "The card number was detected to be the phone number of"
+                    " Building security at NTNU. Please enter a valid card number."
                 )
                 raise forms.ValidationError(message)
         return card_number

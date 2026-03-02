@@ -7,7 +7,8 @@ from django.core.management.commands import makemessages
 
 
 class Command(makemessages.Command):
-    # Remove leading `./` as well, in case it ever happens to be generated (see comment above `write_po_file()` for context)
+    # Remove leading `./` as well, in case it ever happens to be generated (see comment
+    # above `write_po_file()` for context)
     PATH_PREFIX_REGEX: Final = re.compile(r" \.[\\/]")
     PATH_PREFIX_REPLACEMENT: Final = " "
 
@@ -18,8 +19,8 @@ class Command(makemessages.Command):
         if path.is_dir() and path != settings.BASE_DIR
     ]
     IGNORED_DIRS_HELP_SUFFIX: Final = (
-        "\n\nIf no --ignore options are provided, the following directories are ignored:"
-        f" [{', '.join(DEFAULT_IGNORED_DIRS)}]."
+        "\n\nIf no --ignore options are provided, the following directories are"
+        f" ignored: [{', '.join(DEFAULT_IGNORED_DIRS)}]."
     )
 
     help = f"{makemessages.Command.help}{IGNORED_DIRS_HELP_SUFFIX}"
@@ -31,11 +32,12 @@ class Command(makemessages.Command):
 
         return super().execute(*args, **options)
 
-    # On Windows, it seems like the `.po` files consistently have their file location comments formatted with
-    # backslashes (\) instead of forward slashes (/) - which is the standard file path format on Windows - and
-    # a leading `.\` path prefix.
-    # The code below converts those comments to the format generated on Linux (forward slashes and no leading `.\`),
-    # to ensure that the command output is not dependent on each developer's operating system.
+    # On Windows, it seems like the `.po` files consistently have their file location
+    # comments formatted with backslashes (\) instead of forward slashes (/) - which is
+    # the standard file path format on Windows - and a leading `.\` path prefix.
+    # The code below converts those comments to the format generated on Linux (forward
+    # slashes and no leading `.\`), to ensure that the command output is not dependent
+    # on each developer's operating system.
     def write_po_file(self, potfile, locale):
         super().write_po_file(potfile=potfile, locale=locale)
 

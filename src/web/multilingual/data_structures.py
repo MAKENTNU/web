@@ -39,8 +39,8 @@ class MultiLingualTextStructure:
         try:
             json_dict = json.loads(json_content)
         except JSONDecodeError as e:
-            # If for some reason (i.e. old or corrupt data) the content given is not JSON,
-            # use it as content for the default language.
+            # If for some reason (i.e. old or corrupt data) the content given is not
+            # JSON, use it as content for the default language.
             self.languages[settings.LANGUAGE_CODE] = json_content
             get_request_logger().exception(
                 f"Unable to decode as JSON:\n{json_content}", exc_info=e
@@ -52,8 +52,9 @@ class MultiLingualTextStructure:
 
     def __str__(self):
         """
-        Return the content in the current language of the thread when called, to provide a seamless API to Django.
-        Meaning that in most places, the object will appear as a localized string without any extra code.
+        Return the content in the current language of the thread when called, to provide
+        a seamless API to Django. Meaning that in most places, the object will appear as
+        a localized string without any extra code.
         """
         return self[get_language()]
 
@@ -70,8 +71,8 @@ class MultiLingualTextStructure:
         value = self.languages.get(key, "")
         if value or not self.use_default_for_empty:
             return value
-        # If the value for the given language is empty and use_default_for_empty is set to True, provide the value of
-        # the default language instead
+        # If the value for the given language is empty and use_default_for_empty is set
+        # to True, provide the value of the default language instead
         return self.languages[settings.LANGUAGE_CODE]
 
     def __setitem__(self, key, item: str):

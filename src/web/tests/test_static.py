@@ -18,7 +18,8 @@ class InterpolatedStaticFilesTests(LiveServerTestCase):
             f"{favicons_folder}browserconfig.interpolated.xml": [
                 (
                     f"{{% static '{favicons_folder}mstile-150x150.png' %}}",
-                    rf"/static/{favicons_folder}mstile-150x150{MANIFEST_HEX_SUFFIX_REGEX}\.png",
+                    f"/static/{favicons_folder}mstile-150x150"
+                    rf"{MANIFEST_HEX_SUFFIX_REGEX}\.png",
                 )
             ]
             for favicons_folder in favicons_folders
@@ -27,18 +28,21 @@ class InterpolatedStaticFilesTests(LiveServerTestCase):
             f"{favicons_folder}site.interpolated.webmanifest": [
                 (
                     f"{{% static '{favicons_folder}android-chrome-192x192.png' %}}",
-                    rf"/static/{favicons_folder}android-chrome-192x192{MANIFEST_HEX_SUFFIX_REGEX}\.png",
+                    f"/static/{favicons_folder}android-chrome-192x192"
+                    rf"{MANIFEST_HEX_SUFFIX_REGEX}\.png",
                 ),
                 (
                     f"{{% static '{favicons_folder}android-chrome-512x512.png' %}}",
-                    rf"/static/{favicons_folder}android-chrome-512x512{MANIFEST_HEX_SUFFIX_REGEX}\.png",
+                    f"/static/{favicons_folder}android-chrome-512x512"
+                    rf"{MANIFEST_HEX_SUFFIX_REGEX}\.png",
                 ),
             ]
             for favicons_folder in favicons_folders
         },
     }
 
-    # Requesting static files does for some reason not work with `self.client.get()` - even when subclassing `StaticLiveServerTestCase`
+    # Requesting static files does for some reason not work with `self.client.get()`
+    # - even when subclassing `StaticLiveServerTestCase`
     def request(self, url: str):
         return urlopen(f"{self.live_server_url}{url}")
 
@@ -64,7 +68,8 @@ class InterpolatedStaticFilesTests(LiveServerTestCase):
                     self.assertIn(before_string, file_contents)
                     if not is_using_manifest:
                         # Remove the manifest regex, as when in debug mode,
-                        # static files are served directly from the source directory (instead of from the `STATIC_ROOT` directory)
+                        # static files are served directly from the source directory
+                        # (instead of from the `STATIC_ROOT` directory)
                         after_string = after_string.replace(
                             MANIFEST_HEX_SUFFIX_REGEX, ""
                         )

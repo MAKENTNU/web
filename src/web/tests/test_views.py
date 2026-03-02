@@ -78,7 +78,8 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.create_time_place(start_time=now - timedelta(days=1), event=past_repeating)
         assert_context_event_dicts_equal([])
 
-        # Events with future time places should be shown, even if they also have past time places
+        # Events with future time places should be shown, even if they also have past
+        # time places
         future_standalone = self.create_event(event_type=Event.Type.STANDALONE)
         future_standalone__past = self.create_time_place(
             start_time=now + timedelta(days=-2), event=future_standalone
@@ -107,8 +108,8 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
             [future_standalone_dict, future_repeating_dict]
         )
 
-        # Adding a time place that occurs before the existing future ones,
-        # should change the first occurrence, and make the associated event be listed first
+        # Adding a time place that occurs before the existing future ones, should change
+        # the first occurrence, and make the associated event be listed first
         future_repeating__1_day = self.create_time_place(
             start_time=now + timedelta(days=1), event=future_repeating
         )
@@ -118,7 +119,8 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
             [future_repeating_dict, future_standalone_dict]
         )
 
-        # Adding a time place that occurs between the two existing ones for that event, should not change the first occurrence
+        # Adding a time place that occurs between the two existing ones for that event,
+        # should not change the first occurrence
         future_repeating__2_days = self.create_time_place(
             start_time=now + timedelta(days=2), event=future_repeating
         )
@@ -156,8 +158,8 @@ class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
                 )
                 self.assertFalse(response_context["more_events_exist"])
 
-        # Create one more event before the existing ones, which should not change the number of events shown,
-        # and should make the "More events" button visible
+        # Create one more event before the existing ones, which should not change
+        # the number of events shown, and should make the "More events" button visible
         event = self.create_event_with_one_time_place(
             event_type=Event.Type.STANDALONE, start_time=now + timedelta(days=0.5)
         )

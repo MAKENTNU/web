@@ -143,8 +143,9 @@ class MultiSubdomainTests(TestCase):
 
         self.internal_user = User.objects.create_user("internal_user")
         self.internal_admin = User.objects.create_user("internal_admin", is_staff=True)
-        # This superuser should not have any permissions added to their `user_permissions` or through groups,
-        # to test that they have all permissions without having to grant any explicitly
+        # This superuser should not have any permissions added to their
+        # `user_permissions` or through groups, to test that they have all permissions
+        # without having to grant any explicitly
         self.superuser = User.objects.create_user(
             "superuser", is_staff=True, is_superuser=True
         )
@@ -222,10 +223,12 @@ class MultiSubdomainTests(TestCase):
             self.assertEqual(response.status_code, HTTPStatus.OK)
             self.assertEqual(response.context["has_change_permission"], can_change)
             form_fields = response.context["adminform"].form.fields
-            # If the user does not have the change permission, the form should not contain any fields, as the page will be read-only
+            # If the user does not have the change permission, the form should not
+            # contain any fields, as the page will be read-only
             self.assertEqual(bool(form_fields), can_change)
 
-        # Only users with the `internal_change_perm` permission can edit internal content boxes
+        # Only users with the `internal_change_perm` permission can edit internal
+        # content boxes
         self.assertEqual(
             self.internal_user__internal_client.get(self.internal_edit_url).status_code,
             HTTPStatus.FORBIDDEN,
@@ -253,7 +256,8 @@ class MultiSubdomainTests(TestCase):
         assert_staff_can_change_through_django_admin(
             True, self.superuser__admin_client, self.internal_admin_edit_url
         )
-        # Non-staff users are redirected to the login page by Django admin if they lack the required permissions
+        # Non-staff users are redirected to the login page by Django admin if they lack
+        # the required permissions
         self.assertRedirects(
             self.internal_user__admin_client.get(self.public_admin_edit_url),
             f"/login/?next={urlparse(self.public_admin_edit_url).path}",
@@ -269,7 +273,8 @@ class MultiSubdomainTests(TestCase):
             content_type=ContentType.objects.get_for_model(ContentBox),
         )
         self.internal_content_box.extra_change_permissions.add(extra_perm)
-        # Users without the extra change permission for the content box, are not allowed to edit it
+        # Users without the extra change permission for the content box, are not allowed
+        # to edit it
         self.assertEqual(
             self.internal_admin__internal_client.get(
                 self.internal_edit_url
@@ -279,7 +284,8 @@ class MultiSubdomainTests(TestCase):
         assert_staff_can_change_through_django_admin(
             False, self.internal_admin__admin_client, self.internal_admin_edit_url
         )
-        # After granting `internal_admin` the extra change permission, they can edit the content box again:
+        # After granting `internal_admin` the extra change permission, they can edit
+        # the content box again:
         self.internal_admin.user_permissions.add(extra_perm)
         self.assertEqual(
             self.internal_admin__internal_client.get(

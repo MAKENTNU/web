@@ -53,7 +53,8 @@ urlpatterns = [
 
 admin_urlpatterns = [
     path("", views.AdminPanelView.as_view(), name="admin_panel"),
-    # App paths, sorted by app label (should have the same path prefixes as the ones in `urlpatterns` below):
+    # App paths, sorted by app label (should have the same path prefixes as the ones in
+    # `urlpatterns` below):
     path("announcements/", include(announcements_urls.adminpatterns)),
     path("checkin/", include(checkin_urls.adminpatterns)),
     path("faq/", include(faq_urls.adminpatterns)),
@@ -64,7 +65,8 @@ admin_urlpatterns = [
 ]
 
 admin_api_urlpatterns = [
-    # App paths, sorted by app label (should have the same path prefixes as the ones in `urlpatterns` below):
+    # App paths, sorted by app label (should have the same path prefixes as the ones in
+    # `urlpatterns` below):
     path("checkin/", include(checkin_urls.adminapipatterns)),
     path("news/", include(news_urls.adminapipatterns)),
     path("users/", include(users_urls.adminapipatterns)),
@@ -80,7 +82,8 @@ api_urlpatterns = [
             admin_api_urlpatterns,
         ),
     ),
-    # App paths, sorted by app label (should have the same path prefixes as the ones in `urlpatterns` below):
+    # App paths, sorted by app label (should have the same path prefixes as the ones in
+    # `urlpatterns` below):
     path("reservation/", include(make_queue_urls.apipatterns)),
 ]
 
@@ -136,7 +139,8 @@ if settings.USE_DATAPORTEN_AUTH:
             RedirectView.as_view(url="/login/dataporten/", query_string=True),
             name="login",
         ),
-        # This line must come before including `social_django.urls` below, to override social_django's `complete` view
+        # This line must come before including `social_django.urls` below, to override
+        # social_django's `complete` view
         re_path(rf"^complete/(?P<backend>[^/]+){extra}$", login_wrapper),
         path("", include("social_django.urls", namespace="social")),
         prefix_default_language=False,
@@ -150,7 +154,8 @@ else:
             auth_views.LoginView.as_view(
                 template_name="web/login.html",
                 redirect_authenticated_user=True,
-                # This allows the `next` query parameter (used when logging in) to redirect to pages on all the subdomains
+                # This allows the `next` query parameter (used when logging in) to
+                # redirect to pages on all the subdomains
                 success_url_allowed_hosts=set(settings.ALLOWED_REDIRECT_HOSTS),
             ),
             name="login",
@@ -161,8 +166,10 @@ urlpatterns += logout_urls()
 
 Owner = ReservationListQueryForm.Owner
 # --- Old URLs ---
-# URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs.
-# These need only be URLs for pages that are likely to have been linked to, and that are deemed important to keep working.
+# URLs kept for "backward-compatibility" after paths were changed, so that users are
+# simply redirected to the new URLs.
+# These need only be URLs for pages that are likely to have been linked to, and that are
+# deemed important to keep working.
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(pattern_name="rules", permanent=True)),
     path(
@@ -172,7 +179,8 @@ urlpatterns += i18n_patterns(
     path(
         "reservation/<int:year>/<int:week>/<int:pk>/",
         RedirectView.as_view(
-            url="/reservation/machines/%(pk)s/?calendar_year=%(year)s&calendar_week=%(week)s",
+            url="/reservation/machines/%(pk)s/"
+            "?calendar_year=%(year)s&calendar_week=%(week)s",
             permanent=True,
         ),
     ),

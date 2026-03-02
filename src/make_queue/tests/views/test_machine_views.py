@@ -300,7 +300,8 @@ class TestMachineListView(TestCase):
     def create_machine(
         name_prefix: str, machine_type: MachineType, **kwargs
     ) -> Machine:
-        """Creates a machine of type ``machine_type`` with name '``name_prefix`` ``machine_type``'."""
+        """Creates a machine of type ``machine_type`` with name
+        "``name_prefix`` ``machine_type``"."""
         return Machine.objects.create(
             name=f"{name_prefix} {machine_type.name}",
             machine_type=machine_type,
@@ -310,7 +311,8 @@ class TestMachineListView(TestCase):
 
 class TestMachineDetailView(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         printer_machine_type = MachineType.objects.get(pk=1)
         sewing_machine_type = MachineType.objects.get(pk=2)
 
@@ -343,7 +345,8 @@ class TestMachineDetailView(TestCase):
         for machine in self.machines:
             with self.subTest(machine=machine):
                 base_url = reverse("machine_detail", args=[machine.pk])
-                # (`calendar_year=1&calendar_week=1` causes an `OverflowError`, but not consistently in all test environments)
+                # (`calendar_year=1&calendar_week=1` causes an `OverflowError`, but not
+                # consistently in all test environments)
                 assert_context_has(
                     f"{base_url}?calendar_year=1&calendar_week=2",
                     selected_year=1,
@@ -400,7 +403,10 @@ class TestMachineDetailView(TestCase):
         value_not_int = "Oppgi et heltall."
         both_fields_must_be_set = {
             "__all__": [
-                "Either both 'calendar_year' and 'calendar_week' must be set, or none of them."
+                (
+                    "Either both 'calendar_year' and 'calendar_week' must be set, or"
+                    " none of them."
+                )
             ]
         }
         undefined_asdf_field = {

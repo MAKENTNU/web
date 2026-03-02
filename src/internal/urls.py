@@ -103,7 +103,8 @@ quote_urlpatterns = [
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name="home"), name="home"),
     path("bulletins/", include(committee_bulletin_urlpatterns)),
-    # The proper `url_name` for this would be `MAKE-history`, but the validator of the model's field requires it to be lowercase
+    # The proper `url_name` for this would be `MAKE-history`, but the validator of
+    # the model's field requires it to be lowercase
     views.InternalContentBoxDetailView.get_path("make-history"),
     path("contentbox/", include(internal_content_box_urlpatterns)),
     path(

@@ -28,7 +28,8 @@ from ..models.reservation import Quota
 class AdminQuotaPanelView(
     PermissionRequiredMixin, QueryParameterFormMixin, TemplateView
 ):
-    """View for the quota admin panel that allows admins to control the quotas of users."""
+    """View for the quota admin panel that allows admins to control the quotas of
+    users."""
 
     permission_required = ("make_queue.change_quota",)
     template_name = "make_queue/quota/admin_quota_panel.html"

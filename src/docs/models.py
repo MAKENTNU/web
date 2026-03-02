@@ -47,7 +47,8 @@ class Page(models.Model):
 
 
 class Content(models.Model):
-    """The content of a documentation page. All versions are kept for editing history."""
+    """The content of a documentation page. All versions are kept for editing
+    history."""
 
     page = models.ForeignKey(
         to=Page,

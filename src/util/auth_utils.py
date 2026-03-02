@@ -22,8 +22,9 @@ def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, 
 
         perms_not_found = perm_strings_set - set(perms_to_str(filtered_perms))
         if not perms_not_found:
-            # If all the perm arguments were found, it means that the filtered perms contain duplicate
-            # combinations of app labels and codenames, in which case it's fine to just return them
+            # If all the perm arguments were found, it means that the filtered perms
+            # contain duplicate combinations of app labels and codenames, in which case
+            # it's fine to just return them
             return
         perms_not_found_str = ", ".join(f"'{perm}'" for perm in perms_not_found)
         raise Permission.DoesNotExist(
@@ -44,7 +45,8 @@ def perm_to_str(permission: Permission) -> str:
 def perms_to_str(
     permissions: QuerySet[Permission] | Sequence[Permission],
 ) -> tuple[str]:
-    """Find the ``<app_label>.<codename>`` strings for a collection of permission objects."""
+    """Find the ``<app_label>.<codename>`` strings for a collection of permission
+    objects."""
     if isinstance(permissions, QuerySet):
         return tuple(
             f"{app_label}.{codename}"

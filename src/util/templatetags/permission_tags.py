@@ -16,14 +16,15 @@ def has_any_permissions_for(
 ):
     """
     :param user: the user to check permissions for
-    :param model__or__app_and_model: either a model type, a string with the name of a uniquely named model,
-                                     or a string of the format "{app_label}.{model_name}"
+    :param model__or__app_and_model: either a model type, a string with the name of
+        a uniquely named model, or a string of the format "{app_label}.{model_name}"
     """
     if not isinstance(model__or__app_and_model, str) and not isinstance(
         model__or__app_and_model, type(models.Model)
     ):
         raise ValueError(
-            f"Expected an instance of {str} or {type(models.Model)}, but got '{model__or__app_and_model}'"
+            f"Expected an instance of {str} or {type(models.Model)}, but got"
+            f" '{model__or__app_and_model}'"
         )
 
     if user.is_anonymous:

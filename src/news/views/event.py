@@ -322,9 +322,11 @@ class EventCreateView(PermissionRequiredMixin, EventFormMixin, CreateView):
 
 class EventRelatedViewMixin:
     """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
-    which will be used to query the database for the event that the object(s) are related to.
-    If found, the event will be assigned to an ``event`` field on the view, otherwise, a 404 error will be raised.
+    NOTE: When extending this mixin class, it's required to have an ``int`` path
+          converter named ``pk`` as part of the view's path, which will be used to query
+          the database for the event that the object(s) are related to.
+          If found, the event will be assigned to an ``event`` field on the view,
+          otherwise, a 404 error will be raised.
     """
 
     event: Event
@@ -338,10 +340,14 @@ class EventRelatedViewMixin:
 
 class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
     """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``time_place_pk`` as part of the view's path,
-    which will be used to query the database for the time place that the object(s) are related to.
-    If either the time place's PK does not exist, or if the time place is not related to the event found by the parent class
-    ``EventRelatedViewMixin``, a 404 error will be raised. Otherwise, the time place will be assigned to a ``time_place`` field on the view.
+    NOTE: When extending this mixin class, it's required to have an ``int`` path
+          converter named ``time_place_pk`` as part of the view's path, which will be
+          used to query the database for the time place that the object(s) are related
+          to.
+          If either the time place's PK does not exist, or if the time place is not
+          related to the event found by the parent class ``EventRelatedViewMixin``, a
+          404 error will be raised. Otherwise, the time place will be assigned to
+          a ``time_place`` field on the view.
 
     See the docstring of the mentioned parent class for additional details.
     """
@@ -495,7 +501,8 @@ class EventTicketCreateView(
         time_place_pk = self.kwargs.get("time_place_pk")
         if time_place_pk is None:
             self.ticket_time_place = None
-            # Raise an error if the event has no time places (see the first `timeplaces` check in `Event.can_register()`)
+            # Raise an error if the event has no time places (see the first `timeplaces`
+            # check in `Event.can_register()`)
             if not self.event.timeplaces.exists():
                 raise Http404("Cannot register for an event with no time places")
 
@@ -517,7 +524,8 @@ class EventTicketCreateView(
         return can_register_for_time_place or can_register_for_event
 
     def dispatch(self, request, *args, **kwargs):
-        # If the user already has an active ticket for the event/timeplace, redirect to that ticket
+        # If the user already has an active ticket for the event/timeplace, redirect to
+        # that ticket
         try:
             ticket = self.request.user.event_tickets.get(
                 active=True, timeplace=self.ticket_time_place, event=self.ticket_event
@@ -537,10 +545,12 @@ class EventTicketCreateView(
                 event=self.ticket_event,
             )
         except EventTicket.DoesNotExist:
-            # If this is a completely new ticket, set the initial language to the user-set site language
+            # If this is a completely new ticket, set the initial language to
+            # the user-set site language
             kwargs["initial"]["language"] = get_language()
         else:
-            # If a user already has an existing ticket for the timeplace/event, use this as the instance
+            # If a user already has an existing ticket for the timeplace/event, use this
+            # as the instance
             kwargs["instance"] = existing_ticket_for_user
 
         # Forcefully insert the user, time place and event into the form
@@ -558,7 +568,8 @@ class EventTicketCreateView(
         # This is done mainly for reactivating an existing ticket
         form_instance.active = True
         # If the ticket object already exists, update the timestamp
-        # (the model's `save()` method handles setting the timestamp when creating the ticket object)
+        # (the model's `save()` method handles setting the timestamp when creating
+        # the ticket object)
         if not form_instance._state.adding:
             form_instance.active_last_modified = timezone.localtime()
         ticket: EventTicket = form.save()
@@ -629,7 +640,8 @@ class EventTicketMyListView(LoginRequiredMixin, ListView):
     context_object_name = "tickets"
 
     def get_queryset(self):
-        # Prefetching `timeplace__event` instead of selecting related, to prevent debug error messages when `timeplace` is `None`
+        # Prefetching `timeplace__event` instead of selecting related, to prevent debug
+        # error messages when `timeplace` is `None`
         return self.request.user.event_tickets.prefetch_related(
             "event__timeplaces__event", "timeplace__event"
         )
@@ -652,7 +664,8 @@ class AdminEventTicketListView(
         if (
             # If the event / time place has no tickets
             not focused_object.tickets.exists()
-            # ...and the event is of the "wrong" type to view the tickets connected to `focused_object`:
+            # ...and the event is of the "wrong" type to view the tickets connected to
+            # `focused_object`:
             and (
                 (isinstance(focused_object, Event) and self.event.repeating)
                 or (isinstance(focused_object, TimePlace) and self.event.standalone)
@@ -667,7 +680,8 @@ class AdminEventTicketListView(
             "news/event/admin_event_ticket_list__event_type_error.html"
         ).render({"event": self.event})
         if settings.DEBUG:
-            # Should remove the excess whitespace when displayed on Django's debug error page
+            # Should remove the excess whitespace when displayed on Django's debug error
+            # page
             message = mark_safe(trim_whitespace(message))
         return message
 
@@ -740,7 +754,8 @@ class EventTicketCancelView(PermissionRequiredMixin, CleanNextParamMixin, Update
         else:
             at_time_string = ""
         heading = _(
-            "Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?"
+            "Are you sure you want to cancel your ticket for"
+            "<br/>“{event}”{at_time_string}?"
         ).format(
             event=self.ticket.registered_event,
             at_time_string=at_time_string,

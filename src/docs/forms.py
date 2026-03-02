@@ -64,7 +64,8 @@ class ChangePageVersionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Limit the choices to the initial ones, to reduce the size of the HTML generated for a non-changing hidden form
+        # Limit the choices to the initial ones, to reduce the size of the HTML
+        # generated for a non-changing hidden form
         choice = kwargs.get("initial").get("current_content")
         if choice:
             self.fields["current_content"].choices = [(choice.pk, choice)]

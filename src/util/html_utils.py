@@ -15,8 +15,9 @@ def _should_include_escape_entry(unicode_character: str, named_character: str):
 
     if len(unicode_character) != 1:
         return False
-    # The character should be escaped (and therefore included in the dict) if it's not ASCII.
-    # Might have to tweak the condition below, e.g. by checking if the character is part of `string.printable` instead.
+    # The character should be escaped (and therefore included in the dict) if it's not
+    # ASCII. Might have to tweak the condition below, e.g. by checking if the character
+    # is part of `string.printable` instead.
     should_escape = ord(unicode_character) >= 128
     return should_escape
 

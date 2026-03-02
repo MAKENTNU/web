@@ -25,7 +25,8 @@ from ...views.reservation import ReservationCreateView, ReservationUpdateView
 class ReservationCreateOrUpdateViewTestBase(TestCase, ABC):
     def setUp(self):
         Reservation.FUTURE_LIMIT = timedelta(days=7)
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.sewing_machine_type = MachineType.objects.get(pk=2)
         self.user = User.objects.create_user(username="test")
         self.machine = Machine.objects.create(
@@ -103,8 +104,8 @@ class TestReservationCreateOrUpdateView(ReservationCreateOrUpdateViewTestBase):
         view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         self.assertEqual(
             view.get_error_message(form, reservation),
-            "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene for hvilke "
-            "perioder det er mulig å reservere maskinen i",
+            "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene"
+            " for hvilke perioder det er mulig å reservere maskinen i",
         )
 
     def test_get_error_message_event(self):
@@ -142,7 +143,8 @@ class TestReservationCreateOrUpdateView(ReservationCreateOrUpdateViewTestBase):
         view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         self.assertEqual(
             view.get_error_message(form, reservation),
-            f"Reservasjoner kan bare lages {Reservation.FUTURE_LIMIT.days} dager fram i tid",
+            f"Reservasjoner kan bare lages {Reservation.FUTURE_LIMIT.days} dager fram"
+            f" i tid",
         )
 
     def test_get_error_message_machine_out_of_order(self):
@@ -301,7 +303,7 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
             **{"pk": self.machine.pk, **kwargs},
         )
 
-    def test_only_users_with_3d_printer_course_can_view_create_reservation_page_for_3d_printers(
+    def test_only_3d_printer_users_can_view_create_reservation_page_for_3d_printers(
         self,
     ):
         printer_machine_type = MachineType.objects.get(pk=1)
@@ -326,7 +328,7 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
             self.user, machine
         )
 
-    def test_only_users_with_raise3d_course_can_view_create_reservation_page_for_raise3d_printers(
+    def test_only_raise3d_users_can_view_create_reservation_page_for_raise3d_printers(
         self,
     ):
         def set_raise3d_course(course: Printer3DCourse):
@@ -343,11 +345,11 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
             machine_model="Raise3D Pro2 Plus",
             machine_type=raise3d_machine_type,
         )
-        self._test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
-            machine, set_raise3d_course
+        self._test_which_users_can_view_create_reservation_page_for_advanced_printers(
+            machine, set_advanced_course_func=set_raise3d_course
         )
 
-    def test_only_users_with_sla_course_can_view_create_reservation_page_for_sla_printers(
+    def test_only_sla_users_can_view_create_reservation_page_for_sla_printers(
         self,
     ):
         def set_sla_course(course: Printer3DCourse):
@@ -364,13 +366,14 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
             machine_model="Formlabs Form 2",
             machine_type=sla_machine_type,
         )
-        self._test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
-            machine, set_sla_course
+        self._test_which_users_can_view_create_reservation_page_for_advanced_printers(
+            machine, set_advanced_course_func=set_sla_course
         )
 
-    def _test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
+    def _test_which_users_can_view_create_reservation_page_for_advanced_printers(
         self,
         machine: Machine,
+        *,
         set_advanced_course_func: Callable[[Printer3DCourse], None],
     ):
         reservation_create_url = reverse("reservation_create", args=[machine.pk])
@@ -496,7 +499,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
         view = self.get_view(pk=reservation.pk)
         view.request.method = "POST"
         response = view.dispatch(view.request, pk=reservation.pk)
-        # Response should be the edit page for the reservation, as no form is posted with the data
+        # Response should be the edit page for the reservation, as no form is posted
+        # with the data
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertListEqual(
             response.template_name, ["make_queue/reservation_form.html"]
@@ -630,7 +634,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
 class TestReservationListView(TestCase):
     def setUp(self):
         now = timezone.localtime()
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         printer_machine_type = MachineType.objects.get(pk=1)
         sewing_machine_type = MachineType.objects.get(pk=2)
 

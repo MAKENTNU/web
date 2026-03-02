@@ -13,7 +13,8 @@ class PermissionTagTests(TestCase):
         self.user.groups.add(self.group)
 
     def clear_user_perm_cache(self):
-        # Re-fetch the user from the database, to clear the permission cache (`refresh_from_db()` does not work for this)
+        # Re-fetch the user from the database, to clear the permission cache
+        # (`refresh_from_db()` does not work for this)
         self.user = User.objects.get(pk=self.user.pk)
 
     def test__has_any_permissions_for__returns_as_expected(self):
@@ -56,12 +57,14 @@ class PermissionTagTests(TestCase):
         assert_can_view_admin_panel(False)
         self.group.permissions.set([get_perm("groups.add_committee")])
         assert_can_view_admin_panel(True)
-        # This custom permission should pass the assertion, as it's listed in `AdminPanelView.EXTRA_PERMS`
+        # This custom permission should pass the assertion, as it's listed in
+        # `AdminPanelView.EXTRA_PERMS`
         self.group.permissions.set(
             [get_perm("make_queue.can_create_event_reservation")]
         )
         assert_can_view_admin_panel(True)
-        # This custom permission should fail the assertion, as it's not listed in `AdminPanelView.EXTRA_PERMS`
+        # This custom permission should fail the assertion, as it's not listed in
+        # `AdminPanelView.EXTRA_PERMS`
         self.group.permissions.set([get_perm("internal.is_internal")])
         assert_can_view_admin_panel(False)
         # Clear the group's permissions

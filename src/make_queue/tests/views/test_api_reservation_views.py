@@ -39,7 +39,8 @@ class APIReservationListViewTests(TestCase):
         self.admin_client.force_login(self.admin)
         self.user_client.force_login(self.user)
 
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         printer_machine_type = MachineType.objects.get(pk=1)
         self.machine1 = Machine.objects.create(
             name="Machine 1", machine_type=printer_machine_type
@@ -99,7 +100,8 @@ class APIReservationListViewTests(TestCase):
         self.machine1_url = reverse("api_reservation_list", args=[self.machine1.pk])
 
     def test_responds_with_expected_json_for_various_datetimes(self):
-        # Facilitates printing the whole diff if the tests fail, which is useful due to the long dict strings in this test case
+        # Facilitates printing the whole diff if the tests fail, which is useful due to
+        # the long dict strings in this test case
         self.maxDiff = None
 
         def assert_user_info_in_json(json_dict: dict, boolean: bool):
@@ -120,7 +122,7 @@ class APIReservationListViewTests(TestCase):
             ):
                 with self.subTest(user=user):
                     response = client.get(
-                        f"{self.machine1_url}?{urlencode({'start_date': start, 'end_date': end})}"
+                        self.machine1_url, {"start_date": start, "end_date": end}
                     )
                     self.assertEqual(response.status_code, HTTPStatus.OK)
                     response_json = response.json()
@@ -140,7 +142,8 @@ class APIReservationListViewTests(TestCase):
                         response_json["reservations"],
                         strict=True,
                     ):
-                        # The response should only contain the user info if an admin is viewing the page, and if it's a reservation "owned" by MAKE
+                        # The response should only contain the user info if an admin is
+                        # viewing the page, and if it's a reservation "owned" by MAKE
                         user_info_present = (
                             user == self.admin
                             and not reservation.special
@@ -194,7 +197,8 @@ class APIReservationListViewTests(TestCase):
             ],
         )
 
-        # If start and end are equal, no reservations should be returned, since the time interval is 0
+        # If start and end are equal, no reservations should be returned, since the time
+        # interval is 0
         assert_response_contains(
             start=self.reservation2.start_time,
             end=self.reservation2.start_time,
@@ -301,7 +305,8 @@ class TestAPIReservationMarkFinishedView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("test")
         self.client.force_login(self.user)
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.machine_type = MachineType.objects.get(pk=2)
         self.machine = Machine.objects.create(
             machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test"
@@ -342,7 +347,8 @@ class TestAPIReservationMarkFinishedView(TestCase):
 
     @patch("django.utils.timezone.now")
     def test_valid_post_request_succeeds(self, now_mock):
-        # Freeze the return value of `timezone.now()` and set it to 1 minute after `self.reservation1` has started
+        # Freeze the return value of `timezone.now()` and set it to 1 minute after
+        # `self.reservation1` has started
         now_mock.return_value = self.now + timedelta(hours=1, minutes=1)
         self.assertTrue(can_change_reservation(self.reservation1, self.user))
 
@@ -404,7 +410,7 @@ class TestAPIReservationMarkFinishedView(TestCase):
         self.assertEqual(reservation2.end_time, timezone.now())
 
     @patch("django.utils.timezone.now")
-    def test_can_finish_existing_reservations_for_machine_out_of_order_or_on_maintenance(
+    def test_can_finish_existing_reservations_for_out_of_order_or_maintenance_machine(
         self, now_mock
     ):
         # Freeze the return value of `timezone.now()`
@@ -437,7 +443,8 @@ class TestAPIReservationDeleteView(TestCase):
         self.client1.login(username=self.user1.username, password=password)
         self.client2.login(username=self.user2.username, password=password)
 
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         printer_machine_type = MachineType.objects.get(pk=1)
         self.machine1 = Machine.objects.create(
             name="U1",

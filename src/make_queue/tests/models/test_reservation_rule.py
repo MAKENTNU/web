@@ -14,7 +14,8 @@ Period = ReservationRule.Period
 
 class TestPeriod(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def assert_overlap_equals(
@@ -164,7 +165,8 @@ class TestPeriod(TestCase):
 
 class TestReservationRule(TestCase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_time_periods(self):
@@ -218,7 +220,8 @@ class TestReservationRule(TestCase):
         }
         self.assertTrue(
             ReservationRuleForm(data=form_data).is_valid(),
-            "A rule with a difference of less than 24h between start_time and end_time should not overlap with itself",
+            "A rule with a difference of less than 24h between start_time and end_time"
+            " should not overlap with itself",
         )
 
         form_data = {
@@ -314,7 +317,8 @@ class TestReservationRule(TestCase):
         form_data["machine_type"] = MachineType.objects.get(pk=2)
         self.assertTrue(
             ReservationRuleForm(data=form_data).is_valid(),
-            "Rules for different machine types should not effect the validity of each other",
+            "Rules for different machine types should not effect the validity of each"
+            " other",
         )
 
     def test_is_valid_time_in_rule_no_border_cross(self):
@@ -406,8 +410,9 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-12 00:01"),
                 self.machine_type,
             ),
-            "Reservations should not be valid if they are longer than 1 week, as the logic won't work correctly."
-            " Reservations can still be longer than 1 week if they are allowed to ignore the rules.",
+            "Reservations should not be valid if they are longer than 1 week, as"
+            " the logic won't work correctly. Reservations can still be longer than"
+            " 1 week if they are allowed to ignore the rules.",
         )
 
     def test_is_valid_time(self):
@@ -436,7 +441,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-05 18:00"),
                 self.machine_type,
             ),
-            "Periods that cover only one rule, should be valid if they are valid in that rule",
+            "Periods that cover only one rule, should be valid if they are valid in"
+            " that rule",
         )
         self.assertFalse(
             ReservationRule.valid_time(
@@ -444,7 +450,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-05 23:00"),
                 self.machine_type,
             ),
-            "Periods that cover only one rule, should be valid if they are valid in that rule",
+            "Periods that cover only one rule, should be valid if they are valid in"
+            " that rule",
         )
         self.assertTrue(
             ReservationRule.valid_time(
@@ -452,7 +459,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-07 03:00"),
                 self.machine_type,
             ),
-            "Periods that cover only one rule, should be valid if they are valid in that rule",
+            "Periods that cover only one rule, should be valid if they are valid in"
+            " that rule",
         )
         self.assertFalse(
             ReservationRule.valid_time(
@@ -460,7 +468,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-07 18:00"),
                 self.machine_type,
             ),
-            "Periods that cover only one rule, should be valid if they are valid in that rule",
+            "Periods that cover only one rule, should be valid if they are valid in"
+            " that rule",
         )
 
         self.assertTrue(
@@ -469,8 +478,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-06 18:00"),
                 self.machine_type,
             ),
-            "A period may still be valid, even though its total duration is larger than what is allowed in"
-            "one of the rules it partially covers",
+            "A period may still be valid, even though its total duration is larger than"
+            " what is allowed in one of the rules it partially covers",
         )
 
         self.assertFalse(
@@ -479,7 +488,8 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-06 22:00"),
                 self.machine_type,
             ),
-            "A period may be valid in each rule, it can still be invalid due to its total duration",
+            "A period may be valid in each rule, it can still be invalid due to its"
+            " total duration",
         )
 
         self.assertFalse(
@@ -497,14 +507,14 @@ class TestReservationRule(TestCase):
                 parse_datetime("2018-11-06 10:00"),
                 self.machine_type,
             ),
-            "A period may be valid, even though not all of its rules are valid, if it is still less than"
-            "the shortest maximum length of any of its rules.",
+            "A period may be valid, even though not all of its rules are valid, if it"
+            " is still less thanthe shortest maximum length of any of its rules.",
         )
 
     def test_is_valid_time_no_rules(self):
         """
-        Tests to check that `ReservationRule.valid_time` works correctly when there are no rules or a period is not
-        covered by any rules.
+        Tests to check that `ReservationRule.valid_time` works correctly when there are
+        no rules or a period is not covered by any rules.
         """
         start_time = parse_datetime("2021-03-03 12:00")
         end_time = start_time + timedelta(hours=6)
@@ -540,5 +550,6 @@ class TestReservationRule(TestCase):
         is_valid = ReservationRule.valid_time(start_time, start_time, self.machine_type)
         self.assertFalse(
             is_valid,
-            "A period should not be valid if it is empty, i.e., not coverd by any rules.",
+            "A period should not be valid if it is empty, i.e., not coverd by any"
+            " rules.",
         )

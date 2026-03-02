@@ -24,21 +24,26 @@ adminpatterns = [
     ),
     # These paths are currently not in use:
     # path("post/", views.AdminCheckInView.as_view(), name='admin_check_in'),
-    # path("register/card/", views.AdminRegisterCardView.as_view(), name='admin_register_card'),
-    # path("suggest/", views.AdminSuggestSkillView.as_view(), name='admin_suggest_skill'),
+    # path("register/card/", views.AdminRegisterCardView.as_view(),
+    #      name='admin_register_card'),
+    # path("suggest/", views.AdminSuggestSkillView.as_view(),
+    #      name='admin_suggest_skill'),
 ]
 
 # --- Admin API URL patterns (imported in `web/urls.py`) ---
 
 """ These paths are currently not in use
 suggest_skill_adminapipatterns = [
-    path("vote/", api_views.AdminAPISuggestSkillVoteView.as_view(), name='admin_api_suggest_skill_vote'),
-    path("<int:pk>/delete/", api_views.AdminAPISuggestSkillDeleteView.as_view(), name='admin_api_suggest_skill_delete'),
+    path("vote/", api_views.AdminAPISuggestSkillVoteView.as_view(),
+         name='admin_api_suggest_skill_vote'),
+    path("<int:pk>/delete/", api_views.AdminAPISuggestSkillDeleteView.as_view(),
+         name='admin_api_suggest_skill_delete'),
 ]
 """
 
 adminapipatterns = [
     # These paths are currently not in use:
-    # path("register/profile/", api_views.AdminAPIRegisterProfileView.as_view(), name='admin_api_register_profile'),
+    # path("register/profile/", api_views.AdminAPIRegisterProfileView.as_view(),
+    #      name='admin_api_register_profile'),
     # path("suggest/", include(suggest_skill_adminapipatterns)),
 ]

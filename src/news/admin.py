@@ -191,7 +191,8 @@ class EventAdmin(NewsBaseAdmin):
         occurrence_string = link_to_admin_change_form(
             last_occurrence, text=short_datetime_format(last_occurrence.start_time)
         )
-        # Use `block_join()` to format the rendered occurrence string in the same way as the other columns
+        # Use `block_join()` to format the rendered occurrence string in the same way as
+        # the other columns
         return html_utils.block_join([occurrence_string], sep="")
 
     @admin.display(description=_("number of reserved tickets"))

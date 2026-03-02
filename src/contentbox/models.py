@@ -41,7 +41,8 @@ class ContentBox(models.Model):
         permissions = (
             ("can_upload_image", "Can upload images in CKEditor"),
             ("can_browse_image", "Can browse images in CKEditor"),
-            # Internal content boxes should have a permission that is separate from the public content boxes'
+            # Internal content boxes should have a permission that is separate from
+            # the public content boxes'
             ("change_internal_contentbox", "Can change internal content boxes"),
         )
         verbose_name = "content box"
@@ -51,7 +52,8 @@ class ContentBox(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        # Should update this code if any content box URLs are placed under other subdomains
+        # Should update this code if any content box URLs are placed under other
+        # subdomains
         all_host_kwargs = (
             {"host": "main"},
             {"host": "internal", "host_args": ["i"]},

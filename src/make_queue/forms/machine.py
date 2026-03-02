@@ -65,7 +65,8 @@ class MachineFormBase(forms.ModelForm):
                         "stream_name",
                         ValidationError(
                             _(
-                                "Stream name cannot be empty when the machine type supports streaming."
+                                "Stream name cannot be empty when the machine type"
+                                " supports streaming."
                             ),
                             code="invalid_empty_stream_name",
                         ),
@@ -85,7 +86,8 @@ class AddMachineForm(MachineFormBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Don't show the default value of `info_message_date` in the create form, as it might cause confusion
+        # Don't show the default value of `info_message_date` in the create form, as it
+        # might cause confusion
         self.fields["info_message_date"].widget.format_value = lambda value: None
 
 
@@ -138,7 +140,10 @@ class MachineDetailQueryForm(forms.Form):
                         invalid_week = True
 
                 if invalid_week:
-                    message = f"{calendar_week} is not a valid week number for the year {calendar_year}."
+                    message = (
+                        f"{calendar_week} is not a valid week number for the year"
+                        f" {calendar_year}."
+                    )
                     raise forms.ValidationError(
                         {
                             "calendar_week": forms.ValidationError(
@@ -152,6 +157,9 @@ class MachineDetailQueryForm(forms.Form):
     @staticmethod
     def _get_all_fields_must_be_set_validation_error():
         return forms.ValidationError(
-            "Either both 'calendar_year' and 'calendar_week' must be set, or none of them.",
+            _(
+                "Either both 'calendar_year' and 'calendar_week' must be set, or none"
+                " of them."
+            ),
             code="all_or_no_fields_must_be_set",
         )

@@ -15,12 +15,17 @@ class Test(TestCase):
         unicode_to_expected_values = {
             "a": "a",
             "\n": "\n",
-            string.printable: string.printable,  # Printable characters should remain unescaped
+            # Printable characters should remain unescaped
+            string.printable: string.printable,
             "æøå": "&aelig;&oslash;&aring;",
             "ÆØÅ": "&AElig;&Oslash;&Aring;",
             # From https://no.wikipedia.org/w/index.php?title=Diakritisk_tegn&oldid=21691316
-            "Ä, Á, É, È, Ô, Ö og Ü": "&Auml;, &Aacute;, &Eacute;, &Egrave;, &Ocirc;, &Ouml; og &Uuml;",
-            "ä, á, é, è, ô, ö og ü": "&auml;, &aacute;, &eacute;, &egrave;, &ocirc;, &ouml; og &uuml;",
+            "Ä, Á, É, È, Ô, Ö og Ü": (
+                "&Auml;, &Aacute;, &Eacute;, &Egrave;, &Ocirc;, &Ouml; og &Uuml;"
+            ),
+            "ä, á, é, è, ô, ö og ü": (
+                "&auml;, &aacute;, &eacute;, &egrave;, &ocirc;, &ouml; og &uuml;"
+            ),
         }
         for unicode_str, expected_value in unicode_to_expected_values.items():
             self.assertEqual(escape_to_named_characters(unicode_str), expected_value)

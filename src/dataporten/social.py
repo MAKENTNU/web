@@ -7,18 +7,29 @@ class DataportenOAuth2(OpenIdConnectAuth):
     OIDC_ENDPOINT = "https://auth.dataporten.no"
     DEFAULT_SCOPE = [
         *OpenIdConnectAuth.DEFAULT_SCOPE,
-        # These attribute groups (among others) are selected in the "User information" tab of our website's service in Feide's customer portal
-        "userinfo-name",  # From the customer portal: "Given name, surname, legal name, common name and display name"
-        "userid-feide",  # From the customer portal: "User name, personal Feide ID at organization and previous Feide IDs at organization"
+        # These attribute groups (among others) are selected in the "User information"
+        # tab of our website's service in Feide's customer portal.
+        # From the customer portal: "Given name, surname, legal name, common name and
+        # display name"
+        "userinfo-name",
+        # From the customer portal: "User name, personal Feide ID at organization and
+        # previous Feide IDs at organization"
+        "userid-feide",
     ]
-    # Names of extra claims (keys in the response dict from Dataporten) to store in the database
-    # - through the `extra_data` field on the `UserSocialAuth` model (e.g. `user.social_auth.first().extra_data`).
+    # Names of extra claims (keys in the response dict from Dataporten) to store in
+    # the database - through the `extra_data` field on the `UserSocialAuth` model (e.g.
+    # `user.social_auth.first().extra_data`).
     # If a list element is a tuple, it's interpreted like this:
-    # (<claim name - returned by `get_user_details()`>, <key for the JSON key/value pair stored through `extra_data`>)
+    # (
+    #     <claim name - returned by `get_user_details()`>,
+    #     <key for the JSON key/value pair stored through `extra_data`>,
+    # )
     EXTRA_DATA = [
         *OpenIdConnectAuth.EXTRA_DATA,
         "scope",
-        "username",  # Used as the base username for new users; it's set in `get_user_details()` below
+        # Used as the base username for new users; it's set in `get_user_details()`
+        # below
+        "username",
         "email",
         ("name", "fullname"),
     ]
@@ -28,7 +39,8 @@ class DataportenOAuth2(OpenIdConnectAuth):
 
     def get_user_details(self, response):
         """
-        Converts response data from the format of Dataporten's API, to the format used by the rest of the code.
+        Converts response data from the format of Dataporten's API, to the format used
+        by the rest of the code.
 
         See info on the API endpoint here: https://docs.feide.no/reference/apis/userinfo.html
 

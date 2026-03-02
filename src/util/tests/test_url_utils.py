@@ -31,8 +31,8 @@ class UrlUtilsTests(SimpleTestCase):
                     f"{base_path}?a=1&b=2",
                 )
 
-                # Params with the same name are overwritten instead of added;
-                # this should maybe be fixed in the future, but isn't a big problem as of now
+                # Params with the same name are overwritten instead of added; this
+                # should maybe be fixed in the future, but isn't a big problem as of now
                 self.assertEqual(
                     urljoin_query(f"{base_path}?a=1", {"a": 2}), f"{base_path}?a=2"
                 )
@@ -83,7 +83,10 @@ class UrlUtilsTests(SimpleTestCase):
             )
 
         def get_expected_value_error_message(url_: str):
-            return f"The passed URL ({url_}) must be internal, i.e. makentnu.localhost:8000 must be part of the URL's host."
+            return (
+                f"The passed URL ({url_}) must be internal, i.e."
+                " makentnu.localhost:8000 must be part of the URL's host."
+            )
 
         for scheme in ("http://", "https://", "//"):
             for path in ("", "/", "/asdf/", "/asdf/?qwer=2"):

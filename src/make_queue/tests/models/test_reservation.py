@@ -102,7 +102,8 @@ class ReservationTestBase(TestCase, ABC):
 
 class TestReservation(ReservationTestBase):
     def setUp(self):
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         super().init_objs(MachineType.objects.get(pk=1))
 
         self._original_reservation_future_limit = Reservation.FUTURE_LIMIT
@@ -136,7 +137,8 @@ class TestReservation(ReservationTestBase):
         )
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
-            "Users who are not allowed to use a machine, should not be able to reserve it",
+            "Users who are not allowed to use a machine, should not be able to reserve"
+            " it",
         )
 
     def test_reserve_end_time_before_start_time(self):
@@ -150,13 +152,15 @@ class TestReservation(ReservationTestBase):
             self.create_reservation(
                 timedelta(hours=1), timedelta(hours=self.max_time_reservation + 1.1)
             ),
-            "Reservations should not be allowed to exceed the maximum allowed time for the user",
+            "Reservations should not be allowed to exceed the maximum allowed time for"
+            " the user",
         )
 
     def test_reserve_in_the_past(self):
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=-1), timedelta(hours=1)),
-            "A reservation is invalid if it starts in the past, even though it ends in the future",
+            "A reservation is invalid if it starts in the past, even though it ends in"
+            " the future",
         )
 
         self.check_reservation_invalid(
@@ -256,13 +260,15 @@ class TestReservation(ReservationTestBase):
         # End at the start time of other
         self.check_reservation_valid(
             self.create_reservation(timedelta(hours=0), timedelta(hours=1)),
-            "A reservation should be allowed to end at the same time another one starts",
+            "A reservation should be allowed to end at the same time as another one"
+            " starts",
         )
 
         # Start at the end time of other
         self.check_reservation_valid(
             self.create_reservation(timedelta(hours=2), timedelta(hours=3)),
-            "A reservation should be allowed to start at the same time another one ends",
+            "A reservation should be allowed to start at the same time as another one"
+            " ends",
         )
 
     def test_make_event_without_event_permission(self):
@@ -282,7 +288,8 @@ class TestReservation(ReservationTestBase):
             self.create_reservation(
                 timedelta(hours=1), timedelta(hours=2), event=self.timeplace
             ),
-            "User with the correct permission should be allowed to create an event reservation",
+            "User with the correct permission should be allowed to create an event"
+            " reservation",
         )
 
         self.check_reservation_valid(
@@ -291,7 +298,8 @@ class TestReservation(ReservationTestBase):
                 timedelta(days=1, hours=2),
                 event=self.timeplace,
             ),
-            "Event reservations should not count towards the total number of reservations",
+            "Event reservations should not count towards the total number of"
+            " reservations",
         )
 
     def test_make_event_reservation_with_longer_than_user_max_time(self):
@@ -303,7 +311,8 @@ class TestReservation(ReservationTestBase):
                 timedelta(hours=self.max_time_reservation + 2),
                 event=self.timeplace,
             ),
-            "User should be able to make event reservations longer than their maximum reservation time",
+            "User should be able to make event reservations longer than their maximum"
+            " reservation time",
         )
 
     def test_change_event_while_maximum_booked(self):
@@ -318,7 +327,8 @@ class TestReservation(ReservationTestBase):
 
         self.check_reservation_valid(
             reservation,
-            "Changing a reservation with the maximum number of reservations should be valid",
+            "Changing a reservation with the maximum number of reservations should be"
+            " valid",
         )
 
     def test_same_time_separate_machines(self):
@@ -374,7 +384,8 @@ class TestReservation(ReservationTestBase):
         reservation.end_time = timezone.now() + timedelta(hours=-1)
         self.check_reservation_invalid(
             reservation,
-            "Should not be able to change end time of started reservation to before the current time",
+            "Should not be able to change end time of started reservation to before"
+            " the current time",
         )
 
     def test_can_owner_change_end_time_of_ended_reservation(self):
@@ -520,14 +531,15 @@ class TestReservation(ReservationTestBase):
             self.create_reservation(
                 timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace
             ),
-            "Event reservations are always valid no matter how far in the future they are",
+            "Event reservations are always valid no matter how far in the future they"
+            " are",
         )
 
     def set_machine_status(self, status: Machine.Status):
         self.machine.status = status
         self.machine.save()
 
-    def test_cannot_create_reservations_for_machines_out_of_order_or_on_maintenance(
+    def test_cannot_create_reservations_for_out_of_order_or_maintenance_machines(
         self,
     ):
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
@@ -542,7 +554,7 @@ class TestReservation(ReservationTestBase):
         self.check_reservation_valid(reservation)
 
     @patch("django.utils.timezone.now")
-    def test_can_make_existing_reservations_shorter_for_machine_out_of_order_or_on_maintenance(
+    def test_can_shorten_existing_reservations_for_out_of_order_or_maintenance_machine(
         self, now_mock
     ):
         # Freeze the return value of `timezone.now()`
@@ -582,7 +594,8 @@ class TestReservation(ReservationTestBase):
                 self.check_reservation_valid(reservation1)
                 reservation1.end_time += timedelta(hours=0.5)
                 self.check_reservation_valid(reservation1)
-                # Make it even longer (than it was above) and reset it for the next loop iteration
+                # Make it even longer (than it was above) and reset it for the next loop
+                # iteration
                 reservation1.start_time = initial_start_time
                 reservation1.end_time = initial_end_time
                 self.check_reservation_valid(reservation1)
@@ -592,7 +605,8 @@ class TestReservation(ReservationTestBase):
         self.set_machine_status(Machine.Status.AVAILABLE)
         reservation2 = self.create_reservation(timedelta(hours=1), timedelta(hours=5))
         self.check_reservation_valid(reservation2)  # This also saves it
-        # Changing the reservation duration after the reservation has started should produce the same results
+        # Changing the reservation duration after the reservation has started should
+        # produce the same results
         now_mock.return_value += timedelta(hours=2)
 
         initial_end_time = reservation2.end_time
@@ -612,7 +626,8 @@ class TestReservation(ReservationTestBase):
                 self.set_machine_status(Machine.Status.AVAILABLE)
                 reservation2.end_time += timedelta(hours=0.5)
                 self.check_reservation_valid(reservation2)
-                # Make it even longer (than it was above) and reset it for the next loop iteration
+                # Make it even longer (than it was above) and reset it for the next loop
+                # iteration
                 reservation2.end_time = initial_end_time
                 self.check_reservation_valid(reservation2)
 
@@ -627,7 +642,8 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
             )
             course.save()
 
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self._test_advanced_printer_can_only_be_reserved_by_users_with_advanced_course(
             MachineType.objects.get(pk=6), set_raise3d_course
         )
@@ -641,7 +657,8 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
             )
             course.save()
 
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by
+        # default
         self._test_advanced_printer_can_only_be_reserved_by_users_with_advanced_course(
             MachineType.objects.get(pk=7), set_sla_course
         )

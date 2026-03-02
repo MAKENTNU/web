@@ -67,7 +67,7 @@ class InternalContentBoxTests(TestCase):
             HTTPStatus.OK,
         )
 
-    def test_internal_content_boxes_only_contain_visible_edit_buttons_when_user_has_required_permission(
+    def test_internal_content_boxes_only_contain_edit_buttons_when_user_has_permission(
         self,
     ):
         home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/change/"
@@ -99,11 +99,13 @@ class InternalContentBoxTests(TestCase):
             response.content.decode(),
             count=1,
         )
-        # `editsource` is the name of the toolbar section containing the edit source button (see `CKEDITOR_CONFIGS` in the settings)
+        # `editsource` is the name of the toolbar section containing the edit source
+        # button (see `CKEDITOR_CONFIGS` in the settings)
         self.assertContains(
             response,
             "&quot;editsource&quot;",
-            # This view only uses one language, and so there should only be one occurrence of this string
+            # This view only uses one language, and so there should only be one
+            # occurrence of this string
             count=1,
         )
 
@@ -113,8 +115,9 @@ class InternalContentBoxTests(TestCase):
 
     @override_settings(LANGUAGE_CODE="en")
     def test_internal_content_boxes_accept_posting_just_english(self):
-        # Have to clear the cached URLs, to make calls to `reverse()` return paths that are not prefixed with `/en`
-        # (after having overridden the `LANGUAGE_CODE` setting so that it's set to `en`)
+        # Have to clear the cached URLs, to make calls to `reverse()` return paths that
+        # are not prefixed with `/en` (after having overridden the `LANGUAGE_CODE`
+        # setting so that it's set to `en`)
         clear_url_caches()
         self._test_internal_content_boxes_accept_posting_just_one_language()
 
@@ -169,8 +172,9 @@ class SecretTests(TestCase):
 
         self.member_user = User.objects.create_user("member_user")
         self.board_member_user = User.objects.create_user("board_member_user")
-        # This superuser should not have any permissions added to their `user_permissions` or through groups,
-        # to test that they have all permissions without having to grant any explicitly
+        # This superuser should not have any permissions added to their
+        # `user_permissions` or through groups, to test that they have all permissions
+        # without having to grant any explicitly
         self.superuser = User.objects.create_user(
             "superuser", is_staff=True, is_superuser=True
         )
@@ -245,7 +249,8 @@ class SecretTests(TestCase):
             delete_url = reverse_internal("secret_delete", secret.pk)
             try:
                 with transaction.atomic():
-                    # `FOUND` means that the request was successful and that the client is redirected to the view's `success_url`
+                    # `FOUND` means that the request was successful and that the client
+                    # is redirected to the view's `success_url`
                     self.assertEqual(
                         client.delete(delete_url).status_code,
                         HTTPStatus.FOUND if can_delete else HTTPStatus.FORBIDDEN,
@@ -257,7 +262,8 @@ class SecretTests(TestCase):
                     raise IntegrityError
             except IntegrityError:
                 pass
-            # Ensure that the deletion of the secret was rolled back (not strictly necessary to test)
+            # Ensure that the deletion of the secret was rolled back (not strictly
+            # necessary to test)
             self.assertTrue(Secret.objects.filter(pk=secret.pk).exists())
 
         assert_user_can_delete_secret(

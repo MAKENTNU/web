@@ -27,7 +27,8 @@ class MultiLingualTextField(models.TextField):
     use_default_if_empty = True
 
     def __init__(self, *args, widget=None, languages=None, **kwargs):
-        # Allow for specification of a widget on creation, to allow for both textarea and text input
+        # Allow for specification of a widget on creation, to allow for both textarea
+        # and text input
         self.widget = widget or self.widget
         self.languages = languages or self.languages
         if isinstance(self.widget, type) and issubclass(
