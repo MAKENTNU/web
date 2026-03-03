@@ -17,7 +17,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### Improvements
-
+- Added shortcuts to machine page, to help users navigate
 
 ### Fixes
 
