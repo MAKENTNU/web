@@ -9,11 +9,11 @@ def convert_start_days_from_bit_field_to_multiselect(apps, schema_editor):
     for rule in ReservationRule.objects.all():
         start_days_bit_field = int(rule.start_days[0])
 
-        start_days = []
-        for shift in range(7):
-            if start_days_bit_field & (1 << shift):
-                start_days.append(shift + 1)  # the ISO weekdays are 1-indexed
-
+        start_days = [
+            shift + 1  # the ISO weekdays are 1-indexed
+            for shift in range(7)
+            if start_days_bit_field & (1 << shift)
+        ]
         rule.start_days = start_days
         rule.save()
 

@@ -77,14 +77,14 @@ class EventListView(ListView):
                     }
                 )
             else:
-                for timeplace in event.future_timeplaces:
-                    future_event_dicts.append(
-                        {
-                            "event": event,
-                            "shown_occurrence": timeplace,
-                            "number_of_occurrences": 1,
-                        }
-                    )
+                future_event_dicts.extend(
+                    {
+                        "event": event,
+                        "shown_occurrence": timeplace,
+                        "number_of_occurrences": 1,
+                    }
+                    for timeplace in event.future_timeplaces
+                )
 
         past = (
             queryset.past()

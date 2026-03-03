@@ -1,6 +1,6 @@
 import mimetypes
-import os
 import smtplib
+from pathlib import Path
 
 from channels.consumer import SyncConsumer
 from django.core.mail import EmailMultiAlternatives
@@ -143,4 +143,4 @@ def serialize_file(file):
         content_type = file.content_type
     except AttributeError:
         content_type = mimetypes.guess_type(file.name)[0]
-    return os.path.basename(file.name), file.read(), content_type
+    return Path(file.name).name, file.read(), content_type

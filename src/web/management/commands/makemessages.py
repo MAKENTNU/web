@@ -56,8 +56,7 @@ class Command(makemessages.Command):
         new_po_file_contents = "".join(po_file_lines)
         if new_po_file_contents != original_po_file_contents:
             # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
-            with open(po_file, "w", encoding="utf-8") as fp:
-                fp.write(new_po_file_contents)
+            po_file.write_text(new_po_file_contents, "utf-8")
 
     @classmethod
     def get_default_ignore_patterns(cls) -> list[str]:
