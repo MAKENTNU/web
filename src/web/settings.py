@@ -505,7 +505,7 @@ CKEDITOR_CONFIGS = {
             static_lazy("ckeditor/ckeditor/customstyles.css"),
             static_lazy("ckeditor/ckeditor/contents.css"),  # CKEditor's default styles
         ],
-        "extraPlugins": ",".join(
+        "extraPlugins": ",".join(  # noqa: FLY002
             [
                 "mathjax",
                 "codesnippet",

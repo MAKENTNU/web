@@ -1,6 +1,7 @@
 import re
 from fnmatch import fnmatchcase
 from io import BytesIO
+from itertools import chain
 from pathlib import Path
 
 from django.conf import settings
@@ -113,17 +114,16 @@ def serve_interpolated(request, path, *args, **kwargs):
     ):
         content = response.getvalue().decode()
 
-        for extension, patterns in _compiled_interpolation_patterns.items():
-            for pattern, template in patterns:
+        for pattern, template in chain(*_compiled_interpolation_patterns.values()):
 
-                def replace(match_obj: re.Match):
-                    matches = match_obj.groupdict()
-                    matches["url"] = ManifestStaticFilesStorage.get_full_static_url(
-                        matches["url"]
-                    )
-                    return template % matches
+            def replace(match_obj: re.Match):
+                matches = match_obj.groupdict()
+                matches["url"] = ManifestStaticFilesStorage.get_full_static_url(
+                    matches["url"]
+                )
+                return template % matches
 
-                content = pattern.sub(replace, content)
+            content = pattern.sub(replace, content)
 
         response.streaming_content = BytesIO(content.encode())
 
