@@ -52,6 +52,10 @@ class Printer3DCourseForm(forms.ModelForm):
         self.base_permission = CoursePermission.objects.get(
             short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE
         )
+        if not self.instance.pk:
+            self.initial["course_permissions"] = self.fields[
+                "course_permissions"
+            ].queryset.filter(short_name="VRON")
 
     def clean_card_number(self):
         card_number: str = self.cleaned_data["card_number"]
