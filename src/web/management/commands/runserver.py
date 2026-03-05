@@ -47,7 +47,7 @@ class Command(runserver.Command):
                 # unnecessarily doing regex matching
                 self.stdout.write = original_write_func
 
-            original_write_func(msg=msg, *args_, **kwargs_)
+            original_write_func(*args_, msg=msg, **kwargs_)
 
         self.stdout.write = write
         super().inner_run(*args, **options)

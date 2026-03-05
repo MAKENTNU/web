@@ -168,7 +168,9 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     self.assertIn("Content-Type: text/plain", printed_email_str)
                     self.assertIn("Content-Type: text/html", printed_email_str)
 
-                    def count_fail_message(search_str):
+                    def count_fail_message(
+                        search_str: object, printed_email_str: str = printed_email_str
+                    ) -> str:
                         return (
                             "The following string did not contain the expected number"
                             f' of occurrences of "{search_str}":\n{printed_email_str}'
@@ -222,6 +224,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     expected_form_instance: EventTicket | None,
                     expected_language: str,
                     expected_comment: str,
+                    time_place_or_event: TimePlace | Event = time_place_or_event,
+                    registration_url: str = registration_url,
                 ) -> EventTicket:
                     form_instance = (
                         self.client1.get(registration_url).context["form"].instance
@@ -291,7 +295,13 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 self.assertTrue(ticket.active)
                 self.assertEqual(ticket.active_last_modified, ticket.creation_date)
 
-                def assert_ticket_active_after_posting(active: bool):
+                def assert_ticket_active_after_posting(
+                    active: bool,
+                    *,
+                    ticket: EventTicket = ticket,
+                    ticket_detail_url: str = ticket_detail_url,
+                    ticket_cancel_url: str = ticket_cancel_url,
+                ):
                     response = self.client1.post(ticket_cancel_url)
                     self.assertRedirects(response, ticket_detail_url)
 
@@ -327,7 +337,14 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 ticket_detail_url = reverse("event_ticket_detail", args=[ticket.pk])
                 ticket_cancel_url = reverse("event_ticket_cancel", args=[ticket.pk])
 
-                def assert_next_param_is_valid(next_param: str, valid: bool):
+                def assert_next_param_is_valid(
+                    next_param: str,
+                    valid: bool,
+                    *,
+                    ticket: EventTicket = ticket,
+                    ticket_detail_url: str = ticket_detail_url,
+                    ticket_cancel_url: str = ticket_cancel_url,
+                ):
                     response = self.client1.post(
                         f"{ticket_cancel_url}?next={next_param}"
                     )

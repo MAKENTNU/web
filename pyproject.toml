@@ -70,6 +70,7 @@ format.docstring-code-format = true
 lint.select = [
   "A",      # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
   "ASYNC",  # https://docs.astral.sh/ruff/rules/#flake8-async-async
+  "B",      # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
   "E",      # https://docs.astral.sh/ruff/rules/#error-e
   "F",      # https://docs.astral.sh/ruff/rules/#pyflakes-f
   "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly

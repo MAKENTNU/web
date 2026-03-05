@@ -59,7 +59,7 @@ class QueryParameterFormMixin(FormMixin, ABC):
         if self._query_param_errors:
             return self.form_invalid(form=None)
         else:
-            return self.form_valid(form=None, *args, **kwargs)
+            return self.form_valid(*args, form=None, **kwargs)
 
     def validate_query_params(self):
         form: Form = self.get_form()

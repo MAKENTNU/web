@@ -39,7 +39,7 @@ class MultiLingualFormField(forms.MultiValueField):
             subfield.locale = language
             subfields.append(subfield)
 
-        super().__init__(fields=subfields, *args, **kwargs)
+        super().__init__(*args, fields=subfields, **kwargs)
 
     def compress(self, data_list):
         """
