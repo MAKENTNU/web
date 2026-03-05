@@ -12,6 +12,8 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ## Unreleased
+- Made it so when creating an event, the amount of tickets is set to 0 when setting the event to repeating
+ - https://github.com/MAKENTNU/web/pull/798
 
 ### New features
 
