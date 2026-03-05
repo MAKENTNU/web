@@ -1,6 +1,5 @@
-import re
 from pathlib import Path
-from typing import Final
+from typing import Any, Final
 
 from django.conf import settings
 from django.core.management.commands import makemessages
@@ -13,13 +12,8 @@ class Command(makemessages.Command):
 
     * Ignores files within the top-level directories that don't contain our project's
       Python code.
-    * Ensures that the generated comments have the same format regardless of OS.
+    * Prevents ``#:`` comments from being generated.
     """
-
-    # Remove leading `./` as well, in case it ever happens to be generated (see comment
-    # above `write_po_file()` for context)
-    PATH_PREFIX_REGEX: Final = re.compile(r" \.[\\/]")
-    PATH_PREFIX_REPLACEMENT: Final = " "
 
     # Ignore all top-level directories that are not the `BASE_DIR`
     DEFAULT_IGNORED_DIRS: Final = [
@@ -41,31 +35,11 @@ class Command(makemessages.Command):
 
         return super().execute(*args, **options)
 
-    # On Windows, it seems like the `.po` files consistently have their file location
-    # comments formatted with backslashes (\) instead of forward slashes (/) - which is
-    # the standard file path format on Windows - and a leading `.\` path prefix.
-    # The code below converts those comments to the format generated on Linux (forward
-    # slashes and no leading `.\`), to ensure that the command output is not dependent
-    # on each developer's operating system.
-    def write_po_file(self, potfile, locale):
-        super().write_po_file(potfile=potfile, locale=locale)
+    def handle(self, *args: Any, **options: Any) -> str | None:
+        # The `#:` comments cause merge conflicts too often, so we'd like to omit them
+        options["no_location"] = True
 
-        # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L683-L685
-        locale_dir = Path(potfile).parent / locale / "LC_MESSAGES"
-        po_file = locale_dir / f"{self.domain}.po"
-
-        original_po_file_contents = po_file.read_text(encoding="utf-8")
-        po_file_lines = original_po_file_contents.splitlines(keepends=True)
-        for i, line in enumerate(po_file_lines):
-            if line.startswith("#:"):
-                po_file_lines[i] = self.PATH_PREFIX_REGEX.sub(
-                    self.PATH_PREFIX_REPLACEMENT, line
-                ).replace("\\", "/")
-
-        new_po_file_contents = "".join(po_file_lines)
-        if new_po_file_contents != original_po_file_contents:
-            # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
-            po_file.write_text(new_po_file_contents, "utf-8")
+        return super().handle(*args, **options)
 
     @classmethod
     def get_default_ignore_patterns(cls) -> list[str]:
