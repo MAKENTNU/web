@@ -609,7 +609,7 @@ class EventTicketCreateView(
         else:
             try:
                 async_to_sync(get_channel_layer().send)("email", email_message_dict)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 log_request_exception(
                     "Sending event ticket email failed.", e, self.request
                 )

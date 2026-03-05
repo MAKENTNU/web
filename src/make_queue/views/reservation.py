@@ -191,7 +191,7 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             form = ReservationForm(request.POST)
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_request_exception("Validating reservation failed.", e, request)
         return self.get(request, **kwargs)
 
