@@ -386,7 +386,9 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         )
 
         # Find all periods between reservations
-        for period_start, period_end in zip(reservations, reservations[1:]):
+        for period_start, period_end in zip(
+            reservations, reservations[1:], strict=False
+        ):
             duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
             if duration >= required_time:
                 periods.append(

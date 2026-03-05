@@ -142,8 +142,8 @@ class ToggleForm(forms.Form):
         toggle_attr = self.cleaned_data["toggle_attr"]
         try:
             attr_value = getattr(self.instance, toggle_attr)
-        except AttributeError:
-            raise forms.ValidationError("No attribute found with this name")
+        except AttributeError as e:
+            raise forms.ValidationError("No attribute found with this name") from e
         if type(attr_value) is not bool:
             raise forms.ValidationError(
                 "The attribute is not a boolean field, and is therefore not toggleable"

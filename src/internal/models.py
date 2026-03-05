@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
@@ -114,7 +116,7 @@ class Member(models.Model):
 
         if is_creation:
             # Setup all properties for new members
-            for property_name, value in SystemAccess.NAME_CHOICES:
+            for property_name, _label in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the member
                 # list
                 SystemAccess.objects.create(
@@ -159,15 +161,20 @@ class Member(models.Model):
         return date_to_semester(self.date_quit_or_retired)
 
     def set_quit(
-        self, quit_status: bool, reason="", date_quit_or_retired=timezone.now()
-    ):
+        self,
+        quit_status: bool,
+        reason: str = "",
+        date_quit_or_retired: datetime | None = None,
+    ) -> None:
         """
         Perform all the actions to set a member as quit or undo this action.
 
-        :param quit_status: Indicates if the member has quit
-        :param reason: The reason why the member has quit
-        :param date_quit_or_retired: The date the member quit
+        :param quit_status: Whether the member has quit.
+        :param reason: The reason why the member has quit.
+        :param date_quit_or_retired: The date the member quit. Defaults to now.
         """
+        date_quit_or_retired = date_quit_or_retired or timezone.now()
+
         self.quit = quit_status
         if self.quit:
             self.date_quit_or_retired = date_quit_or_retired
@@ -179,14 +186,16 @@ class Member(models.Model):
         self.set_membership(not quit_status)
 
     def set_retirement(
-        self, retirement_status: bool, date_quit_or_retired=timezone.now()
-    ):
+        self, retirement_status: bool, date_quit_or_retired: datetime | None = None
+    ) -> None:
         """
         Perform all the actions to set a member as retired or to undo this action.
 
-        :param retirement_status: Indicates if the member has retired
-        :param date_quit_or_retired: The date the member retired
+        :param retirement_status: Whether the member has retired.
+        :param date_quit_or_retired: The date the member retired. Defaults to now.
         """
+        date_quit_or_retired = date_quit_or_retired or timezone.now()
+
         self.retired = retirement_status
         if self.retired:
             self.date_quit_or_retired = date_quit_or_retired
