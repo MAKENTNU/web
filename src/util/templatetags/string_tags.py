@@ -8,7 +8,8 @@ register = template.Library()
 @register.filter(is_safe=True)
 @stringfilter
 def first_word(string: str, arg=" "):
-    return string.split(arg)[0]
+    first, *_rest = string.split(arg, maxsplit=1)
+    return first
 
 
 @register.filter(is_safe=True)

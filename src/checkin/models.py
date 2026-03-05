@@ -1,3 +1,5 @@
+from typing import Final
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -82,6 +84,8 @@ class UserSkill(models.Model):
 
 
 class SuggestSkill(models.Model):
+    NUM_VOTES_TO_ADD_SKILL: Final = 5
+
     creator = models.ForeignKey(
         to=Profile,
         on_delete=models.SET_NULL,

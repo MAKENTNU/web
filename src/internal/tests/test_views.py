@@ -123,7 +123,7 @@ class InternalContentBoxTests(TestCase):
 
     def _test_internal_content_boxes_accept_posting_just_one_language(self):
         mock_content = "asdf"
-        expected_content_languages = {
+        language_to_expected_content = {
             language: mock_content
             for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES
         }
@@ -145,13 +145,10 @@ class InternalContentBoxTests(TestCase):
                 # The content box should contain the same content for all languages
                 self.assertEqual(
                     len(content_text_structure.languages),
-                    len(expected_content_languages),
+                    len(language_to_expected_content),
                 )
-                for language in expected_content_languages:
-                    self.assertEqual(
-                        content_text_structure[language],
-                        expected_content_languages[language],
-                    )
+                for language, expected_content in language_to_expected_content.items():
+                    self.assertEqual(content_text_structure[language], expected_content)
 
 
 class SecretTests(TestCase):

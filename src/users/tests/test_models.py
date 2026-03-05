@@ -24,3 +24,19 @@ class UserModelTests(TestCase):
         self.user1.refresh_from_db()
 
         self.assertEqual(self.user1.card_number, None)
+
+    def test__get_short_full_name(self):
+        def check(first_name: str, last_name: str, *, expected: str) -> None:
+            self.user1.first_name = first_name
+            self.user1.last_name = last_name
+            self.assertEqual(self.user1.get_short_full_name(), expected)
+
+        check("", "", expected="")
+        check("Ola", "", expected="Ola")
+        check("Ola Johan", "", expected="Ola Johan")
+        check("", "Nordmann", expected="Nordmann")
+        check("", "Johan Nordmann", expected="Johan Nordmann")
+        check("Ola", "Nordmann", expected="Ola Nordmann")
+        check("Ola Johan", "Nordmann", expected="Ola Nordmann")
+        check("Ola", "Jakob Nordmann", expected="Ola Nordmann")
+        check("Ola Johan", "Jakob Nordmann", expected="Ola Nordmann")
