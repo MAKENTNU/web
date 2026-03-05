@@ -7,7 +7,7 @@ from django.utils.translation import get_language
 from util.logging_utils import get_request_logger
 
 
-class MultiLingualTextStructure:
+class MultiLingualTextStructure:  # noqa: PLW1641 - shouldn't implement `__hash__()`, as objects are intended to be mutable
     """
     Data structure to keep track of multilingual string data.
     """
@@ -81,9 +81,9 @@ class MultiLingualTextStructure:
         """
         self.languages[key] = item
 
-    def __eq__(self, other):
-        if type(other) is not MultiLingualTextStructure:
-            return False
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultiLingualTextStructure):
+            return NotImplemented
         return (
             self.languages == other.languages
             and self.use_default_for_empty == other.use_default_for_empty

@@ -1374,10 +1374,11 @@ msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
 #: src/make_queue/forms/reservation_rule.py:33
+#, python-brace-format
 msgid ""
-"Period is either too long (7+ days) or start time is earlier than end time."
+"Period is either too long ({n}+ days) or start time is earlier than end time."
 msgstr ""
-"Perioden er enten for lang (7+ dager) eller starttiden er før sluttiden."
+"Perioden er enten for lang ({n}+ dager) eller starttiden er før sluttiden."
 
 #: src/make_queue/forms/reservation_rule.py:42
 msgid "Rule has internal overlap of time periods."

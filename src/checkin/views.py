@@ -94,14 +94,13 @@ class ProfileDetailView(TemplateView):
         profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
 
-        if 0 <= rating <= 3:
-            if UserSkill.objects.filter(skill=skill, profile=profile).exists():
+        if 0 <= rating <= max(UserSkill.Level):
+            existing_skill_qs = UserSkill.objects.filter(skill=skill, profile=profile)
+            if existing_skill_qs.exists():
                 if rating == 0:
-                    UserSkill.objects.filter(skill=skill, profile=profile).delete()
+                    existing_skill_qs.delete()
                 else:
-                    UserSkill.objects.filter(skill=skill, profile=profile).update(
-                        skill_level=rating
-                    )
+                    existing_skill_qs.update(skill_level=rating)
             elif rating != 0:
                 UserSkill.objects.create(
                     skill=skill, profile=profile, skill_level=rating
@@ -226,7 +225,8 @@ class AdminSuggestSkillView(PermissionRequiredMixin, TemplateView):
                 )
                 sug.voters.add(profile)
 
-            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
+            num_votes = SuggestSkill.objects.get(title=suggestion).voters.count()
+            if num_votes >= SuggestSkill.NUM_VOTES_TO_ADD_SKILL:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.success(request, _("Skill added!"))

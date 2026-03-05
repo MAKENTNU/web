@@ -83,6 +83,7 @@ lint.select = [
   "LOG",    # https://docs.astral.sh/ruff/rules/#flake8-logging-log
   "PERF",   # https://docs.astral.sh/ruff/rules/#perflint-perf
   "PGH",    # https://docs.astral.sh/ruff/rules/#pygrep-hooks-pgh
+  "PL",     # https://docs.astral.sh/ruff/rules/#pylint-pl
   "PTH",    # https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
   "PYI",    # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
   "RSE",    # https://docs.astral.sh/ruff/rules/#flake8-raise-rse
@@ -91,6 +92,14 @@ lint.select = [
   "TID252", # https://docs.astral.sh/ruff/rules/relative-imports/#relative-imports-tid252
   "W",      # https://docs.astral.sh/ruff/rules/#warning-w
   "YTT",    # https://docs.astral.sh/ruff/rules/#flake8-2020-ytt
+]
+lint.ignore = [
+  "PLC0415", # `import` should be at the top-level of a file
+  "PLC2701", # Private name imported from external module
+  "PLR09",   # Too many <X>
+  "PLR1702", # Too many nested blocks
+  "PLR1704", # Redefining argument with the local name
+  "PLR5501", # Use `elif` instead of `else` then `if`, to reduce indentation
 ]
 
 # Disable line length check in migrations
