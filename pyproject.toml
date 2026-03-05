@@ -71,6 +71,7 @@ lint.select = [
   "A",      # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
   "ASYNC",  # https://docs.astral.sh/ruff/rules/#flake8-async-async
   "B",      # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+  "BLE",    # https://docs.astral.sh/ruff/rules/#flake8-blind-except-ble
   "E",      # https://docs.astral.sh/ruff/rules/#error-e
   "F",      # https://docs.astral.sh/ruff/rules/#pyflakes-f
   "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly
@@ -90,6 +91,7 @@ lint.select = [
   "SLOT",   # https://docs.astral.sh/ruff/rules/#flake8-slots-slot
   "T10",    # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
   "TID252", # https://docs.astral.sh/ruff/rules/relative-imports/#relative-imports-tid252
+  "TRY",    # https://docs.astral.sh/ruff/rules/#tryceratops-try
   "W",      # https://docs.astral.sh/ruff/rules/#warning-w
   "YTT",    # https://docs.astral.sh/ruff/rules/#flake8-2020-ytt
 ]
@@ -100,6 +102,7 @@ lint.ignore = [
   "PLR1702", # Too many nested blocks
   "PLR1704", # Redefining argument with the local name
   "PLR5501", # Use `elif` instead of `else` then `if`, to reduce indentation
+  "TRY003",  # Avoid specifying long messages outside the exception class
 ]
 
 # Disable line length check in migrations

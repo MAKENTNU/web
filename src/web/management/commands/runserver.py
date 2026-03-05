@@ -38,11 +38,11 @@ class Command(runserver.Command):
                     msg = (
                         f"{prefix}{dev_server_prefix_str}{dev_host_addr}:{port}{suffix}"
                     )
-                except Exception:
+                except Exception as e:  # noqa: BLE001
                     self.stderr.write(
                         "Error while parsing development server address string:"
                     )
-                    self.stderr.write(traceback.format_exc())
+                    self.stderr.write("".join(traceback.format_exception(e)))
                 # Reset the write function, which prevents this function from
                 # unnecessarily doing regex matching
                 self.stdout.write = original_write_func

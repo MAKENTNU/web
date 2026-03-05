@@ -1,3 +1,4 @@
+from contextlib import suppress
 from http import HTTPStatus
 
 from django.conf import settings
@@ -244,21 +245,18 @@ class SecretTests(TestCase):
             client: Client, secret: Secret, *, can_delete: bool
         ):
             delete_url = reverse_internal("secret_delete", secret.pk)
-            try:
-                with transaction.atomic():
-                    # `FOUND` means that the request was successful and that the client
-                    # is redirected to the view's `success_url`
-                    self.assertEqual(
-                        client.delete(delete_url).status_code,
-                        HTTPStatus.FOUND if can_delete else HTTPStatus.FORBIDDEN,
-                    )
-                    self.assertEqual(
-                        Secret.objects.filter(pk=secret.pk).exists(), not can_delete
-                    )
-                    # Raise an error so that the transaction is rolled back
-                    raise IntegrityError
-            except IntegrityError:
-                pass
+            with suppress(IntegrityError), transaction.atomic():
+                # `FOUND` means that the request was successful and that the client
+                # is redirected to the view's `success_url`
+                self.assertEqual(
+                    client.delete(delete_url).status_code,
+                    HTTPStatus.FOUND if can_delete else HTTPStatus.FORBIDDEN,
+                )
+                self.assertEqual(
+                    Secret.objects.filter(pk=secret.pk).exists(), not can_delete
+                )
+                # Raise an error so that the transaction is rolled back
+                raise IntegrityError
             # Ensure that the deletion of the secret was rolled back (not strictly
             # necessary to test)
             self.assertTrue(Secret.objects.filter(pk=secret.pk).exists())

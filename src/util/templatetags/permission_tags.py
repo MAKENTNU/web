@@ -22,7 +22,7 @@ def has_any_permissions_for(
     if not isinstance(model__or__app_and_model, str) and not isinstance(
         model__or__app_and_model, type(models.Model)
     ):
-        raise ValueError(
+        raise TypeError(
             f"Expected an instance of {str} or {type(models.Model)}, but got"
             f" '{model__or__app_and_model}'"
         )
