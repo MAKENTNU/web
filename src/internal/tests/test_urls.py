@@ -91,13 +91,13 @@ class UrlTests(TestCase):
         self.secrets = (self.secret1, self.secret2)
 
         self.quote1 = Quote.objects.create(
-            quote="Ha ha.", quoted="Human 1", author=member_user, date="2022-02-02"
+            quote="Ha ha.", quoted="Human 1", author=member_user, time="2022-02-02"
         )
         self.quote2 = Quote.objects.create(
             quote="I like human humor.",
             quoted="Human 2",
             author=member_editor_user,
-            date="2022-02-02",
+            time="2022-02-02",
         )
         self.quotes = (self.quote1, self.quote2)
 
