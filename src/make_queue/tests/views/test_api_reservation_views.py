@@ -226,7 +226,7 @@ class APIReservationListViewTests(TestCase):
         value_not_datetime = "Oppgi gyldig dato og tidspunkt."
         undefined_asdf_field = {
             "undefined_fields": {
-                "message": "These provided fields are not defined in the API.",
+                "message": "Disse oppgitte feltene er ikke definert i API-et.",
                 "fields": ["asdf"],
             }
         }
