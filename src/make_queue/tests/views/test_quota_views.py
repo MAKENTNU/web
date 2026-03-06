@@ -96,7 +96,7 @@ class TestAdminQuotaPanelView(TestCase):
         user_404_not_found = "User with pk=404 was not found."
         undefined_asdf_field = {
             "undefined_fields": {
-                "message": "These provided fields are not defined in the API.",
+                "message": "Disse oppgitte feltene er ikke definert i API-et.",
                 "fields": ["asdf"],
             }
         }

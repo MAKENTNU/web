@@ -354,14 +354,17 @@ msgstr ""
 "printerne på «Reservasjoner»-siden."
 
 #: src/checkin/views.py:132
+#, python-brace-format
 msgid "You have completed the {} course"
 msgstr "Du har fullført {}kurset"
 
 #: src/checkin/views.py:133
+#, python-brace-format
 msgid "You have not taken the {} course"
 msgstr "Du har ikke tatt {}kurset"
 
 #: src/checkin/views.py:135
+#, python-brace-format
 msgid ""
 "To use a {}, make a reservation in the calendar of one of the {}s on the "
 "“Reservations” page."
@@ -1300,6 +1303,10 @@ msgstr "maskiner"
 msgid "location"
 msgstr "sted"
 
+#: src/make_queue/admin.py:143 src/make_queue/models/course.py:64
+msgid "course permissions"
+msgstr "kurs tillatelser"
+
 #: src/make_queue/api/views.py:139
 msgid "Cannot mark reservation as finished when it has not started yet."
 msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå."
@@ -1325,9 +1332,8 @@ msgstr "Kan ikke slette reservasjonen når den allerede er over."
 msgid "Select user"
 msgstr "Velg bruker"
 
-#. Translators: See the Norwegian and English versions of this page for
-#. a translation of "Building security":
-#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
+#. Translators: See the Norwegian and English versions of this page
+#. for a translation of "Building security": https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
 #: src/make_queue/forms/course.py:56
 msgid ""
 "The card number was detected to be the phone number of Building security at "
@@ -1352,6 +1358,13 @@ msgstr "Velg maskintype"
 #: src/make_queue/forms/machine.py:63
 msgid "Stream name cannot be empty when the machine type supports streaming."
 msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
+
+#: src/make_queue/forms/machine.py:161
+msgid ""
+"Either both 'calendar_year' and 'calendar_week' must be set, or none of them."
+msgstr ""
+"Enten må både 'calendar_year' og 'calendar_week' være oppgitt, eller ingen "
+"av dem."
 
 #: src/make_queue/forms/quota.py:45
 msgid "User must be set when “All users” is not set."
@@ -1389,6 +1402,22 @@ msgid "Rule time periods overlap with time periods of other rules."
 msgstr ""
 "Tidsperiodene til regelen overlapper med tidsperiodene til andre regler."
 
+#: src/make_queue/models/course.py:15
+msgid "Only has to be logged in"
+msgstr "Trenger bare å være innlogget"
+
+#: src/make_queue/models/course.py:16
+msgid "Taken the 3D printer course"
+msgstr "Tatt 3D-printerkurset"
+
+#: src/make_queue/models/course.py:17
+msgid "Taken the course on Raise3D printers"
+msgstr "Tatt Raise3D-printerkurset"
+
+#: src/make_queue/models/course.py:18
+msgid "Taken the SLA 3D printer course"
+msgstr "Tatt SLA 3D-printerkurset"
+
 #: src/make_queue/models/course.py:13
 msgid "short name"
 msgstr "kort navn"
@@ -1398,8 +1427,7 @@ msgid "Registered"
 msgstr "Registrert"
 
 #. Translators: See the Norwegian and English versions of this page for
-#. a translation of "Building security":
-#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
+#. a translation of "Building security": https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
 #: src/make_queue/models/course.py:28
 msgid "Sent to Building security"
 msgstr "Sendt til Vakt og service"
@@ -1417,10 +1445,6 @@ msgstr "brukernavn"
 #: src/make_queue/models/course.py:43
 msgid "course date"
 msgstr "kursdato"
-
-#: src/make_queue/models/course.py:45
-msgid "course permissions"
-msgstr "kurs tillatelser"
 
 #: src/make_queue/models/course.py:52
 msgid "3D printer course"
@@ -3001,6 +3025,10 @@ msgstr ""
 "Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
 "understreker."
 
+#: src/util/view_utils.py:84
+msgid "These provided fields are not defined in the API."
+msgstr "Disse oppgitte feltene er ikke definert i API-et."
+
 #: src/web/multilingual/formfields.py:19
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
@@ -3274,15 +3302,3 @@ msgstr "Søk etter steder"
 
 #~ msgid "SLA course"
 #~ msgstr "SLA-kurs"
-
-#~ msgid "Only has to be logged in"
-#~ msgstr "Trenger bare å være innlogget"
-
-#~ msgid "Taken the 3D printer course"
-#~ msgstr "Tatt 3D-printerkurset"
-
-#~ msgid "Taken the course on Raise3D printers"
-#~ msgstr "Tatt Raise3D-printerkurset"
-
-#~ msgid "Taken the SLA 3D printer course"
-#~ msgstr "Tatt SLA 3D-printerkurset"

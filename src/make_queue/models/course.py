@@ -33,8 +33,7 @@ class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
         REGISTERED = "registered", _("Registered")
         # Translators: See the Norwegian and English versions of this page for
-        # a translation of "Building security":
-        # https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
+        # a translation of "Building security": https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
         SENT = "sent", _("Sent to Building security")
         ACCESS = "access", _("Access granted")
 

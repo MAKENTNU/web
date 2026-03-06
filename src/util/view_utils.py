@@ -81,7 +81,7 @@ class QueryParameterFormMixin(FormMixin, ABC):
             fields_not_on_form = self.request.GET.keys() - form.base_fields.keys()
             if fields_not_on_form:
                 errors["undefined_fields"] = {
-                    "message": "These provided fields are not defined in the API.",
+                    "message": _("These provided fields are not defined in the API."),
                     "fields": list(fields_not_on_form),
                 }
 

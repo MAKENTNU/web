@@ -7,6 +7,15 @@ from django.core.management.commands import makemessages
 
 
 class Command(makemessages.Command):
+    """A custom override of the ``compilemessages`` command.
+
+    Differences from the standard command:
+
+    * Ignores files within the top-level directories that don't contain our project's
+      Python code.
+    * Ensures that the generated comments have the same format regardless of OS.
+    """
+
     # Remove leading `./` as well, in case it ever happens to be generated (see comment
     # above `write_po_file()` for context)
     PATH_PREFIX_REGEX: Final = re.compile(r" \.[\\/]")

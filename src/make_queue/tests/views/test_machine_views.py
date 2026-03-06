@@ -403,15 +403,13 @@ class TestMachineDetailView(TestCase):
         value_not_int = "Oppgi et heltall."
         both_fields_must_be_set = {
             "__all__": [
-                (
-                    "Either both 'calendar_year' and 'calendar_week' must be set, or"
-                    " none of them."
-                )
+                "Enten må både 'calendar_year' og 'calendar_week' være oppgitt,"
+                " eller ingen av dem.",
             ]
         }
         undefined_asdf_field = {
             "undefined_fields": {
-                "message": "These provided fields are not defined in the API.",
+                "message": "Disse oppgitte feltene er ikke definert i API-et.",
                 "fields": ["asdf"],
             }
         }
