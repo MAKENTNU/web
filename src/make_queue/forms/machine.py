@@ -102,6 +102,8 @@ class ChangeMachineForm(MachineFormBase):
 
         if not self.instance.machine_type.has_stream:
             self.fields["stream_name"].disabled = True
+        if not self.instance.machine_type.has_ip:
+            self.fields["ip_address"].disabled = True
 
     def clean(self):
         # Force the machine type before doing any other cleaning

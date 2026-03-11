@@ -50,6 +50,8 @@ class MachineType(models.Model):
         on_delete=models.PROTECT,
     )
     has_stream = models.BooleanField(default=False)
+    has_ip = models.BooleanField(default=False)
+
     priority = models.IntegerField(
         verbose_name=_("priority"),
         help_text=_("The machine types are sorted ascending by this value."),
@@ -205,6 +207,7 @@ class Machine(models.Model):
     history = HistoricalRecords(
         excluded_fields=["status", "info_message_date", "priority", "last_modified"]
     )
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
@@ -260,6 +263,11 @@ class Machine(models.Model):
             in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
             self.get_status_display(),
         )
+    def can_upload_to_printer(
+        self,
+        user: User | AnonymousUser
+    ):
+        return self.ip != "" and self.can_user_use(user)
 
 
 class MachineUsageRule(models.Model):

@@ -214,6 +214,9 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
             {"fields": ("stream_name",), "layout_class": "ui two fields"}
             if self.should_include_stream_name()
             else None,
+            {"fields": ("ip_address",), "layout_class": "ui two fields"}
+            if self.should_include_ip_address()
+            else None,
             {"fields": ("location", "location_url"), "layout_class": "ui two fields"},
             {"fields": ("priority", "status"), "layout_class": "ui two fields"},
             {
@@ -225,6 +228,8 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
         ]
 
     def should_include_stream_name(self):
+        return True
+    def should_include_ip_address(self):
         return True
 
 
@@ -248,6 +253,8 @@ class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
 
     def should_include_stream_name(self):
         return self.object.machine_type.has_stream
+    def should_include_ip_address(self):
+        return self.object.machine_type.has_ip
 
 
 class MachineDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
