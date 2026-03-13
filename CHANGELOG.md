@@ -26,6 +26,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 - Added custom front page logo on [makentnu.dev](https://makentnu.dev/) (MAKENTNU/web#781)
 - Stopped generating `#:` comments in `.po` files (MAKENTNU/web#806)
+- Stopped generating `#, fuzzy` translations in `.po` files (MAKENTNU/web#806)
 
 
 ## 2025-10-26 (MAKENTNU/web#779)

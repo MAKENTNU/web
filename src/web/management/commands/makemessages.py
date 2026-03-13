@@ -12,6 +12,7 @@ class Command(makemessages.Command):
 
     * Ignores files that are not part of our project.
     * Prevents ``#:`` comments from being generated.
+    * Prevents ``#, fuzzy`` ``msgstr`` entries from being generated.
     """
 
     # Ignore all top-level directories that are not the `BASE_DIR`, as well as
@@ -30,6 +31,20 @@ class Command(makemessages.Command):
     )
 
     help = f"{makemessages.Command.help}{IGNORED_DIRS_HELP_SUFFIX}"
+
+    msgmerge_options = [
+        *makemessages.Command.msgmerge_options,
+        # https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#index-_002d_002dno_002dfuzzy_002dmatching_002c-msgmerge-option
+        # We don't have any dedicated translators for whom the pre-filled `#, fuzzy`
+        # `msgstr`s could help, and since the matching is so often very wrong - which
+        # can cause a lot of user confusion if not caught - it's easier for us to just
+        # not do any fuzzy matching and instead always generate new, blank translations.
+        # This does mean that if you run `makemessages` after changing e.g. one
+        # character in an existing message in the code, the previous `msgstr` will be
+        # wiped - albeit with the previous `msgid` and `msgstr` commented out with `#~`
+        # and moved to the bottom of the `.po` file.
+        "--no-fuzzy-matching",
+    ]
 
     def execute(self, *args, **options):
         ignore_patterns: list[str] = options["ignore_patterns"]
