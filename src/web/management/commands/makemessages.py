@@ -10,16 +10,19 @@ class Command(makemessages.Command):
 
     Differences from the standard command:
 
-    * Ignores files within the top-level directories that don't contain our project's
-      Python code.
+    * Ignores files that are not part of our project.
     * Prevents ``#:`` comments from being generated.
     """
 
-    # Ignore all top-level directories that are not the `BASE_DIR`
+    # Ignore all top-level directories that are not the `BASE_DIR`, as well as
+    # third-party JavaScript libraries
     DEFAULT_IGNORED_DIRS: Final = [
-        path.name
-        for path in settings.REPO_DIR.iterdir()
-        if path.is_dir() and path != settings.BASE_DIR
+        *(
+            path.name
+            for path in settings.REPO_DIR.iterdir()
+            if path.is_dir() and path != settings.BASE_DIR
+        ),
+        settings.JS_LIBRARIES_DIR.relative_to(settings.REPO_DIR).as_posix(),
     ]
     IGNORED_DIRS_HELP_SUFFIX: Final = (
         "\n\nIf no --ignore options are provided, the following directories are"
