@@ -31,7 +31,7 @@ dependencies = [
   # to provide the `openidconnect` extra - see
   # https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options
   "social-auth-core[openidconnect]==4.4.2",
-  "python-ldap==3.4.4",
+  "python-ldap==3.4.5",
 
   # Async-related packages (mainly for sending of emails)
   "channels[daphne]==4.1.0",
