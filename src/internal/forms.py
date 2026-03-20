@@ -8,6 +8,7 @@ from internal.models import Member, Quote, Secret, SystemAccess
 from users.models import User
 from web.widgets import (
     SemanticDateInput,
+    SemanticDateTimeInput,
     SemanticMultipleSelectInput,
     SemanticSearchableChoiceInput,
 )
@@ -196,7 +197,7 @@ class SecretsForm(forms.ModelForm):
 class QuoteForm(forms.ModelForm):
     class Meta:
         model = Quote
-        fields = ("quote", "quoted", "context", "date")
+        fields = ("quote", "quoted", "context", "time")
         widgets = {
-            "date": SemanticDateInput(),
+            "time": SemanticDateTimeInput(),
         }
