@@ -14,7 +14,6 @@
 
 _(If any of the points are not relevant, mark them as checked, so that it's easy to see which points you've handled or not)_
 
-- [ ] I've run `makemigrations`, `makemessages` and `compilemessages`
 - [ ] I've written tests that fail without these changes (if relevant/possible)
 - [ ] I've manually tested the website UI with different device layouts
   - _Most common is to test with typical screen sizes for mobile (320-425 px), tablet (768 px) and desktop (1024+ px), which can easily be done with your browser's dev tools_
