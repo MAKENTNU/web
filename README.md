@@ -23,7 +23,7 @@
 1. Install dev dependencies:
    (this will create a `.venv` folder inside your repository folder, by default)
    ```shell
-   uv sync --group dev
+   uv sync
    ```
 1. Create an empty `.env` file directly inside the repository folder, and fill it by
    copying the contents of [`.env.example`](.env.example)
