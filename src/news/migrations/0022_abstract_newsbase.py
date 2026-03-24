@@ -106,7 +106,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "ordering": ("-publication_time",),
-                "permissions": (("can_view_private", "Can view private articles"),),
+                "permissions": [("can_view_private", "Can view private articles")],
                 "abstract": False,
             },
         ),
@@ -176,7 +176,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "permissions": (("can_view_private", "Can view private events"),),
+                "permissions": [("can_view_private", "Can view private events")],
                 "abstract": False,
             },
         ),

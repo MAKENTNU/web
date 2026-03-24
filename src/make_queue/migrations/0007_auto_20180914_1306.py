@@ -64,9 +64,9 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "permissions": (
+                "permissions": [
                     ("can_view_reservation_user", "Can view reservation user"),
-                ),
+                ],
             },
         ),
         migrations.DeleteModel(
