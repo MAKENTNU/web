@@ -26,6 +26,8 @@ class MakemessagesTests(StandardTestCase):
         management.call_command("makemessages", all=True, domain="djangojs")
         after_contents = self.get_po_file_contents()
 
+        self.maxDiff = None
+        self.assertEqual(after_contents, before_contents)
         if after_contents != before_contents:
             self.fail(
                 f"\n{'#' * 52}"
