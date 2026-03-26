@@ -25,22 +25,17 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 ### Other changes
 
 
-## 2026-03-26
-
-## Unreleased
-Admin page shortcut in internal pages
+## 2026-03-26 (MAKENTNU/web#810)
 
 ### New features
-
-
-### Improvements
+- Admin page shortcut in internal pages (MAKENTNU/web#755)
 
 
 ### Fixes
+- Find reservations no longer shows machines under maintenance (MAKENTNU/web#780)
 
 
 ### Other changes
-
 - Added custom front page logo on [makentnu.dev](https://makentnu.dev/) (MAKENTNU/web#781)
 
 
