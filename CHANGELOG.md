@@ -10,9 +10,8 @@ Whenever a deployment is planned, this section should be renamed to the current 
 and a new, empty "Unreleased" section should be added.
 Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
 
-
 ## Unreleased
-Admin page shortcut in internal pages
+
 
 ### New features
 
@@ -25,6 +24,18 @@ Admin page shortcut in internal pages
 
 ### Other changes
 
+
+## 2026-03-26 (MAKENTNU/web#810)
+
+### New features
+- Admin page shortcut in internal pages (MAKENTNU/web#755)
+
+
+### Fixes
+- Find reservations no longer shows machines under maintenance (MAKENTNU/web#780)
+
+
+### Other changes
 - Added custom front page logo on [makentnu.dev](https://makentnu.dev/) (MAKENTNU/web#781)
 
 
