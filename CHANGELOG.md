@@ -10,6 +10,22 @@ Whenever a deployment is planned, this section should be renamed to the current 
 and a new, empty "Unreleased" section should be added.
 Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
 
+## Unreleased
+
+
+### New features
+
+
+### Improvements
+
+
+### Fixes
+
+
+### Other changes
+
+
+## 2026-03-26
 
 ## Unreleased
 Admin page shortcut in internal pages
