@@ -12,6 +12,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ## Unreleased
+Admin page shortcut in internal pages
 
 ### New features
 
