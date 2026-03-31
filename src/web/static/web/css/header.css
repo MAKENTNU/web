@@ -16,6 +16,8 @@
     width: 100%;
     height: var(--header-height);
     background-color: rgb(34, 43, 52);
+    background-color: #1b140d;
+
 }
 
 #header .item > .text {
