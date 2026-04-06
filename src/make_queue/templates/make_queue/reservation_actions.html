@@ -29,6 +29,20 @@
             {% endif %}
         </div>
     </a>
+    {% if can_upload_gcode %}
+    <form class="item" method="post" enctype="multipart/form-data"
+        action="{% url 'upload_gcode' machine.pk %}">
+        {% csrf_token %}
+
+        <i class="large middle aligned green upload icon"></i>
+
+        <div class="content">
+            <div class="header">{% translate "Upload Gcode" %}</div>
+            <input type="file" name="file" accept=".gcode" required>
+            <button type="submit" class="ui button small">Upload</button>
+        </div>
+    </form>
+    {% endif %}
     <a class="item" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">

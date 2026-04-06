@@ -31,6 +31,7 @@ specific_machine_urlpatterns = [
         login_required(reservation_views.ReservationCreateView.as_view()),
         name="reservation_create",
     ),
+    path("upload/", machine_views.UploadGcodeView.as_view(), name="upload_gcode")
 ]
 machine_urlpatterns = [
     path("", machine_views.MachineListView.as_view(), name="machine_list"),

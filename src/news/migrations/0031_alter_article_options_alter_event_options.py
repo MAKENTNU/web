@@ -4,18 +4,20 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0030_eventticket_creation_date_and_active_last_modified'),
+        ("news", "0030_eventticket_creation_date_and_active_last_modified"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='article',
-            options={'ordering': ('-publication_time',), 'permissions': [('can_view_private', 'Can view private articles')]},
+            name="article",
+            options={
+                "ordering": ("-publication_time",),
+                "permissions": [("can_view_private", "Can view private articles")],
+            },
         ),
         migrations.AlterModelOptions(
-            name='event',
-            options={'permissions': [('can_view_private', 'Can view private events')]},
+            name="event",
+            options={"permissions": [("can_view_private", "Can view private events")]},
         ),
     ]

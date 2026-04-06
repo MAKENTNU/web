@@ -4,14 +4,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0012_profile_user_non_nullable'),
+        ("checkin", "0012_profile_user_non_nullable"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='suggestskill',
-            options={'ordering': ('title',), 'permissions': [('can_force_suggestion', 'Can force suggestion')]},
+            name="suggestskill",
+            options={
+                "ordering": ("title",),
+                "permissions": [("can_force_suggestion", "Can force suggestion")],
+            },
         ),
     ]

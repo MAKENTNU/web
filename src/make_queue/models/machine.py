@@ -18,6 +18,7 @@ from web.multilingual.modelfields import (
     MultiLingualRichTextUploadingField,
     MultiLingualTextField,
 )
+import requests
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -263,11 +264,25 @@ class Machine(models.Model):
             in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
             self.get_status_display(),
         )
-    def can_upload_to_printer(
-        self,
-        user: User | AnonymousUser
-    ):
-        return self.ip != "" and self.can_user_use(user)
+    def can_upload_to_printer(self, user):
+        if not (self.ip_address and self.can_user_use(user)):
+            return False
+
+        status = self.get_printer_status()
+
+        return status in ["standby", "paused","cancelled","complete"]
+
+    def get_printer_status(self):
+        try:
+            res = requests.get(
+                f"http://{self.ip_address}/printer/objects/query?print_stats",
+                timeout=5
+            )
+            data = res.json()
+
+            return data["result"]["status"]["print_stats"]["state"]
+        except Exception:
+            return "offline"
 
 
 class MachineUsageRule(models.Model):

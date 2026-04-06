@@ -1,7 +1,7 @@
 from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -27,7 +27,9 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
-
+import requests
+from django.contrib import messages
+from django.views import View
 
 # noinspection PyUnresolvedReferences
 class MachineTypeRelatedViewMixin:
@@ -178,6 +180,8 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
             "selected_year": selected_year,
             "selected_week": selected_week,
             "selected_date": year_and_week_to_monday(selected_year, selected_week),
+            "can_upload_gcode": False,
+            "printer_status": "Offline"
         }
 
         if self.request.user.is_authenticated:
@@ -186,7 +190,9 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
                 for quota in Quota.get_user_quotas(
                     self.request.user, machine.machine_type
                 ).filter(ignore_rules=True)
-            )
+            )            
+            context["can_upload_gcode"] = machine.can_upload_to_printer(self.request.user)
+            context["printer_status"] = machine.get_printer_status()
 
         return context
 
@@ -229,6 +235,7 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
 
     def should_include_stream_name(self):
         return True
+
     def should_include_ip_address(self):
         return True
 
@@ -253,6 +260,7 @@ class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
 
     def should_include_stream_name(self):
         return self.object.machine_type.has_stream
+
     def should_include_ip_address(self):
         return self.object.machine_type.has_ip
 
@@ -281,3 +289,43 @@ class MachineRelatedViewMixin:
         self.machine = get_object_or_404(
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
+
+class UploadGcodeView(View):
+    def post(self, request, pk):
+        machine = get_object_or_404(Machine, pk=pk)
+
+        if not machine.can_upload_to_printer(request.user):
+            messages.error(request, "You are not allowed to upload to this printer.")
+            return redirect(machine.get_absolute_url())
+
+        file = request.FILES.get("file")
+
+        if not file:
+            messages.error(request, "No file uploaded.")
+            return redirect(machine.get_absolute_url())
+
+        #Only allow .gcode
+        if not file.name.endswith(".gcode"):
+            messages.error(request, "Only .gcode files are allowed.")
+            return redirect(machine.get_absolute_url())
+
+        try:
+            response = requests.post(
+                f"http://{machine.ip_address}/server/files/upload",
+                files={"file": (file.name, file, "application/octet-stream")},
+                data={
+                    "root": "gcodes",
+                    "path": ""
+                },
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                messages.success(request, "File uploaded successfully.")
+            else:
+                messages.error(request, f"Upload failed: {response.text}")
+
+        except requests.RequestException as e:
+            messages.error(request, f"Printer connection failed: {e}")
+
+        return redirect(machine.get_absolute_url())

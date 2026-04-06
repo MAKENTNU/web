@@ -5,39 +5,53 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0035_coursepermission_printer3dcourse_course_permissions_and_more'),
+        (
+            "make_queue",
+            "0035_coursepermission_printer3dcourse_course_permissions_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='reservation',
-            options={'permissions': [('can_view_reservation_user', 'Can view reservation user')]},
+            name="reservation",
+            options={
+                "permissions": [
+                    ("can_view_reservation_user", "Can view reservation user")
+                ]
+            },
         ),
         migrations.AddField(
-            model_name='historicalmachine',
-            name='ip_address',
+            model_name="historicalmachine",
+            name="ip_address",
             field=models.GenericIPAddressField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='ip_address',
+            model_name="machine",
+            name="ip_address",
             field=models.GenericIPAddressField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='machinetype',
-            name='has_ip',
+            model_name="machinetype",
+            name="has_ip",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='coursepermission',
-            name='short_name',
-            field=models.CharField(blank=True, max_length=4, unique=True, verbose_name='short name'),
+            model_name="coursepermission",
+            name="short_name",
+            field=models.CharField(
+                blank=True, max_length=4, unique=True, verbose_name="short name"
+            ),
         ),
         migrations.AlterField(
-            model_name='machinetype',
-            name='usage_requirement',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='make_queue.coursepermission', verbose_name='usage requirement'),
+            model_name="machinetype",
+            name="usage_requirement",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="make_queue.coursepermission",
+                verbose_name="usage requirement",
+            ),
         ),
     ]
