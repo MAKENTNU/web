@@ -29,20 +29,43 @@
             {% endif %}
         </div>
     </a>
-    {% if can_upload_gcode %}
-    <form class="item" method="post" enctype="multipart/form-data"
-        action="{% url 'upload_gcode' machine.pk %}">
-        {% csrf_token %}
+{% if show_upload_button %}
+{% if can_upload_gcode %}
+<form class="item" method="post" enctype="multipart/form-data"
+      action="{% url 'upload_gcode' machine.pk %}">
+    {% csrf_token %}
 
-        <i class="large middle aligned green upload icon"></i>
+    <i class="large middle aligned green upload icon"></i>
 
-        <div class="content">
-            <div class="header">{% translate "Upload Gcode" %}</div>
-            <input type="file" name="file" accept=".gcode" required>
-            <button type="submit" class="ui button small">Upload</button>
-        </div>
-    </form>
-    {% endif %}
+    <div class="content">
+        <div class="header">{% translate "Upload" %} Gcode</div>
+        <input type="file" name="file" accept=".gcode" required>
+        <button type="submit" class="ui button small">{% translate "Upload" %}</button>
+    </div>
+</form>
+
+{% else %}
+<div class="item disabled">
+    <i class="large middle aligned grey upload icon"></i>
+
+    <div class="content">
+        <div class="header">{% translate "Upload" %} Gcode</div>
+
+        {% if not user.is_authenticated %}
+            {% translate "Log in to upload files." %}
+        {% elif not machine.ip_address %}
+            {% translate "Printer is not connected." %}
+        {% elif printer_status == "offline" %}
+            {% translate "Printer is offline." %}
+        {% elif not can_upload_gcode %}
+            {% translate "You are not allowed to upload to this printer." %}
+        {% else %}
+            {% translate "Upload is currently unavailable." %}
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{%endif %}
     <a class="item" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">

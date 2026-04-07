@@ -1,9 +1,12 @@
 from abc import ABC
 
+import requests
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -27,9 +30,7 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
-import requests
-from django.contrib import messages
-from django.views import View
+
 
 # noinspection PyUnresolvedReferences
 class MachineTypeRelatedViewMixin:
@@ -181,7 +182,8 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
             "selected_week": selected_week,
             "selected_date": year_and_week_to_monday(selected_year, selected_week),
             "can_upload_gcode": False,
-            "printer_status": "Offline"
+            "show_upload_button": False,
+            "printer_status": "Offline",
         }
 
         if self.request.user.is_authenticated:
@@ -190,8 +192,13 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
                 for quota in Quota.get_user_quotas(
                     self.request.user, machine.machine_type
                 ).filter(ignore_rules=True)
-            )            
-            context["can_upload_gcode"] = machine.can_upload_to_printer(self.request.user)
+            )
+            context["show_upload_button"] = machine.show_upload_button(
+                self.request.user
+            )
+            context["can_upload_gcode"] = machine.can_upload_to_printer(
+                self.request.user
+            )
             context["printer_status"] = machine.get_printer_status()
 
         return context
@@ -290,6 +297,7 @@ class MachineRelatedViewMixin:
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
 
+
 class UploadGcodeView(View):
     def post(self, request, pk):
         machine = get_object_or_404(Machine, pk=pk)
@@ -304,7 +312,7 @@ class UploadGcodeView(View):
             messages.error(request, "No file uploaded.")
             return redirect(machine.get_absolute_url())
 
-        #Only allow .gcode
+        # Only allow .gcode
         if not file.name.endswith(".gcode"):
             messages.error(request, "Only .gcode files are allowed.")
             return redirect(machine.get_absolute_url())
@@ -313,11 +321,8 @@ class UploadGcodeView(View):
             response = requests.post(
                 f"http://{machine.ip_address}/server/files/upload",
                 files={"file": (file.name, file, "application/octet-stream")},
-                data={
-                    "root": "gcodes",
-                    "path": ""
-                },
-                timeout=10
+                data={"root": "gcodes", "path": ""},
+                timeout=10,
             )
 
             if response.status_code == 200:

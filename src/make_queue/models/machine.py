@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
 
+import requests
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
 from django.db.models import F, Prefetch, Q
@@ -18,7 +19,6 @@ from web.multilingual.modelfields import (
     MultiLingualRichTextUploadingField,
     MultiLingualTextField,
 )
-import requests
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -264,19 +264,22 @@ class Machine(models.Model):
             in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
             self.get_status_display(),
         )
+
+    def show_upload_button(self, user):
+        return self.ip_address and self.can_user_use(user)
+
     def can_upload_to_printer(self, user):
-        if not (self.ip_address and self.can_user_use(user)):
+        if not (self.show_upload_button(user)):
             return False
 
         status = self.get_printer_status()
 
-        return status in ["standby", "paused","cancelled","complete"]
+        return status in ["standby", "paused", "cancelled", "complete"]
 
     def get_printer_status(self):
         try:
             res = requests.get(
-                f"http://{self.ip_address}/printer/objects/query?print_stats",
-                timeout=5
+                f"http://{self.ip_address}/printer/objects/query?print_stats", timeout=5
             )
             data = res.json()
 
