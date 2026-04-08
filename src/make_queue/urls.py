@@ -32,6 +32,7 @@ specific_machine_urlpatterns = [
         name="reservation_create",
     ),
     path("upload/", machine_views.UploadGcodeView.as_view(), name="upload_gcode"),
+    path("status/", machine_views.printer_status_api, name="printer_status"),
 ]
 machine_urlpatterns = [
     path("", machine_views.MachineListView.as_view(), name="machine_list"),

@@ -30,6 +30,7 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
+from django.http import JsonResponse
 
 
 # noinspection PyUnresolvedReferences
@@ -196,12 +197,16 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
             context["show_upload_button"] = machine.show_upload_button(
                 self.request.user
             )
-            context["can_upload_gcode"] = machine.can_upload_to_printer(
-                self.request.user
-            )
-            context["printer_status"] = machine.get_printer_status()
-
         return context
+    
+def printer_status_api(request, pk):
+    machine = get_object_or_404(Machine, pk=pk)
+
+    status = machine.get_printer_status()
+
+    return JsonResponse({
+        "status": status
+    })
 
 
 class MachineFormMixin(CustomFieldsetFormMixin, ABC):

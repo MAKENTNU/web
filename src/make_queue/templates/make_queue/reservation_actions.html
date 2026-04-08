@@ -1,6 +1,99 @@
 {% load i18n %}
 {% load reservation_extra %}
 
+{% if show_upload_button %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("file-input");
+    const button = document.getElementById("upload-button");
+    const form = document.getElementById("upload-form");
+    const statusText = document.getElementById("upload-status");
+    const message = document.getElementById("upload-message");
+    const icon = document.getElementById("upload-icon");
+
+    const TXT = {
+        uploading: "{% translate 'Uploading' %}...",
+        upload: "{% translate 'Upload' %}",
+        uploadComplete: "{% translate 'Upload complete' %}",
+        uploadFailed: "{% translate 'Upload failed' %}",
+        offline: "{% translate 'Printer is offline.' %}",
+        printing: "{% translate 'Printer is printing. Upload is not allowed.' %}",
+        ready: "{% translate 'Printer is ready. Upload allowed.' %}",
+        unknown: "{% translate 'Printer status:' %}",
+        fetchError: "{% translate 'Could not fetch printer status.' %}",
+    };
+    if (button && fileInput) {
+        button.addEventListener("click", () => fileInput.click());
+
+        fileInput.addEventListener("change", () => {
+            if (!fileInput.files.length) return;
+
+            button.disabled = true;
+            button.textContent = TXT.uploading;
+            statusText.textContent = "";
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                }
+            })
+            .then(res => res.text())
+            .then(() => {
+                button.textContent = TXT.upload;
+                statusText.textContent = TXT.uploadComplete;
+            })
+            .catch(() => {
+                button.textContent = TXT.upload;
+                statusText.textContent = TXT.uploadFailed;
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
+        });
+    }
+    function updateStatus() {
+        fetch("{% url 'printer_status' machine.pk %}")
+            .then(res => res.json())
+            .then(data => {
+                const status = data.status;
+
+                if (!message) return;
+
+                if (status === "offline") {
+                    message.textContent = TXT.offline;
+                    button.disabled = true;
+                    form.classList.add("disabled");
+                    icon.classList.replace("green", "grey");
+
+                } else if (["printing", "paused"].includes(status)) {
+                    message.textContent = TXT.printing;
+                    button.disabled = true;
+                    form.classList.add("disabled");
+                    icon.classList.replace("green", "grey");
+
+                } else if (["standby", "cancelled", "complete"].includes(status)) {
+                    message.textContent = TXT.ready;
+                    button.disabled = false;
+                    form.classList.remove("disabled");
+                    icon.classList.replace("grey", "green");
+
+                } else {
+                    message.textContent = TXT.unknown + " " + status;
+                }
+            })
+            .catch(() => {
+                message.textContent = TXT.fetchError;
+            });
+    }
+
+    updateStatus();
+});
+</script>
+{% endif %}
 
 {# Linking `reservation_actions.css` is required when including this template. #}
 {# Also, the machine dropdown should be initialized after the document is ready (using `.dropdown()`) #}
@@ -30,42 +123,31 @@
         </div>
     </a>
 {% if show_upload_button %}
-{% if can_upload_gcode %}
-<form class="item" method="post" enctype="multipart/form-data"
+<form id="upload-form"
+      class="item disabled"
+      method="post"
+      enctype="multipart/form-data"
       action="{% url 'upload_gcode' machine.pk %}">
     {% csrf_token %}
 
-    <i class="large middle aligned green upload icon"></i>
+    <i id="upload-icon" class="large middle aligned grey upload icon"></i>
 
     <div class="content">
-        <div class="header">{% translate "Upload" %} Gcode</div>
-        <input type="file" name="file" accept=".gcode" required>
-        <button type="submit" class="ui button small">{% translate "Upload" %}</button>
+        <div class="header">{% translate "Upload Gcode" %}</div>
+
+        <input id="file-input" type="file" name="file" accept=".gcode" hidden required>
+
+        <button id="upload-button" type="button" class="ui button small" disabled>
+            {% translate "Upload" %}
+        </button>
+
+        <div id="upload-status" class="ui tiny text"></div>
+        <div id="upload-message" class="ui tiny text">
+            {% translate "Printer is offline" %}
+        </div>
     </div>
 </form>
-
-{% else %}
-<div class="item disabled">
-    <i class="large middle aligned grey upload icon"></i>
-
-    <div class="content">
-        <div class="header">{% translate "Upload" %} Gcode</div>
-
-        {% if not user.is_authenticated %}
-            {% translate "Log in to upload files." %}
-        {% elif not machine.ip_address %}
-            {% translate "Printer is not connected." %}
-        {% elif printer_status == "offline" %}
-            {% translate "Printer is offline." %}
-        {% elif not can_upload_gcode %}
-            {% translate "You are not allowed to upload to this printer." %}
-        {% else %}
-            {% translate "Upload is currently unavailable." %}
-        {% endif %}
-    </div>
-</div>
 {% endif %}
-{%endif %}
     <a class="item" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
