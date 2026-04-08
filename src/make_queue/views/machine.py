@@ -307,7 +307,7 @@ class UploadGcodeView(View):
     def post(self, request, pk):
         machine = get_object_or_404(Machine, pk=pk)
 
-        if not machine.can_upload_to_printer(request.user):
+        if not machine.show_upload_button(request.user):
             messages.error(request, "You are not allowed to upload to this printer.")
             return redirect(machine.get_absolute_url())
 
