@@ -1,8 +1,10 @@
+import ipaddress
 from abc import ABC
 
 import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -30,7 +32,6 @@ from util.view_utils import (
     PreventGetRequestsMixin,
     QueryParameterFormMixin,
 )
-from django.http import JsonResponse
 
 
 # noinspection PyUnresolvedReferences
@@ -198,15 +199,14 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
                 self.request.user
             )
         return context
-    
+
+
 def printer_status_api(request, pk):
     machine = get_object_or_404(Machine, pk=pk)
 
     status = machine.get_printer_status()
 
-    return JsonResponse({
-        "status": status
-    })
+    return JsonResponse({"status": status})
 
 
 class MachineFormMixin(CustomFieldsetFormMixin, ABC):
@@ -322,6 +322,10 @@ class UploadGcodeView(View):
             messages.error(request, "Only .gcode files are allowed.")
             return redirect(machine.get_absolute_url())
 
+        ip = ipaddress.ip_address(machine.ip_address)
+        if not ip.is_private:  # Just in case bad ip address entered
+            messages.error(request, "Invalid printer address.")
+            return redirect(machine.get_absolute_url())
         try:
             response = requests.post(
                 f"http://{machine.ip_address}/server/files/upload",

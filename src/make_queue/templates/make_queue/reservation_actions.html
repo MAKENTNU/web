@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
         upload: "{% translate 'Upload' %}",
         uploadComplete: "{% translate 'Upload complete' %}",
         uploadFailed: "{% translate 'Upload failed' %}",
-        offline: "{% translate 'Printer is offline.' %}",
-        printing: "{% translate 'Printer is printing. Upload is not allowed.' %}",
-        ready: "{% translate 'Printer is ready. Upload allowed.' %}",
-        unknown: "{% translate 'Printer status:' %}",
-        fetchError: "{% translate 'Could not fetch printer status.' %}",
+        offline: "{% translate 'Printer is offline' %}",
+        printing: "{% translate 'Upload unavailable while printing is in progress.' %}",
+        ready: "{% translate 'Ready for upload' %}",
+        unknown: "{% translate 'Current printer status' %}:",
+        fetchError: "{% translate 'Unable to retrieve printer status.' %}",
     };
     if (button && fileInput) {
         button.addEventListener("click", () => fileInput.click());
