@@ -42,7 +42,7 @@ dependencies = [
 
   # Misc. packages
   "bleach[css]==6.1.0",
-  "Pillow==11.3.0",
+  "Pillow==12.2.0",
   "uuid==1.30",
   "XlsxWriter==3.2.0",
 ]
