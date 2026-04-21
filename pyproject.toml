@@ -38,7 +38,7 @@ dependencies = [
   "channels-redis==4.2.0",
 
   # Environment variables
-  "python-dotenv==1.1.1",
+  "python-dotenv==1.2.2",
 
   # Misc. packages
   "bleach[css]==6.1.0",
