@@ -3242,9 +3242,73 @@ msgstr "Velg verdi"
 msgid "Search places"
 msgstr "Søk etter steder"
 
-#: src\internal\templates\internal\guidance_hours.html:10
+#: src/internal/templates/internal/guidance_hours.html:9
+#: src/internal/templates/internal/guidance_hours.html:25
+#: src/internal/templates/internal/header.html:24
+#: src/internal/views.py:453
 msgid "Guidance hours"
 msgstr "Veiledningstimer"
+
+#: src/internal/templates/internal/guidance_hours.html:21
+msgid "Are you sure you want to cancel this slot?"
+msgstr "Er du helt sikker på at du vil melde deg av denne veiledningstimen?"
+
+#: src/internal/templates/internal/guidance_hours.html:22
+msgid "Are you sure you want to book this slot?"
+msgstr "Er du helt sikker på at du vil melde deg på denne veiledningstimen?"
+
+#: src/internal/templates/internal/guidance_hours.html:23
+msgid "Are you sure you want to clear all bookings?"
+msgstr "Er du helt sikker på at du vil fjerne alle påmeldinger?"
+
+#: src/internal/templates/internal/guidance_hours.html:35
+msgid "Clear all"
+msgstr "Fjern alle"
+
+#: src/internal/templates/internal/guidance_hours.html:41
+msgid "Your scheduled times this semester:"
+msgstr "Dine veiledningstimer dette semesteret:"
+
+#: src/internal/templates/internal/guidance_hours.html:47
+#: src/internal/templates/internal/guidance_hours.html:57
+msgid "None"
+msgstr "Ingen"
+
+#: src/internal/templates/internal/guidance_hours.html:51
+msgid "At the makerspace now:"
+msgstr "På verkstedet nå:"
+
+#: src/internal/templates/internal/guidance_hours.html:106
+msgid "cancel"
+msgstr "meld av"
+
+#: src/internal/templates/internal/guidance_hours.html:113
+msgid "full"
+msgstr "fullt"
+
+#: src/internal/templates/internal/guidance_hours.html:121
+msgid "book"
+msgstr "meld på"
+
+#: src/internal/templates/internal/guidance_hours.html:130
+msgid "comments"
+msgstr "kommentarer"
+
+#: src/internal/views.py:419
+msgid "This guidance slot is already full."
+msgstr "Denne veiledningstimen er allerede full."
+
+#: src/internal/views.py:439
+msgid "All guidance hour bookings and comments have been cleared."
+msgstr "Alle påmeldinger og kommentarer for veiledningstimer er fjernet."
+
+#: src/internal/views.py:460
+msgid "Create Guidance Hours Slot"
+msgstr "Opprett veiledningstime"
+
+#: src/internal/views.py:467
+msgid "Update Guidance Hours Slot"
+msgstr "Oppdater veiledningstime"
 
 #~ msgid "You have completed the Raise3D printer course"
 #~ msgstr "Du har fullført Raise3D-printerkurset"
