@@ -330,21 +330,16 @@ class GuidanceHours(models.Model):
 
     from_time = models.TimeField(verbose_name=_("from time"))
     to_time = models.TimeField(verbose_name=_("to time"))
-    max_slots = 4
+    notes = models.TextField(blank=True, verbose_name=_("notes"))
+    max_members = 5
     members = models.ManyToManyField(
         to=Member,
         related_name='guidance_hours',
         verbose_name=_("members"),
     )
 
-    def add_member(self, member: Member):
-        self.members.add(member)
-
-    def get_members(self):
-        return [str(member.user.username) for member in self.members.all()]
-    
     def __str__(self):
-        return "{weekday} {from_time}:{to_time}"
+        return f"{self.get_weekday_display()} {self.from_time:%H:%M} - {self.to_time:%H:%M}"
     
     def is_full(self):
-        return self.members.count() >= self.max_slots
+        return self.members.count() >= self.max_members
