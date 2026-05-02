@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
-from .models import Member, Quote, Secret, SystemAccess
+from .models import GuidanceHours, Member, Quote, Secret, SystemAccess
 
 
 class AddMemberForm(forms.ModelForm):
@@ -175,4 +175,26 @@ class QuoteForm(forms.ModelForm):
         fields = ('quote', 'quoted', 'context', 'date')
         widgets = {
             'date': SemanticDateInput(),
+        }
+
+class GuidanceHoursForm(forms.ModelForm):
+    def clean(self):
+        cleaned_data = super().clean()
+        from_time = cleaned_data.get('from_time')
+        to_time = cleaned_data.get('to_time')
+
+        if from_time and to_time and from_time >= to_time:
+            raise forms.ValidationError(
+                _("Start time must be before end time."),
+                code='invalid_time_range',
+            )
+
+        return cleaned_data
+
+    class Meta:
+        model = GuidanceHours
+        fields = ('from_time', 'to_time', 'weekday')
+        widgets = {
+            'from_time': forms.TimeInput(attrs={'type': 'time'}),
+            'to_time': forms.TimeInput(attrs={'type': 'time'}),
         }
