@@ -4,47 +4,167 @@
 {% load datetime_tags %}
 {% load html_tags %}
 {% load member %}
-{% load hosts %}
 
 
 {% block title %}{% translate "Guidance hours" %}{% endblock title %}
 
 {% block extra_head %}
+    <script>
+        var csrfToken = "{{ csrf_token }}";
+    </script>
     <link rel="stylesheet" href="{% static 'internal/css/guidance_hours.css' %}"/>
+    <script defer src="{% static 'internal/js/guidance_hours.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
-    <h1>{% translate "Guidance hours" %}</h1>
-    
+<div class="ui container">
+    {% translate "Are you sure you want to cancel this slot?" as cancel_confirm_msg %}
+    {% translate "Are you sure you want to book this slot?" as book_confirm_msg %}
+    {% translate "Are you sure you want to clear all bookings?" as clear_all_confirm_msg %}
+    <h1 class="ui header guidance_hours_header">
+            {% translate "Guidance hours" %}
+            {% if perms.internal.add_guidancehours %}
+                <a href="{% url 'create_guidance_hours' %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+            {% if perms.internal.change_guidancehours %}
+                <form method="post" action="{% url 'clear_guidance_slots' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="clear-all-button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ clear_all_confirm_msg }}">
+                        {% translate "Clear all" %}
+                    </button>
+                </form>
+            {% endif %}
+        </h1>
+    <div class="guidance_hours_my_slots">
+        <strong>{% translate "Your scheduled times this semester:" %}</strong>
+        {% if current_member_slots %}
+            {% for slot in current_member_slots %}
+                {{ slot.get_weekday_display }} {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            {% translate "None" %}
+        {% endif %}
+    </div>
+    <div class="guidance_hours_my_slots">
+        <strong>{% translate "At the makerspace now:" %}</strong>
+        {% if current_guidance_members %}
+            {% for member in current_guidance_members %}
+                {{ member.user.username }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            {% translate "None" %}
+        {% endif %}
+    </div>
     {% for weekday, slots in grouped_hours.items %}
         <table class="  {% if forloop.counter|divisibleby:2 %}
-                            guidance_hours_yellow   
+                            guidance_hours_grey   
                         {% else %}
-                            guidance_hours_grey
+                            guidance_hours_yellow
                         {% endif %}">
             <thead>
                 <tr>
-                    <th colspan="6">{{ slots.0.get_weekday_display }}</th>
+                    {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
+                        <th colspan="9">{{ slots.0.get_weekday_display }}</th>
+                    {% else %}
+                        <th colspan="8">{{ slots.0.get_weekday_display }}</th>
+                    {% endif %}
                 </tr>
             </thead>
 
             <tbody>
             {% for slot in slots %}
-                <tr>
-                <th>
-                    {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}
-                </th>
+                <tr class="guidance_slot_row">
+                    <th class="guidance_slot_time">{{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}</th>
 
-                {% for member in slot.members.all %}
-                    <td>{{ member.user.username }}</td>
-                {% empty %}
-                    <td>
-                    <button class="book_button">
-                        {% translate "book" %}
-                    </button>
+                    {% for member in slot.display_members %}
+                        <td class="guidance_member_cell{% if not member %} guidance_member_cell_empty{% endif %}">
+                            {% if member %}
+                                <div class="guidance_member_info">
+                                    <div class="guidance_member_info_row guidance_member_name">{{ member.user.username }}</div>
+                                    {% if member.committees.all %}
+                                        <div class="guidance_member_info_row">
+                                            {% for committee in member.committees.all %}
+                                                {{ committee.group.name }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if member.phone_number %}
+                                        <div class="guidance_member_info_row">{{ member.phone_number }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+
+                    {% if current_member in slot.all_members %}
+                        <td class="guidance_slot_action">
+                        <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
+                                {% translate "cancel" %}
+                            </button>
+                        </form>
+                        </td>
+
+                    {% elif slot.all_members|length >= slot.max_members %}
+                        <td class="guidance_slot_action guidance_slot_full">
+                            {% translate "full" %}
+                        </td>
+
+                    {% else %}
+                        <td class="guidance_slot_action">
+                        <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
+                                {% translate "book" %}
+                            </button>
+                        </form>
+                        </td>
+                    {% endif %}
+                    <td class="guidance_slot_comments">
+                        <button type="button" class="toggle_notes_button" 
+                            data-target="notes-row-{{ slot.id }}" 
+                            data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}">
+                            {% translate "comments" %}
+                        </button>
                     </td>
-                {% endfor %}
+                    {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
+                    <td class="control_buttons">
+                        {% if perms.internal.change_guidancehours %}
+                        <a href="{% url 'guidance_hours_update' slot.pk %}">
+                            <i class="make-col-yellow pencil icon"></i>
+                        </a>
+                        {% endif %}
+                        {% if perms.internal.delete_guidancehours %}
+                        <a class="delete-modal-button"
+                           data-url="{% url 'guidance_hours_delete' slot.pk %}"
+                           data-obj-name="{{ slot }}">
+                            <i class="red trash icon"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
 
+                <tr id="notes-row-{{ slot.id }}" class="guidance_notes_row guidance_notes_row_hidden">
+                    <th class="guidance_notes_time"></th>
+                    <td class="guidance_notes_cell" colspan="7">
+                        {% if current_member in slot.all_members %}
+                            <textarea class="guidance_hours_notes"
+                            data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
+                            rows="3"
+                            style="width:100%; max-width:100%; min-width:100%;">{{ slot.notes }}</textarea>
+                        {% else %}
+                            <p class="guidance_hours_notes_display">
+                                {{ slot.notes }}
+                            </p>
+                        {% endif %}
+                    </td>
+                    {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
+                    <td class="control_buttons" aria-hidden="true"></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -52,5 +172,5 @@
 
         <br>
     {% endfor %}
-
+</div>
 {% endblock body %}

@@ -1,11 +1,13 @@
 from http import HTTPStatus
+from datetime import datetime, time
+from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError, transaction
 from django.templatetags.static import static
-from django.test import Client, TestCase, override_settings
+from django.test import Client, RequestFactory, TestCase, override_settings
 from django.urls import clear_url_caches
 
 from contentbox.forms import EditSourceContentBoxForm
@@ -16,7 +18,8 @@ from util.url_utils import reverse_admin, reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .test_urls import INTERNAL_CLIENT_DEFAULTS
-from ..models import Secret
+from ..models import GuidanceHours, Member, Secret
+from ..views import GuidanceHoursView
 
 
 class InternalContentBoxTests(TestCase):
@@ -217,3 +220,72 @@ class SecretTests(TestCase):
 
         assert_users_can_view_admin_page(reverse_admin('internal_secret_delete', args=[self.normal_secret.pk]), is_board_secret=False)
         assert_users_can_view_admin_page(reverse_admin('internal_secret_delete', args=[self.board_secret.pk]), is_board_secret=True)
+
+
+class GuidanceHoursTests(TestCase):
+
+    def setUp(self):
+        self.superuser = User.objects.create_user("superuser", is_staff=True, is_superuser=True)
+        self.regular_user = User.objects.create_user("regular_user")
+        self.regular_user.add_perms('internal.is_internal', 'internal.view_guidancehours')
+        Member.objects.create(user=self.superuser)
+        Member.objects.create(user=self.regular_user)
+
+        self.superuser_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.regular_user_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.request_factory = RequestFactory()
+        self.superuser_client.force_login(self.superuser)
+        self.regular_user_client.force_login(self.regular_user)
+
+        booked_user_1 = User.objects.create_user("booked_user_1")
+        booked_user_2 = User.objects.create_user("booked_user_2")
+        self.booked_member_1 = Member.objects.create(user=booked_user_1)
+        self.booked_member_2 = Member.objects.create(user=booked_user_2)
+
+        self.slot_1 = GuidanceHours.objects.create(weekday=0, from_time=time(9, 0), to_time=time(10, 0), notes="note 1")
+        self.slot_2 = GuidanceHours.objects.create(weekday=1, from_time=time(10, 0), to_time=time(11, 0), notes="note 2")
+        self.slot_1.members.add(self.booked_member_1, self.booked_member_2)
+        self.slot_2.members.add(self.booked_member_1)
+
+    def test_superuser_can_clear_all_guidance_slots(self):
+        clear_url = reverse_internal('clear_guidance_slots')
+
+        response = self.superuser_client.post(clear_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith('/guidance-hours/'))
+        self.slot_1.refresh_from_db()
+        self.slot_2.refresh_from_db()
+        self.assertEqual(self.slot_1.members.count(), 0)
+        self.assertEqual(self.slot_2.members.count(), 0)
+        self.assertEqual(self.slot_1.notes, "")
+        self.assertEqual(self.slot_2.notes, "")
+
+    def test_user_without_change_permission_cannot_clear_all_guidance_slots(self):
+        clear_url = reverse_internal('clear_guidance_slots')
+
+        response = self.regular_user_client.post(clear_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.slot_1.refresh_from_db()
+        self.slot_2.refresh_from_db()
+        self.assertGreater(self.slot_1.members.count(), 0)
+        self.assertGreater(self.slot_2.members.count(), 0)
+        self.assertEqual(self.slot_1.notes, "note 1")
+        self.assertEqual(self.slot_2.notes, "note 2")
+
+    @patch('internal.views.timezone.localtime')
+    @patch('internal.views.timezone.localdate')
+    def test_guidance_hours_view_shows_current_guidance_members(self, mock_localdate, mock_localtime):
+        mock_localdate.return_value = datetime(2026, 4, 27).date()
+        mock_localtime.return_value = datetime(2026, 4, 27, 9, 30)
+
+        request = self.request_factory.get(reverse_internal('guidance_hours'))
+        request.user = self.regular_user
+        view = GuidanceHoursView()
+        view.setup(request)
+        view.object_list = view.get_queryset()
+        context = view.get_context_data()
+
+        current_members = context['current_guidance_members']
+        self.assertEqual([member.pk for member in current_members], [self.booked_member_1.pk, self.booked_member_2.pk])
