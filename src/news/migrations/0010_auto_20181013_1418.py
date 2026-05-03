@@ -5,15 +5,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0009_auto_20180503_0141'),
+        ("news", "0009_auto_20180503_0141"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newsbase',
-            name='content',
+            model_name="newsbase",
+            name="content",
             field=ckeditor_uploader.fields.RichTextUploadingField(),
         ),
     ]

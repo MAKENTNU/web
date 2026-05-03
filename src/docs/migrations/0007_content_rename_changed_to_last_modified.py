@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('docs', '0006_page_current_content_onetoone_and_related_names'),
+        ("docs", "0006_page_current_content_onetoone_and_related_names"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='content',
-            old_name='changed',
-            new_name='last_modified',
+            model_name="content",
+            old_name="changed",
+            new_name="last_modified",
         ),
         migrations.AlterField(
-            model_name='content',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, verbose_name='last modified'),
+            model_name="content",
+            name="last_modified",
+            field=models.DateTimeField(auto_now=True, verbose_name="last modified"),
         ),
     ]

@@ -1,0 +1,49 @@
+---
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.4
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-illegal-windows-names
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        # Our `.gitattributes` file ensures that all checked out files have `\n`
+        # newlines, so this should only affect new/changed files
+        args: [--fix=lf]
+      - id: trailing-whitespace
+
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.24.1
+    hooks:
+      - id: validate-pyproject
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args:
+          - '--config-data={
+              extends: default,
+              rules: {
+                line-length: {max: 88, level: warning},
+                new-lines: {type: unix},
+                truthy: disable,
+              },
+            }'
+
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes

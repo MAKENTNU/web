@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0002_auto_20180408_1018'),
+        ("make_queue", "0002_auto_20180408_1018"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='stream_url',
-            field=models.URLField(default=''),
+            model_name="machine",
+            name="stream_url",
+            field=models.URLField(default=""),
         ),
     ]

@@ -1,0 +1,2 @@
+# Ensure all checked out text files have `\n` line endings
+* text=auto eol=lf

@@ -1,11 +1,11 @@
 /*
  *  /MathJax/config/TeX-AMS_CHTML.js
- *  
+ *
  *  Copyright (c) 2010-2018 The MathJax Consortium
  *
  *  Part of the MathJax library.
  *  See http://www.mathjax.org for details.
- * 
+ *
  *  Licensed under the Apache License, Version 2.0;
  *  you may not use this file except in compliance with the License.
  *
@@ -87,8 +87,8 @@ MathJax.Extension["TeX/AMSsymbols"]={version:"2.7.9"};MathJax.Hub.Register.Start
         AddMenu: function() {
             for (var e, t = Array(this.modules.length), n = 0; e = this.modules[n]; n++) t[n] = e.placeHolder;
             var i, a, o = u.FindId("Accessibility");
-            o ? (t.unshift(s.RULE()), o.submenu.items.push.apply(o.submenu.items, t)) : ((i = (u.FindId("Settings", "Renderer") || {}).submenu) && (t.unshift(s.RULE()), 
-            t.unshift(i.items.pop()), t.unshift(i.items.pop())), t.unshift("Accessibility"), 
+            o ? (t.unshift(s.RULE()), o.submenu.items.push.apply(o.submenu.items, t)) : ((i = (u.FindId("Settings", "Renderer") || {}).submenu) && (t.unshift(s.RULE()),
+            t.unshift(i.items.pop()), t.unshift(i.items.pop())), t.unshift("Accessibility"),
             o = s.SUBMENU.apply(s.SUBMENU, t), (a = u.IndexOfId("Locale")) ? u.items.splice(a, 0, o) : u.items.push(s.RULE(), o));
         },
         Register: function(e) {
@@ -111,7 +111,7 @@ MathJax.Extension["TeX/AMSsymbols"]={version:"2.7.9"};MathJax.Hub.Register.Start
         submenu: !1,
         extension: null,
         Init: function(e, t, n, i, a) {
-            this.option = e, this.name = [ t.replace(/ /g, ""), t ], this.module = n, this.extension = i, 
+            this.option = e, this.name = [ t.replace(/ /g, ""), t ], this.module = n, this.extension = i,
             this.submenu = a || !1;
         },
         CreateMenu: function() {
@@ -132,9 +132,9 @@ MathJax.Extension["TeX/AMSsymbols"]={version:"2.7.9"};MathJax.Hub.Register.Start
             t && (t.Enable(!0, !0), MathJax.Menu.saveCookie());
         }
     });
-    l.Register(r("collapsible", "Collapsible Math", "[a11y]/collapsible.js", "collapsible")), 
-    l.Register(r("autocollapse", "Auto Collapse", "[a11y]/auto-collapse.js", "auto-collapse")), 
-    l.Register(r("explorer", "Explorer", "[a11y]/explorer.js", "explorer", !0)), l.AddDefaults(), 
+    l.Register(r("collapsible", "Collapsible Math", "[a11y]/collapsible.js", "collapsible")),
+    l.Register(r("autocollapse", "Auto Collapse", "[a11y]/auto-collapse.js", "auto-collapse")),
+    l.Register(r("explorer", "Explorer", "[a11y]/explorer.js", "explorer", !0)), l.AddDefaults(),
     i.Register.StartupHook("End Extensions", function() {
         i.Register.StartupHook("MathMenu Ready", function() {
             l.Startup(), i.Startup.signal.Post("Accessibility Menu Ready");

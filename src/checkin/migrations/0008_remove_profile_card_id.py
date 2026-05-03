@@ -7,7 +7,7 @@ def update_user_card_from_profiles(apps, schema_editor):
     """
     Set user card_number from  profile card_id
     """
-    Profile = apps.get_model('checkin', 'Profile')
+    Profile = apps.get_model("checkin", "Profile")
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
@@ -20,7 +20,7 @@ def reverse_update_user_card_from_profiles(apps, schema_editor):
     """
     Reverse setting of user card_number
     """
-    Profile = apps.get_model('checkin', 'Profile')
+    Profile = apps.get_model("checkin", "Profile")
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
@@ -31,14 +31,16 @@ def reverse_update_user_card_from_profiles(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('checkin', '0007_skill_level_english_labels'),
-        ('users', '0003_user_card_number'),
+        ("checkin", "0007_skill_level_english_labels"),
+        ("users", "0003_user_card_number"),
     ]
 
     operations = [
-        migrations.RunPython(update_user_card_from_profiles, reverse_update_user_card_from_profiles),
+        migrations.RunPython(
+            update_user_card_from_profiles, reverse_update_user_card_from_profiles
+        ),
         migrations.RemoveField(
-            model_name='profile',
-            name='card_id',
+            model_name="profile",
+            name="card_id",
         ),
     ]

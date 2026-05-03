@@ -3,16 +3,15 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
-from ...forms import TimePlaceForm
-from ...models import Event
+from news.forms import TimePlaceForm
+from news.models import Event
+from util.test_utils import MOCK_JPG_FILE, CleanUpTempFilesTestMixin
 
 
 class FormTestCase(CleanUpTempFilesTestMixin, TestCase):
-
     def setUp(self):
         event = Event.objects.create(
-            title='',
+            title="",
             image=MOCK_JPG_FILE,
             hidden=True,
             private=False,

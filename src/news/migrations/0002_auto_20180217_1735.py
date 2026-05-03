@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0001_initial'),
+        ("news", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='timeplace',
-            options={'ordering': ('start_date',)},
+            name="timeplace",
+            options={"ordering": ("start_date",)},
         ),
         migrations.AddField(
-            model_name='timeplace',
-            name='hidden',
-            field=models.BooleanField(default=True, verbose_name='skjult'),
+            model_name="timeplace",
+            name="hidden",
+            field=models.BooleanField(default=True, verbose_name="skjult"),
         ),
     ]

@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('makerspace', '0001_initial'),
+        ("makerspace", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Tool',
-            new_name='Equipment',
+            old_name="Tool",
+            new_name="Equipment",
         ),
         migrations.AlterField(
-            model_name='equipment',
-            name='image',
-            field=models.ImageField(upload_to='equipment', verbose_name='image'),
+            model_name="equipment",
+            name="image",
+            field=models.ImageField(upload_to="equipment", verbose_name="image"),
         ),
     ]

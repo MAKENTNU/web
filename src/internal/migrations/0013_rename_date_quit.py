@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0012_member_and_systemaccess_last_modified'),
+        ("internal", "0012_member_and_systemaccess_last_modified"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='member',
-            old_name='date_quit',
-            new_name='date_quit_or_retired',
+            model_name="member",
+            old_name="date_quit",
+            new_name="date_quit_or_retired",
         ),
         migrations.AlterField(
-            model_name='member',
-            name='date_quit_or_retired',
-            field=models.DateField(blank=True, null=True, verbose_name='date quit or retired'),
+            model_name="member",
+            name="date_quit_or_retired",
+            field=models.DateField(
+                blank=True, null=True, verbose_name="date quit or retired"
+            ),
         ),
     ]

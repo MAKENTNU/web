@@ -1,12 +1,11 @@
 from django.test import Client, TestCase
 
+from make_queue.forms.course import Printer3DCourseForm
+from make_queue.models.course import Printer3DCourse
 from users.models import User
-from ...forms.course import Printer3DCourseForm
-from ...models.course import Printer3DCourse
 
 
 class TestPrinter3DCourseForm(TestCase):
-
     def setUp(self):
         self.superuser = User.objects.create_user("superuser", is_superuser=True)
         self.user1 = User.objects.create_user("user1")
@@ -17,10 +16,10 @@ class TestPrinter3DCourseForm(TestCase):
     def test_special_card_numbers_are_rejected_by_custom_checks(self):
         def assert_card_number_valid(card_number_: str, valid_: bool):
             form_data = {
-                'user': self.user1.pk,
-                'date': "2002-02-02",
-                'status': Printer3DCourse.Status.REGISTERED,
-                'card_number': card_number_,
+                "user": self.user1.pk,
+                "date": "2002-02-02",
+                "status": Printer3DCourse.Status.REGISTERED,
+                "card_number": card_number_,
             }
             form = Printer3DCourseForm(data=form_data)
             self.assertEqual(form.is_valid(), valid_)

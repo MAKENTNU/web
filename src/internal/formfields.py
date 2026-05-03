@@ -1,17 +1,19 @@
 from django import forms
 
-from .util import semester_to_year, year_to_semester
-from .validators import semester_string_validator
+from internal.util import semester_to_year, year_to_semester
+from internal.validators import semester_string_validator
 
 
 class SemesterField(forms.CharField):
     default_validators = [semester_string_validator]
 
     def __init__(self, **kwargs):
-        super().__init__(**{
-            'empty_value': None,
-            **kwargs,
-        })
+        super().__init__(
+            **{
+                "empty_value": None,
+                **kwargs,
+            }
+        )
 
     def clean(self, value):
         value = super().clean(value)

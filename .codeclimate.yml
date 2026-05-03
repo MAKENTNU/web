@@ -1,6 +1,7 @@
+---
 version: "2"         # Required to adjust maintainability checks
 
-checks: # https://docs.codeclimate.com/docs/maintainability#section-checks
+checks:  # https://docs.codeclimate.com/docs/maintainability#section-checks
   argument-count:
     config:
       threshold: 7
@@ -10,7 +11,7 @@ checks: # https://docs.codeclimate.com/docs/maintainability#section-checks
   file-lines:
     config:
       threshold: 500
-  method-complexity: # https://docs.codeclimate.com/docs/cognitive-complexity
+  method-complexity:  # https://docs.codeclimate.com/docs/cognitive-complexity
     config:
       threshold: 5
   method-count:
@@ -25,7 +26,7 @@ checks: # https://docs.codeclimate.com/docs/maintainability#section-checks
   return-statements:
     config:
       threshold: 4
-  similar-code: # https://docs.codeclimate.com/docs/duplication-concept
+  similar-code:  # https://docs.codeclimate.com/docs/duplication-concept
     config:
       threshold:  # Language-specific defaults; an override will affect all languages
   identical-code:
@@ -43,7 +44,7 @@ plugins:
   pep8:
     enabled: true
     checks:
-      E501: # Line too long (> 79 characters)
+      E501:  # Line too long (> 79 characters)
         enabled: false
   # https://docs.codeclimate.com/docs/radon
   radon:

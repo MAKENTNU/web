@@ -10,8 +10,8 @@ Whenever a deployment is planned, this section should be renamed to the current 
 and a new, empty "Unreleased" section should be added.
 Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
 
-
 ## Unreleased
+
 
 ### New features
 
@@ -24,6 +24,18 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### Other changes
 
+
+## 2026-03-26 (MAKENTNU/web#810)
+
+### New features
+- Admin page shortcut in internal pages (MAKENTNU/web#755)
+
+
+### Fixes
+- Find reservations no longer shows machines under maintenance (MAKENTNU/web#780)
+
+
+### Other changes
 - Added custom front page logo on [makentnu.dev](https://makentnu.dev/) (MAKENTNU/web#781)
 
 
@@ -45,6 +57,13 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   - Static and media files are persisted between runs (through a volume)
   - Added Docker-specific `make` commands, all prefixed with `d-`
   - Stopped always running migrations when starting the container; it's more useful having manual control, using e.g. `make d-migrate`
+- Added pre-commit (MAKENTNU/web#778)
+  - ...with the following hooks:
+    - Several of the standard `pre-commit-hooks` and `meta` hooks
+    - `validate-pyproject`
+    - `yamllint`
+    - `ruff-format`
+- Formatted all Python code with Ruff (MAKENTNU/web#778)
 
 
 ## 2025-05-03 (MAKENTNU/web#757)

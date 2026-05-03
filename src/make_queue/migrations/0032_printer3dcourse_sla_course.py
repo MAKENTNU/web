@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0031_rename_printer3dcourse_advanced_course_to_raise3d_course'),
+        ("make_queue", "0031_rename_printer3dcourse_advanced_course_to_raise3d_course"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='printer3dcourse',
-            name='sla_course',
-            field=models.BooleanField(default=False, verbose_name='SLA course'),
+            model_name="printer3dcourse",
+            name="sla_course",
+            field=models.BooleanField(default=False, verbose_name="SLA course"),
         ),
     ]

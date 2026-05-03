@@ -1,33 +1,38 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .validators import card_number_validator
+from card.validators import card_number_validator
 
 
 class CardNumberField(models.CharField):
     """
     Custom field for card numbers, doing some extra validation.
     """
+
     empty_strings_allowed = False  # Empty values should be stored as None
     default_validators = [card_number_validator]
 
     def __init__(self, **kwargs):
-        super().__init__(**{
-            'verbose_name': _("card number"),
-            'max_length': 10,  # No card numbers are more than ten digits long
-            'error_messages': {
-                'unique': _("Card number already in use"),
-            },
-            **kwargs,
-        })
+        super().__init__(
+            **{
+                "verbose_name": _("card number"),
+                "max_length": 10,  # No card numbers are more than ten digits long
+                "error_messages": {
+                    "unique": _("Card number already in use"),
+                },
+                **kwargs,
+            }
+        )
 
     def formfield(self, **kwargs):
-        from . import formfields  # Avoids circular importing
+        from card import formfields  # Avoids circular importing
 
-        return super().formfield(**{
-            'form_class': formfields.CardNumberField,
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "form_class": formfields.CardNumberField,
+                **kwargs,
+            }
+        )
 
     def get_prep_value(self, value):
         match value:

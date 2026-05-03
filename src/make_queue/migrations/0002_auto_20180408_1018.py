@@ -4,28 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0001_initial'),
+        ("make_queue", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='reservation3d',
-            options={'permissions': (('can_view_reservation_user', 'Can view reservation user'),)},
+            name="reservation3d",
+            options={
+                "permissions": (
+                    ("can_view_reservation_user", "Can view reservation user"),
+                )
+            },
         ),
         migrations.AlterModelOptions(
-            name='reservationsewing',
-            options={'permissions': (('can_view_reservation_user', 'Can view reservation user'),)},
+            name="reservationsewing",
+            options={
+                "permissions": (
+                    ("can_view_reservation_user", "Can view reservation user"),
+                )
+            },
         ),
         migrations.AddField(
-            model_name='reservation3d',
-            name='comment',
-            field=models.TextField(default='', max_length=2000),
+            model_name="reservation3d",
+            name="comment",
+            field=models.TextField(default="", max_length=2000),
         ),
         migrations.AddField(
-            model_name='reservationsewing',
-            name='comment',
-            field=models.TextField(default='', max_length=2000),
+            model_name="reservationsewing",
+            name="comment",
+            field=models.TextField(default="", max_length=2000),
         ),
     ]

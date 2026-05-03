@@ -38,11 +38,11 @@ dependencies = [
   "channels-redis==4.2.0",
 
   # Environment variables
-  "python-dotenv==1.1.1",
+  "python-dotenv==1.2.2",
 
   # Misc. packages
   "bleach[css]==6.1.0",
-  "Pillow==11.3.0",
+  "Pillow==12.2.0",
   "uuid==1.30",
   "XlsxWriter==3.2.0",
 ]
@@ -50,10 +50,70 @@ dependencies = [
 [dependency-groups]
 dev = [
   "django-debug-toolbar==6.0.0",
+  { include-group = "linting" },
 ]
 ci = [
   "coverage==7.10.6",
+  { include-group = "linting" },
 ]
+linting = [
+  "pre-commit==4.5.1",
+]
+
+[tool.ruff]
+line-length = 88
+show-fixes = true
+
+# Reformat code snippets in docstrings
+format.docstring-code-format = true
+
+lint.select = [
+  "A",      # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
+  "ASYNC",  # https://docs.astral.sh/ruff/rules/#flake8-async-async
+  "B",      # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+  "BLE",    # https://docs.astral.sh/ruff/rules/#flake8-blind-except-ble
+  "E",      # https://docs.astral.sh/ruff/rules/#error-e
+  "F",      # https://docs.astral.sh/ruff/rules/#pyflakes-f
+  "FLY",    # https://docs.astral.sh/ruff/rules/#flynt-fly
+  "FURB",   # https://docs.astral.sh/ruff/rules/#refurb-furb
+  "I",      # https://docs.astral.sh/ruff/rules/#isort-i
+  "ICN",    # https://docs.astral.sh/ruff/rules/#flake8-import-conventions-icn
+  "INP",    # https://docs.astral.sh/ruff/rules/#flake8-no-pep420-inp
+  "INT",    # https://docs.astral.sh/ruff/rules/#flake8-gettext-int
+  "ISC",    # https://docs.astral.sh/ruff/rules/#flake8-implicit-str-concat-isc
+  "LOG",    # https://docs.astral.sh/ruff/rules/#flake8-logging-log
+  "PERF",   # https://docs.astral.sh/ruff/rules/#perflint-perf
+  "PGH",    # https://docs.astral.sh/ruff/rules/#pygrep-hooks-pgh
+  "PL",     # https://docs.astral.sh/ruff/rules/#pylint-pl
+  "PTH",    # https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
+  "PYI",    # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
+  "RSE",    # https://docs.astral.sh/ruff/rules/#flake8-raise-rse
+  "SLOT",   # https://docs.astral.sh/ruff/rules/#flake8-slots-slot
+  "T10",    # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
+  "TID252", # https://docs.astral.sh/ruff/rules/relative-imports/#relative-imports-tid252
+  "TRY",    # https://docs.astral.sh/ruff/rules/#tryceratops-try
+  "W",      # https://docs.astral.sh/ruff/rules/#warning-w
+  "YTT",    # https://docs.astral.sh/ruff/rules/#flake8-2020-ytt
+]
+lint.ignore = [
+  "PLC0415", # `import` should be at the top-level of a file
+  "PLC2701", # Private name imported from external module
+  "PLR09",   # Too many <X>
+  "PLR1702", # Too many nested blocks
+  "PLR1704", # Redefining argument with the local name
+  "PLR5501", # Use `elif` instead of `else` then `if`, to reduce indentation
+  "TRY003",  # Avoid specifying long messages outside the exception class
+]
+
+# Disable line length check in migrations
+lint.per-file-ignores."**/migrations/**" = [ "E501" ]
+
+lint.flake8-tidy-imports.ban-relative-imports = "all"
+
+lint.isort.combine-as-imports = true
+
+# Ignore E501 for comments starting with TODO, FIXME, etc.
+lint.pycodestyle.ignore-overlong-task-comments = true
 
 [tool.uv]
 # Don't install `dev` by default (see

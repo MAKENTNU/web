@@ -24,22 +24,24 @@ class InheritanceGroup(Group):
     """
 
     parents = models.ManyToManyField(
-        to='self',
+        to="self",
         symmetrical=False,
         blank=True,
-        related_name='children',
+        related_name="children",
         verbose_name=_("parents"),
     )
     own_permissions = models.ManyToManyField(
         to=Permission,
         blank=True,
-        related_name='inheritance_groups',
+        related_name="inheritance_groups",
         verbose_name=_("own permissions"),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     # TODO: Add `parents` to `m2m_fields` when https://github.com/jazzband/django-simple-history/issues/1126 is resolved
-    history = HistoricalRecords(m2m_fields=[own_permissions], excluded_fields=['last_modified'])
+    history = HistoricalRecords(
+        m2m_fields=[own_permissions], excluded_fields=["last_modified"]
+    )
 
     @property
     def inherited_permissions(self):
@@ -100,23 +102,28 @@ class Committee(models.Model):
     group = models.OneToOneField(
         to=InheritanceGroup,
         on_delete=models.CASCADE,
-        related_name='committee',
+        related_name="committee",
         verbose_name=_("group"),
     )
     clickbait = models.TextField(blank=True, verbose_name=_("clickbait"))
     description = models.TextField(verbose_name=_("description"))
     email = models.EmailField(verbose_name=_("email"))
-    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('committees'),
-                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("image"))
+    image = CompressedImageField(
+        upload_to=UploadToUtils.get_pk_prefixed_filename_func("committees"),
+        blank=True,
+        max_length=200,
+        storage=OverwriteStorage(),
+        verbose_name=_("image"),
+    )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
-    history = HistoricalRecords(excluded_fields=['last_modified'])
+    history = HistoricalRecords(excluded_fields=["last_modified"])
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('committee_detail', args=[self.pk])
+        return reverse("committee_detail", args=[self.pk])
 
     @property
     def name(self):

@@ -1,13 +1,13 @@
 from django import forms
 
+from makerspace.models import Equipment
 from web.widgets import SemanticFileInput
-from .models import Equipment
 
 
 class EquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'image': SemanticFileInput(),
+            "image": SemanticFileInput(),
         }

@@ -4,16 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('contentbox', '0009_internal_contentbox_permission'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("contentbox", "0009_internal_contentbox_permission"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contentbox',
-            name='extra_change_permissions',
-            field=models.ManyToManyField(blank=True, help_text='Extra permissions that are required for changing the content box.', related_name='content_boxes_with_extra_change_perm', to='auth.Permission', verbose_name='extra change permissions'),
+            model_name="contentbox",
+            name="extra_change_permissions",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="Extra permissions that are required for changing the content box.",
+                related_name="content_boxes_with_extra_change_perm",
+                to="auth.Permission",
+                verbose_name="extra change permissions",
+            ),
         ),
     ]

@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0002_auto_20180217_1735'),
+        ("news", "0002_auto_20180217_1735"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='hoopla',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Hoopla url'),
+            model_name="event",
+            name="hoopla",
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name="Hoopla url"
+            ),
         ),
         migrations.AddField(
-            model_name='event',
-            name='multiday',
+            model_name="event",
+            name="multiday",
             field=models.BooleanField(default=False),
         ),
     ]

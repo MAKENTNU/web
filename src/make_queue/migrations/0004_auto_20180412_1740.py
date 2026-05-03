@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0003_machine_stream_url'),
+        ("make_queue", "0003_machine_stream_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='machine',
-            name='status',
-            field=models.CharField(choices=[('R', 'Reserved'), ('F', 'Available'), ('I', 'In use'), ('O', 'Out of order'), ('M', 'Maintenance')], max_length=2),
+            model_name="machine",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("R", "Reserved"),
+                    ("F", "Available"),
+                    ("I", "In use"),
+                    ("O", "Out of order"),
+                    ("M", "Maintenance"),
+                ],
+                max_length=2,
+            ),
         ),
     ]

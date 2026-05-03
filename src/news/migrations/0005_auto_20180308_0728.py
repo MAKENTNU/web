@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0004_auto_20180307_1352'),
+        ("news", "0004_auto_20180307_1352"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='newsbase',
-            options={'permissions': (('can_view_private', 'Can view private news'),)},
+            name="newsbase",
+            options={"permissions": (("can_view_private", "Can view private news"),)},
         ),
     ]

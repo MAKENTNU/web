@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 
+from card.formfields import CardNumberField
 from make_queue.models.course import Printer3DCourse
 from users.models import User
-from .formfields import CardNumberField
 
 
 def is_valid(card_number):
@@ -22,13 +22,16 @@ def is_valid(card_number):
 
 def is_duplicate(card_number, username):
     """
-    Checks if given card number is a duplicate. Excludes card number connected to user with given username.
+    Checks if given card number is a duplicate. Excludes card number connected to user
+    with given username.
 
     :param card_number: card number to check if duplicate
     :param username: username of user to exclude
     :return: True if card_number is duplicate
     """
     return (
-            User.objects.filter(card_number=card_number).exclude(username=username).exists()
-            or Printer3DCourse.objects.filter(_card_number=card_number).exclude(username=username).exists()
+        User.objects.filter(card_number=card_number).exclude(username=username).exists()
+        or Printer3DCourse.objects.filter(_card_number=card_number)
+        .exclude(username=username)
+        .exists()
     )

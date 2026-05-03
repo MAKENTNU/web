@@ -4,12 +4,13 @@ from multiselectfield import MultiSelectField as MSField
 
 
 class UnlimitedCharField(models.TextField):
-
     def formfield(self, **kwargs):
-        return super().formfield(**{
-            'widget': forms.CharField.widget,
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "widget": forms.CharField.widget,
+                **kwargs,
+            }
+        )
 
 
 class URLTextField(models.TextField):
@@ -17,11 +18,14 @@ class URLTextField(models.TextField):
     description = models.URLField.description
 
     def formfield(self, **kwargs):
-        return super().formfield(**{
-            'form_class': forms.URLField,
-            'widget': forms.URLField.widget,  # Overrides TextField's Textarea widget
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "form_class": forms.URLField,
+                # Overrides TextField's Textarea widget
+                "widget": forms.URLField.widget,
+                **kwargs,
+            }
+        )
 
 
 class MultiSelectField(MSField):
@@ -36,8 +40,8 @@ class MultiSelectField(MSField):
         flat_choices = super(models.CharField, self).flatchoices
 
         class MSFFlatchoices(list):
-            # Used to trick django.contrib.admin.utils.display_for_field into not treating the list of values as a
-            # dictionary key (which errors out)
+            # Used to trick django.contrib.admin.utils.display_for_field into not
+            # treating the list of values as a dictionary key (which errors out)
             def __bool__(self):
                 return False
 

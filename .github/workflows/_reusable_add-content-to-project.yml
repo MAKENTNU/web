@@ -1,25 +1,34 @@
-# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows.
-# It was created because GitHub projects' workflows (see e.g. https://github.com/orgs/MAKENTNU/projects/1/workflows)
-# don't (currently) support doing the specific things done in the steps below.
+---
+# This is a reusable workflow - see
+# https://docs.github.com/en/actions/using-workflows/reusing-workflows.
+# It was created because GitHub projects' workflows (see e.g.
+# https://github.com/orgs/MAKENTNU/projects/1/workflows) don't (currently) support doing
+# the specific things done in the steps below.
 #
 # The workflow requires that the following repository variables have been created:
-# - `ORGANIZATION_PROJECT_NUMBER` - The number/ID in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+# - `ORGANIZATION_PROJECT_NUMBER` - The number/ID in the project URL
+#   (https://github.com/orgs/MAKENTNU/projects/1)
 # - `ORGANIZATION_PROJECT__DATE_FIELD_NAME` - The name of the project's date field
-# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` - The value of the 'Status' field set for an item when closed
-#                                                           (see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
-# and the following organization variables:
-# - `ORGANIZATION_NAME` - The name of the organization in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` - The value of the 'Status'
+#   field set for an item when closed (see
+#   https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+# ...and the following organization variables:
+# - `ORGANIZATION_NAME` - The name of the organization in the project URL
+#   (https://github.com/orgs/MAKENTNU/projects/1)
 #
-# The workflow also expects that the following project workflows are turned on for the project:
+# The workflow also expects that the following project workflows are turned on for
+# the project:
 # - "Item closed" (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450):
 #   - "When an item is closed": "issue, pull request"
-#   - "Set value": "Status: <the value of the `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` repository variable>"
-# and that the following project workflows are turned off:
+#   - "Set value": "Status: <the value of
+#     the `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` repository variable>"
+# ...and that the following project workflows are turned off:
 # - "Item added to project"
 # - "Item reopened"
-# (The "Pull request merged" project workflow (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569451)
-# does not affect and is not affected by any of this.
-# However, it could be natural that it sets the same value as the "Item closed" project workflow.)
+# (The "Pull request merged" project workflow
+# (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569451) does not affect and is
+# not affected by any of this. However, it could be natural that it sets the same value
+# as the "Item closed" project workflow.)
 
 name: Add content to project
 
@@ -27,22 +36,26 @@ on:
   workflow_call:
     inputs:
       content_id:
-        description: "The ID of an issue or a PR, to be added to this repo's GitHub project"
+        description: >
+          The ID of an issue or a PR, to be added to this repo's GitHub project
         required: true
         type: string
       status_field_value_name:
-        description: "The name of one of the values of the project's (single select) 'Status' field, to set for the added project item"
+        description: >
+          The name of one of the values of the project's (single select) 'Status' field,
+          to set for the added project item
         required: true
         type: string
 
 jobs:
   add_content:
     runs-on: ubuntu-latest
-    # Code based on https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions#example-workflow-authenticating-with-a-github-app
+    # Code based on
+    # https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions#example-workflow-authenticating-with-a-github-app
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a  # v2.1.0
         with:
           app_id: ${{ secrets.MAKE_BOT_APP_ID }}
           private_key: ${{ secrets.MAKE_BOT_APP_PEM }}
@@ -89,7 +102,8 @@ jobs:
             echo "DATE_FIELD_ID=$(jq --arg FIELD_NAME "$DATE_FIELD_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .id' project_data.json)"
             # The ID of the project's status field
             echo "STATUS_FIELD_ID=$(jq --arg FIELD_NAME "$STATUS_FIELD_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .id' project_data.json)"
-            # The ID of one of the values of the project's (single select) status field, with name `inputs.status_field_value_name`
+            # The ID of one of the values of the project's (single select) status field,
+            # with name `inputs.status_field_value_name`
             echo "STATUS_FIELD_VALUE_ID=$(jq --arg FIELD_NAME "$STATUS_FIELD_NAME" --arg STATUS_NAME "$STATUS_FIELD_VALUE_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .options[] | select(.name==$STATUS_NAME) | .id' project_data.json)"
           } >> "$GITHUB_ENV"
 
@@ -107,7 +121,8 @@ jobs:
               }
             }' -f project="$PROJECT_ID" -f content="$CONTENT_ID" --jq '.data.addProjectV2ItemById.item.id' )"
 
-          # The ID of the project item (representing an issue or a PR with ID `inputs.content_id`), which was either added or already existed
+          # The ID of the project item (representing an issue or a PR with ID
+          # `inputs.content_id`), which was either added or already existed
           echo "ITEM_ID=$item_id" >> "$GITHUB_ENV"
 
       - name: Get project item data
@@ -145,16 +160,19 @@ jobs:
           {
             # The value of the project item's date field (with ID `env.DATE_FIELD_ID`)
             echo "DATE_FIELD_VALUE=$(jq --arg FIELD_ID "$DATE_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .date' project_item_data.json)"
-            # The value of the project item's status field (with ID `env.STATUS_FIELD_ID`)
+            # The value of the project item's status field (with ID
+            # `env.STATUS_FIELD_ID`)
             echo "STATUS_FIELD_VALUE=$(jq --arg FIELD_ID "$STATUS_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .name' project_item_data.json)"
           } >> "$GITHUB_ENV"
 
       - name: Set status
         # Only set the status if it's not already set,
-        # or if it's a reopened issue/PR (as they should be marked with the value of `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` when closed
-        # - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+        # or if it's a reopened issue/PR (as they should be marked with the value of
+        # `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` when closed - see
+        # https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
         if: ${{ !env.STATUS_FIELD_VALUE
-          || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == vars.ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS }}
+          || github.event.action == 'reopened'
+          && env.STATUS_FIELD_VALUE == vars.ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |

@@ -19,18 +19,25 @@ def reverse_event_type_from_multiday(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('news', '0013_remove_hoopla'),
+        ("news", "0013_remove_hoopla"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='event_type',
-            field=models.CharField(choices=[('R', 'Repeating'), ('S', 'Standalone')], default='R', max_length=1, verbose_name='type of event'),
+            model_name="event",
+            name="event_type",
+            field=models.CharField(
+                choices=[("R", "Repeating"), ("S", "Standalone")],
+                default="R",
+                max_length=1,
+                verbose_name="type of event",
+            ),
         ),
-        migrations.RunPython(event_type_from_multiday, reverse_event_type_from_multiday),
+        migrations.RunPython(
+            event_type_from_multiday, reverse_event_type_from_multiday
+        ),
         migrations.RemoveField(
-            model_name='event',
-            name='multiday',
+            model_name="event",
+            name="multiday",
         ),
     ]

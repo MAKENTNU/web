@@ -2,11 +2,10 @@ from unittest import TestCase as StandardTestCase
 
 from django.utils.dateparse import parse_date
 
-from ..util import date_to_semester, semester_to_year, year_to_semester
+from internal.util import date_to_semester, semester_to_year, year_to_semester
 
 
 class UtilTests(StandardTestCase):
-
     def test_date_to_semester_returns_expected_result(self):
         self.assertEqual(date_to_semester(parse_date("2021-01-01")), "V21")
         self.assertEqual(date_to_semester(parse_date("2021-05-31")), "V21")
@@ -17,7 +16,8 @@ class UtilTests(StandardTestCase):
         self.assertEqual(date_to_semester(parse_date("2022-01-01")), "V22")
 
     def test_semester_to_year_returns_expected_result(self):
-        # Test that both the long and the short way of denoting a year are interpreted correctly
+        # Test that both the long and the short way of denoting a year are interpreted
+        # correctly
         self.assertEqual(semester_to_year("V17"), 2017.0)
         self.assertEqual(semester_to_year("V2017"), 2017.0)
         self.assertEqual(semester_to_year("H17"), 2017.5)
@@ -43,7 +43,8 @@ class UtilTests(StandardTestCase):
         self.assertEqual(year_to_semester(2017.5), "H17")
         self.assertEqual(year_to_semester(2017.99), "H17")
 
-        # Test that results that should contain years with leading zeros, are returned correctly
+        # Test that results that should contain years with leading zeros, are returned
+        # correctly
         self.assertEqual(year_to_semester(2001.0), "V01")
         self.assertEqual(year_to_semester(2001.5), "H01")
 

@@ -1,8 +1,8 @@
 from django.db import models
 
-from . import formfields
-from .util import semester_to_year
-from .validators import validate_semester_float
+from internal import formfields
+from internal.util import semester_to_year
+from internal.validators import validate_semester_float
 
 
 class SemesterField(models.FloatField):
@@ -18,7 +18,9 @@ class SemesterField(models.FloatField):
         return super().get_db_prep_value(value, connection, prepared=prepared)
 
     def formfield(self, **kwargs):
-        return super().formfield(**{
-            'form_class': formfields.SemesterField,
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "form_class": formfields.SemesterField,
+                **kwargs,
+            }
+        )

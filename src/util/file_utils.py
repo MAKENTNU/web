@@ -6,13 +6,14 @@ from django.core.files.uploadedfile import UploadedFile
 
 
 def calculate_file_hash(file: File) -> bytes:
-    file.open('rb')
+    file.open("rb")
     file_hash = hashlib.blake2b()
-    while chunk := file.read(2 ** 16):  # 65536 bytes
+    while chunk := file.read(2**16):  # 65536 bytes
         file_hash.update(chunk)
 
     if isinstance(file, UploadedFile):
-        # Reset file seek; do not close, as uploaded (temporary) files are deleted when closed
+        # Reset file seek; do not close, as uploaded (temporary) files are deleted when
+        # closed
         file.seek(0)
     else:
         file.close()

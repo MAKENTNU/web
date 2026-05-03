@@ -1,14 +1,14 @@
 from django import forms
 
-from .modelfields import CardNumber
+from card.modelfields import CardNumber
 
 
 class CardNumberInput(forms.TextInput):
-    template_name = 'card/widgets/card_number_input.html'
+    template_name = "card/widgets/card_number_input.html"
 
     class Media:
         css = {
-            'all': ('card/css/widgets/card_number_input.css',),
+            "all": ("card/css/widgets/card_number_input.css",),
         }
 
     def format_value(self, value):

@@ -1,4 +1,6 @@
+from collections.abc import Iterable
 from math import ceil
+from typing import Final
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
@@ -6,33 +8,52 @@ from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    TemplateView,
+    UpdateView,
+)
 from django.views.generic.edit import ModelFormMixin
 
+from docs.forms import (
+    AddPageForm,
+    ChangePageVersionForm,
+    DocumentationPageSearchQueryForm,
+    PageContentForm,
+)
+from docs.models import MAIN_PAGE_TITLE, Content, Page
 from util.templatetags.string_tags import title_en
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
-from .forms import AddPageForm, ChangePageVersionForm, DocumentationPageSearchQueryForm, PageContentForm
-from .models import Content, MAIN_PAGE_TITLE, Page
+from util.view_utils import (
+    CustomFieldsetFormMixin,
+    PreventGetRequestsMixin,
+    QueryParameterFormMixin,
+    insert_form_field_values,
+)
 
 
 class DocumentationPageRelatedViewMixin:
     """
-    NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
-    which will be used to query the database for the requested page by title.
+    NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path
+          converter named ``title`` as part of the view's path, which will be used to
+          query the database for the requested page by title.
     """
+
     model = Page
-    # The name of the model field that will be queried using the value of `slug_url_kwarg`
-    slug_field = 'title'
+    # The name of the model field that will be queried using the value of
+    # `slug_url_kwarg`
+    slug_field = "title"
     # The name of the path parameter whose value will be used to query `slug_field`
-    slug_url_kwarg = 'title'
+    slug_url_kwarg = "title"
     # PKs will not be used to query objects
     pk_url_kwarg = None
 
 
 class DocumentationPageDetailView(DocumentationPageRelatedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_detail.html'
-    context_object_name = 'page'
-    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
+    template_name = "docs/documentation_page_detail.html"
+    context_object_name = "page"
+    extra_context = {"MAIN_PAGE_TITLE": MAIN_PAGE_TITLE}
 
     is_main_page = False
 
@@ -43,36 +64,43 @@ class DocumentationPageDetailView(DocumentationPageRelatedViewMixin, DetailView)
 
 
 class DocumentationPageHistoryDetailView(DocumentationPageRelatedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_history_detail.html'
-    context_object_name = 'page'
+    template_name = "docs/documentation_page_history_detail.html"
+    context_object_name = "page"
 
 
 class DocumentationPageContentDetailView(DocumentationPageRelatedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_detail.html'
-    context_object_name = 'page'
-    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
+    template_name = "docs/documentation_page_detail.html"
+    context_object_name = "page"
+    extra_context = {"MAIN_PAGE_TITLE": MAIN_PAGE_TITLE}
 
     content: Content
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        content_pk = self.kwargs['content_pk']
-        self.content = get_object_or_404(self.get_object().content_history, pk=content_pk)
+        content_pk = self.kwargs["content_pk"]
+        self.content = get_object_or_404(
+            self.get_object().content_history, pk=content_pk
+        )
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
+        return {
+            **super().get_context_data(**kwargs),
+            "old": not hasattr(self.content, "page_currently_on"),
+            "content": self.content,
+            "last_edit_name": self.content.made_by.get_full_name()
+            if self.content.made_by
+            else _("Anonymous"),
+            "form": ChangePageVersionForm(initial={"current_content": self.content}),
+        }
 
-        context_data.update({
-            'old': not hasattr(self.content, 'page_currently_on'),
-            'content': self.content,
-            'last_edit_name': self.content.made_by.get_full_name() if self.content.made_by else _("Anonymous"),
-            'form': ChangePageVersionForm(initial={'current_content': self.content}),
-        })
-        return context_data
 
-
-class DocumentationPageVersionUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, UpdateView):
-    permission_required = ('docs.change_page',)
+class DocumentationPageVersionUpdateView(
+    PermissionRequiredMixin,
+    PreventGetRequestsMixin,
+    DocumentationPageRelatedViewMixin,
+    UpdateView,
+):
+    permission_required = ("docs.change_page",)
     form_class = ChangePageVersionForm
 
     def get_success_url(self):
@@ -82,28 +110,32 @@ class DocumentationPageVersionUpdateView(PermissionRequiredMixin, PreventGetRequ
         return HttpResponseForbidden()
 
 
-class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
-    permission_required = ('docs.add_page',)
+class DocumentationPageCreateView(
+    PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView
+):
+    permission_required = ("docs.add_page",)
     model = Page
     form_class = AddPageForm
 
-    base_template = 'docs/base.html'
+    base_template = "docs/base.html"
     narrow = False
     centered_title = False
-    back_button_link = reverse_lazy('home')
+    back_button_link = reverse_lazy("home")
     back_button_text = _("Documentation home page")
     save_button_text = _("Add")
 
     def get_form_kwargs(self):
         # Forcefully insert the user into the form
-        return insert_form_field_values(super().get_form_kwargs(), {'created_by': self.request.user})
+        return insert_form_field_values(
+            super().get_form_kwargs(), {"created_by": self.request.user}
+        )
 
     def get_form_title(self):
         return title_en(_("Add page"))
 
     def form_invalid(self, form):
         try:
-            existing_page = Page.objects.get(title=form.data['title'])
+            existing_page = Page.objects.get(title=form.data["title"])
         except Page.DoesNotExist:
             existing_page = None
         if existing_page:
@@ -111,32 +143,43 @@ class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMix
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('documentation_page_update', args=[self.object.pk])
+        return reverse("documentation_page_update", args=[self.object.pk])
 
 
-class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, DocumentationPageRelatedViewMixin, UpdateView):
-    permission_required = ('docs.change_page',)
+class DocumentationPageUpdateView(
+    PermissionRequiredMixin,
+    CustomFieldsetFormMixin,
+    DocumentationPageRelatedViewMixin,
+    UpdateView,
+):
+    permission_required = ("docs.change_page",)
     form_class = PageContentForm
-    template_name = 'docs/documentation_page_form.html'
+    template_name = "docs/documentation_page_form.html"
 
-    base_template = 'docs/base.html'
+    base_template = "docs/base.html"
     narrow = False
     centered_title = False
 
     def get_initial(self):
         return {
-            'content': self.object.current_content.content if self.object.current_content else "",
+            "content": self.object.current_content.content
+            if self.object.current_content
+            else "",
         }
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
-        # UpdateView inserts the Page instance into the Content form, so remove it, as a new Content instance will be created
-        form_kwargs.pop('instance')
+        # UpdateView inserts the Page instance into the Content form, so remove it, as
+        # a new Content instance will be created
+        form_kwargs.pop("instance")
         # Forcefully insert the page and user into the form
-        return insert_form_field_values(form_kwargs, {
-            'page': self.object,
-            'made_by': self.request.user,
-        })
+        return insert_form_field_values(
+            form_kwargs,
+            {
+                "page": self.object,
+                "made_by": self.request.user,
+            },
+        )
 
     def get_form_title(self):
         return _("Change “{title}”").format(title=self.object)
@@ -157,38 +200,47 @@ class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMix
         return self.object.get_absolute_url()
 
 
-class DocumentationPageDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, DeleteView):
-    permission_required = ('docs.delete_page',)
+class DocumentationPageDeleteView(
+    PermissionRequiredMixin,
+    PreventGetRequestsMixin,
+    DocumentationPageRelatedViewMixin,
+    DeleteView,
+):
+    permission_required = ("docs.delete_page",)
     queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy("home")
 
 
 class DocumentationPageSearchView(QueryParameterFormMixin, TemplateView):
+    PAGE_SIZE: Final = 10
+    NUM_PAGINATION_BUTTONS_ON_EITHER_END: Final = 3
+
     form_class = DocumentationPageSearchQueryForm
-    template_name = 'docs/documentation_page_search.html'
+    template_name = "docs/documentation_page_search.html"
 
-    page_size = 10
+    @classmethod
+    def pages_to_show(cls, current_page: int, n_pages: int) -> Iterable[int]:
+        n_buttons = cls.NUM_PAGINATION_BUTTONS_ON_EITHER_END
 
-    @staticmethod
-    def pages_to_show(current_page, n_pages):
-        if current_page <= 3:
+        if current_page <= n_buttons:
             return range(1, min(n_pages + 1, 8))
-        if current_page >= n_pages - 3:
+        if current_page >= n_pages - n_buttons:
             return range(max(1, n_pages - 6), n_pages + 1)
-        return range(current_page - 3, current_page + 4)
+        return range(current_page - n_buttons, current_page + n_buttons + 1)
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        query = self.query_params['query']
-        page = self.query_params['page'] or 1
+        query = self.query_params["query"]
+        page = self.query_params["page"] or 1
 
-        pages = Page.objects.filter(Q(title__icontains=query) | Q(current_content__content__icontains=query))
-        n_pages = ceil(pages.count() / self.page_size)
-        context_data.update({
-            'pages': pages[(page - 1) * self.page_size:page * self.page_size],
-            'page': page,
-            'pages_to_show': self.pages_to_show(page, n_pages),
-            'query': query,
-        })
+        pages = Page.objects.filter(
+            Q(title__icontains=query) | Q(current_content__content__icontains=query)
+        )
+        n_pages = ceil(pages.count() / self.PAGE_SIZE)
 
-        return context_data
+        return {
+            **super().get_context_data(**kwargs),
+            "pages": pages[(page - 1) * self.PAGE_SIZE : page * self.PAGE_SIZE],
+            "page": page,
+            "pages_to_show": self.pages_to_show(page, n_pages),
+            "query": query,
+        }

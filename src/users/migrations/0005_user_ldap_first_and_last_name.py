@@ -4,23 +4,26 @@ from django.db import migrations, models
 
 
 def copy_first_and_last_name_to_ldap_full_name(apps, schema_editor):
-    User = apps.get_model('users', 'User')
+    User = apps.get_model("users", "User")
     for user in User.objects.all():
         user.ldap_full_name = f"{user.first_name} {user.last_name}"
         user.save()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0004_alter_user_first_name_max_length'),
+        ("users", "0004_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='ldap_full_name',
-            field=models.CharField(blank=True, max_length=150, verbose_name='full name from LDAP'),
+            model_name="user",
+            name="ldap_full_name",
+            field=models.CharField(
+                blank=True, max_length=150, verbose_name="full name from LDAP"
+            ),
         ),
-        migrations.RunPython(copy_first_and_last_name_to_ldap_full_name, migrations.RunPython.noop),
+        migrations.RunPython(
+            copy_first_and_last_name_to_ldap_full_name, migrations.RunPython.noop
+        ),
     ]

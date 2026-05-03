@@ -19,9 +19,11 @@ class WhitelistedEmailValidator(EmailValidator):
         return domain_part in self.valid_domains
 
 
-semester_string_regex = re.compile(r'^([VH])(\d{2}|\d{4})$', re.IGNORECASE)
+semester_string_regex = re.compile(r"^([VH])(\d{2}|\d{4})$", re.IGNORECASE)
 # Used for validating user input through the form field
-semester_string_validator = RegexValidator(semester_string_regex, _("Enter a valid format for a semester."))
+semester_string_validator = RegexValidator(
+    semester_string_regex, _("Enter a valid format for a semester.")
+)
 
 
 # Used for validating the model field
@@ -30,5 +32,5 @@ def validate_semester_float(value):
     if value % 1 not in {0, 0.5}:
         raise ValidationError(
             "%(value)s is not a valid semester float",
-            params={'value': value},
+            params={"value": value},
         )

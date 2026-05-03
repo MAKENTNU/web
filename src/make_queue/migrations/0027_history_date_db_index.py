@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0026_historicalmachineusagerule'),
+        ("make_queue", "0026_historicalmachineusagerule"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='historicalmachineusagerule',
-            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical machine usage rule', 'verbose_name_plural': 'historical machine usage rules'},
+            name="historicalmachineusagerule",
+            options={
+                "get_latest_by": ("history_date", "history_id"),
+                "ordering": ("-history_date", "-history_id"),
+                "verbose_name": "historical machine usage rule",
+                "verbose_name_plural": "historical machine usage rules",
+            },
         ),
         migrations.AlterField(
-            model_name='historicalmachineusagerule',
-            name='history_date',
+            model_name="historicalmachineusagerule",
+            name="history_date",
             field=models.DateTimeField(db_index=True),
         ),
     ]
