@@ -11,7 +11,7 @@ and a new, empty "Unreleased" section should be added.
 Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
 
 ## Unreleased
--Added guidance hours to the internal pages (MAKENTNU/web#798)
+-Added guidance hours to the internal pages (MAKENTNU/web#816)
 
 
 ### New features
