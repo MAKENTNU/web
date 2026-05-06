@@ -59,7 +59,7 @@
     </div>
     {% for weekday, slots in grouped_hours.items %}
         <table class="  {% if forloop.counter|divisibleby:2 %}
-                            guidance_hours_grey   
+                            guidance_hours_grey
                         {% else %}
                             guidance_hours_yellow
                         {% endif %}">
@@ -124,8 +124,8 @@
                         </td>
                     {% endif %}
                     <td class="guidance_slot_comments">
-                        <button type="button" class="toggle_notes_button" 
-                            data-target="notes-row-{{ slot.id }}" 
+                        <button type="button" class="toggle_notes_button"
+                            data-target="notes-row-{{ slot.id }}"
                             data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}">
                             {% translate "comments" %}
                         </button>

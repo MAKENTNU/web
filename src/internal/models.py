@@ -414,7 +414,7 @@ class GuidanceHours(models.Model):
     notes = models.TextField(blank=True, verbose_name=_("notes"))
     members = models.ManyToManyField(
         to=Member,
-        related_name='guidance_hours',
+        related_name="guidance_hours",
         verbose_name=_("members"),
     )
 

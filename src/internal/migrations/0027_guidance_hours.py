@@ -31,6 +31,7 @@ schedule = {
     ],
 }
 
+
 def add_guidance_hours(apps, schema_editor):
     GuidanceHours = apps.get_model("internal", "GuidanceHours")
 
@@ -44,21 +45,47 @@ def add_guidance_hours(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0026_add_secret_permissions'),
+        ("internal", "0026_add_secret_permissions"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GuidanceHours',
+            name="GuidanceHours",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('weekday', models.PositiveSmallIntegerField(choices=[(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'), (4, 'Friday')], verbose_name='weekday')),
-                ('from_time', models.TimeField(verbose_name='from time')),
-                ('to_time', models.TimeField(verbose_name='to time')),
-                ('members', models.ManyToManyField(related_name='guidance_hours', to='internal.member', verbose_name='members')),
-                ('notes', models.TextField(blank=True, verbose_name='notes')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "weekday",
+                    models.PositiveSmallIntegerField(
+                        choices=[
+                            (0, "Monday"),
+                            (1, "Tuesday"),
+                            (2, "Wednesday"),
+                            (3, "Thursday"),
+                            (4, "Friday"),
+                        ],
+                        verbose_name="weekday",
+                    ),
+                ),
+                ("from_time", models.TimeField(verbose_name="from time")),
+                ("to_time", models.TimeField(verbose_name="to time")),
+                (
+                    "members",
+                    models.ManyToManyField(
+                        related_name="guidance_hours",
+                        to="internal.member",
+                        verbose_name="members",
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, verbose_name="notes")),
             ],
         ),
         migrations.RunPython(add_guidance_hours, migrations.RunPython.noop),

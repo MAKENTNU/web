@@ -201,24 +201,25 @@ class QuoteForm(forms.ModelForm):
             "date": SemanticDateInput(),
         }
 
+
 class GuidanceHoursForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
-        from_time = cleaned_data.get('from_time')
-        to_time = cleaned_data.get('to_time')
+        from_time = cleaned_data.get("from_time")
+        to_time = cleaned_data.get("to_time")
 
         if from_time and to_time and from_time >= to_time:
             raise forms.ValidationError(
                 _("Start time must be before end time."),
-                code='invalid_time_range',
+                code="invalid_time_range",
             )
 
         return cleaned_data
 
     class Meta:
         model = GuidanceHours
-        fields = ('from_time', 'to_time', 'weekday')
+        fields = ("from_time", "to_time", "weekday")
         widgets = {
-            'from_time': forms.TimeInput(attrs={'type': 'time'}),
-            'to_time': forms.TimeInput(attrs={'type': 'time'}),
+            "from_time": forms.TimeInput(attrs={"type": "time"}),
+            "to_time": forms.TimeInput(attrs={"type": "time"}),
         }

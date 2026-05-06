@@ -381,9 +381,8 @@ class GuidanceHoursView(ListView):
     context_object_name = "hours"
 
     def get_queryset(self):
-        return (
-            GuidanceHours.objects
-            .prefetch_related("members__user", "members__committees__group")
+        return GuidanceHours.objects.prefetch_related(
+            "members__user", "members__committees__group"
         )
 
     def get_context_data(self, **kwargs):
@@ -397,7 +396,7 @@ class GuidanceHoursView(ListView):
 
         for slot in context["hours"]:
             slot.all_members = list(slot.members.all())
-            padded = slot.all_members[:GuidanceHours.MAX_MEMBERS]
+            padded = slot.all_members[: GuidanceHours.MAX_MEMBERS]
             while len(padded) < GuidanceHours.MAX_MEMBERS:
                 padded.append(None)
             slot.display_members = padded
@@ -432,7 +431,6 @@ class GuidanceHoursView(ListView):
 
 
 class APIGuidanceHoursNotesView(View):
-
     def get(self, request, slot_id):
         slot = get_object_or_404(GuidanceHours, id=slot_id)
         member = get_object_or_404(Member, user=request.user)
@@ -449,12 +447,11 @@ class APIGuidanceHoursNotesView(View):
         if len(notes) > GuidanceHours.MAX_NOTES_LENGTH:
             return UTF8JsonResponse({"error": "notes too long"}, status=400)
         slot.notes = notes
-        slot.save(update_fields=['notes'])
+        slot.save(update_fields=["notes"])
         return UTF8JsonResponse({"notes": slot.notes})
 
 
 class GuidanceHoursBookView(PreventGetRequestsMixin, View):
-
     def post(self, request, slot_id):
         member = get_object_or_404(Member, user=request.user)
         with transaction.atomic():
@@ -469,7 +466,6 @@ class GuidanceHoursBookView(PreventGetRequestsMixin, View):
 
 
 class GuidanceHoursCancelView(PreventGetRequestsMixin, View):
-
     def post(self, request, slot_id):
         slot = get_object_or_404(GuidanceHours, id=slot_id)
         member = get_object_or_404(Member, user=request.user)
@@ -482,7 +478,6 @@ class GuidanceHoursClearView(UserPassesTestMixin, PreventGetRequestsMixin, View)
 
     def test_func(self):
         return self.request.user.is_superuser
-
 
     def post(self, request):
         with transaction.atomic():
@@ -498,10 +493,10 @@ class GuidanceHoursClearView(UserPassesTestMixin, PreventGetRequestsMixin, View)
 class GuidanceHoursFormMixin(CustomFieldsetFormMixin, ABC):
     model = GuidanceHours
     form_class = GuidanceHoursForm
-    template_name = 'internal/create_guidance_hours_slot.html'
-    success_url = reverse_lazy('guidance_hours')
+    template_name = "internal/create_guidance_hours_slot.html"
+    success_url = reverse_lazy("guidance_hours")
 
-    base_template = 'internal/base.html'
+    base_template = "internal/base.html"
     back_button_link = success_url
     back_button_text = _("Guidance hours")
 
@@ -529,4 +524,4 @@ class GuidanceHoursDeleteView(
 ):
     permission_required = ("internal.delete_guidancehours",)
     model = GuidanceHours
-    success_url = reverse_lazy('guidance_hours')
+    success_url = reverse_lazy("guidance_hours")
