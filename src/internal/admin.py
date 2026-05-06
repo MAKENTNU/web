@@ -3,7 +3,7 @@ from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from internal.models import Member, Quote, Secret, SystemAccess
+from internal.models import GuidanceHours, Member, Quote, Secret, SystemAccess
 from util import html_utils
 from util.admin_utils import (
     DefaultAdminWidgetsMixin,
@@ -106,7 +106,23 @@ class QuoteAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdm
     autocomplete_fields = ("author",)
 
 
+class GuidanceHoursAdmin(admin.ModelAdmin):
+    list_display = ("get_display", "get_member_count", "notes")
+    list_filter = ("weekday",)
+    filter_horizontal = ("members",)
+    search_fields = ("notes",)
+
+    @admin.display(description=_("slot"), ordering="weekday")
+    def get_display(self, obj: GuidanceHours):
+        return str(obj)
+
+    @admin.display(description=_("members booked"))
+    def get_member_count(self, obj: GuidanceHours):
+        return obj.members.count()
+
+
 admin.site.register(Member, MemberAdmin)
 admin.site.register(SystemAccess, SystemAccessAdmin)
 admin.site.register(Secret, SecretAdmin)
 admin.site.register(Quote, QuoteAdmin)
+admin.site.register(GuidanceHours, GuidanceHoursAdmin)
