@@ -10,7 +10,7 @@
 
 {% block extra_head %}
     <script>
-        var csrfToken = "{{ csrf_token }}";
+        const csrfToken = "{{ csrf_token }}";
     </script>
     <link rel="stylesheet" href="{% static 'internal/css/guidance_hours.css' %}"/>
     <script defer src="{% static 'internal/js/guidance_hours.js' %}"></script>
@@ -28,7 +28,7 @@
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
-            {% if perms.internal.change_guidancehours %}
+            {% if request.user.is_superuser %}
                 <form method="post" action="{% url 'clear_guidance_slots' %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="clear-all-button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ clear_all_confirm_msg }}">
@@ -51,7 +51,7 @@
         <strong>{% translate "At the makerspace now:" %}</strong>
         {% if current_guidance_members %}
             {% for member in current_guidance_members %}
-                {{ member.user.username }}{% if not forloop.last %}, {% endif %}
+                {{ member.user.get_short_full_name }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
         {% else %}
             {% translate "None" %}
@@ -82,7 +82,7 @@
                         <td class="guidance_member_cell{% if not member %} guidance_member_cell_empty{% endif %}">
                             {% if member %}
                                 <div class="guidance_member_info">
-                                    <div class="guidance_member_info_row guidance_member_name">{{ member.user.username }}</div>
+                                    <div class="guidance_member_info_row guidance_member_name">{{ member.user.get_short_full_name }}</div>
                                     {% if member.committees.all %}
                                         <div class="guidance_member_info_row">
                                             {% for committee in member.committees.all %}
@@ -108,7 +108,7 @@
                         </form>
                         </td>
 
-                    {% elif slot.all_members|length >= slot.max_members %}
+                    {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
                         <td class="guidance_slot_action guidance_slot_full">
                             {% translate "full" %}
                         </td>
@@ -154,8 +154,7 @@
                         {% if current_member in slot.all_members %}
                             <textarea class="guidance_hours_notes"
                             data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
-                            rows="3"
-                            style="width:100%; max-width:100%; min-width:100%;">{{ slot.notes }}</textarea>
+                            rows="3">{{ slot.notes }}</textarea>
                         {% else %}
                             <p class="guidance_hours_notes_display">
                                 {{ slot.notes }}

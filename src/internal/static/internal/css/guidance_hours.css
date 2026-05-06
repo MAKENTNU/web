@@ -1,7 +1,3 @@
-#guidance_hours_title{
-    margin-left: 2%;
-}
-
 .guidance_hours_header {
     width: 100%;
     display: flex;
@@ -10,66 +6,29 @@
     flex-wrap: wrap;
 }
 
-.clear-all-button {
-    border: 1px solid #8f1f1f;
-    background: linear-gradient(180deg, #d74242 0%, #b52d2d 100%);
-    color: #ffffff;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-weight: 700;
-    font-size: 0.92rem;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-    transition: transform 0.12s ease-in-out, box-shadow 0.12s ease-in-out, filter 0.12s ease-in-out;
-}
-
-.clear-all-button:hover {
-    transform: translateY(-1px);
-    filter: brightness(0.95);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.24);
-}
-
-.clear-all-button:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.clear-all-button:focus-visible {
-    outline: 2px solid #0C426A;
-    outline-offset: 2px;
-}
-
 .guidance_hours_grey,
 .guidance_hours_yellow {
     border-collapse: collapse;
     table-layout: fixed;
     width: 100%;
-    margin: 0 auto;
 }
 
-th, td {
+:is(.guidance_hours_grey, .guidance_hours_yellow) :is(th, td) {
     border: 1px solid black;
     padding: 10px 12px;
     text-align: left;
     vertical-align: middle;
 }
 
-th {
+:is(.guidance_hours_grey, .guidance_hours_yellow) th {
     background-color: #0C426A;
-    color: white; 
+    color: white;
 }
 
-.guidance_hours_grey td {
-    background-color: #DCDDDE;
-}
+.guidance_hours_grey td { background-color: #DCDDDE; }
+.guidance_hours_yellow td { background-color: #F8C811; }
 
-.guidance_hours_yellow td {
-    background-color: #F8C811;
-}
-
-.guidance_hours_grey td,
-.guidance_hours_yellow td {
+:is(.guidance_hours_grey, .guidance_hours_yellow) td {
     color: #1a1a1a;
 }
 
@@ -89,22 +48,18 @@ th {
     border-top: 1px solid rgba(12, 66, 106, 0.35);
 }
 
-.guidance_member_name {
-    font-weight: 700;
-}
+.guidance_member_name { font-weight: 700; }
 
-#guidance_hours_notes {
+.guidance_hours_notes {
     width: 100%;
-    height: 100%;
+    resize: vertical;
 }
 
-.guidance_hours_notes_display {
-    background-color: white;
-}
+.guidance_hours_notes_display { background-color: white; }
 
 .guidance_hours_my_slots {
     width: 100%;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 10px;
     padding-left: 6px;
     background-color: #eef4f8;
     border-left: 4px solid #0C426A;
@@ -149,6 +104,36 @@ th {
     background-color: #eef4f8;
 }
 
+.clear-all-button {
+    border: 1px solid #8f1f1f;
+    background: linear-gradient(180deg, #d74242 0%, #b52d2d 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    transition: transform 0.12s ease-in-out, box-shadow 0.12s ease-in-out, filter 0.12s ease-in-out;
+}
+
+.clear-all-button:hover {
+    transform: translateY(-1px);
+    filter: brightness(0.95);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.24);
+}
+
+.clear-all-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.clear-all-button:focus-visible {
+    outline: 2px solid #0C426A;
+    outline-offset: 2px;
+}
+
 .guidance_slot_full {
     font-weight: 700;
     color: #7c1d00;
@@ -156,23 +141,19 @@ th {
     letter-spacing: 0.02em;
 }
 
-.guidance_hours_grey td.control_buttons,
-.guidance_hours_yellow td.control_buttons {
+:is(.guidance_hours_grey, .guidance_hours_yellow) td.control_buttons {
     background-color: #0C426A !important;
     text-align: center;
     white-space: nowrap;
     padding: 4px;
 }
 
-.guidance_notes_row_hidden {
-    display: none;
-}
+.guidance_notes_row_hidden { display: none; }
 
 @media (max-width: 900px) {
     .guidance_hours_grey,
     .guidance_hours_yellow {
-        width: 100%;
-        margin: 0 0 24px 0;
+        margin: 0 0 24px;
         border-collapse: separate;
         border-spacing: 0;
         background: transparent;
@@ -183,19 +164,14 @@ th {
         display: none;
     }
 
-    .guidance_hours_grey thead,
-    .guidance_hours_yellow thead,
-    .guidance_hours_grey thead tr,
-    .guidance_hours_yellow thead tr {
+    :is(.guidance_hours_grey, .guidance_hours_yellow) :is(thead, thead tr) {
         display: block;
     }
 
-    .guidance_hours_grey thead th,
-    .guidance_hours_yellow thead th {
+    :is(.guidance_hours_grey, .guidance_hours_yellow) thead th {
         display: block;
         width: 100%;
-        box-sizing: border-box;
-        margin: 0 0 12px 0;
+        margin: 0 0 12px;
         padding: 12px 14px;
         border: 0;
         border-left: 6px solid #0C426A;
@@ -206,16 +182,10 @@ th {
         font-weight: 800;
     }
 
-    .guidance_hours_grey thead th {
-        background-color: #dcdde0;
-    }
+    .guidance_hours_grey thead th { background-color: #dcdde0; }
+    .guidance_hours_yellow thead th { background-color: #f8c811; }
 
-    .guidance_hours_yellow thead th {
-        background-color: #f8c811;
-    }
-
-    .guidance_hours_grey tbody,
-    .guidance_hours_yellow tbody,
+    :is(.guidance_hours_grey, .guidance_hours_yellow) tbody,
     .guidance_slot_row,
     .guidance_notes_row {
         display: block;
@@ -229,20 +199,13 @@ th {
         box-shadow: 0 10px 24px rgba(12, 66, 106, 0.12);
     }
 
-    .guidance_hours_grey .guidance_slot_row {
-        background: #dcdde0;
-    }
+    .guidance_hours_grey .guidance_slot_row { background: #dcdde0; }
+    .guidance_hours_yellow .guidance_slot_row { background: #f8c811; }
 
-    .guidance_hours_yellow .guidance_slot_row {
-        background: #f8c811;
-    }
-
-    .guidance_slot_row th,
-    .guidance_slot_row td,
+    .guidance_slot_row :is(th, td),
     .guidance_notes_row td {
         display: block;
         width: 100%;
-        box-sizing: border-box;
         padding: 10px 12px;
         font-size: 0.92rem;
         border-left: 0;
@@ -257,15 +220,11 @@ th {
         font-weight: 700;
     }
 
-    .guidance_slot_row .guidance_member_cell,
-    .guidance_slot_row .guidance_slot_action,
-    .guidance_slot_row .guidance_slot_comments {
+    .guidance_slot_row :is(.guidance_member_cell, .guidance_slot_action, .guidance_slot_comments) {
         background: transparent;
     }
 
-    .guidance_slot_row .guidance_slot_action,
-    .guidance_slot_row .guidance_slot_comments,
-    .guidance_slot_row .control_buttons {
+    .guidance_slot_row :is(.guidance_slot_action, .guidance_slot_comments, .control_buttons) {
         border-top: 1px solid rgba(12, 66, 106, 0.12);
     }
 
@@ -275,13 +234,7 @@ th {
         padding: 10px 12px;
     }
 
-    .guidance_notes_row {
-        margin: -10px 0 16px 0;
-    }
-
-    .guidance_notes_row.guidance_notes_row_hidden {
-        display: none;
-    }
+    .guidance_notes_row { margin: -10px 0 16px; }
 
     .guidance_notes_cell {
         border: 1px solid rgba(12, 66, 106, 0.2);
@@ -291,9 +244,7 @@ th {
         box-shadow: 0 10px 24px rgba(12, 66, 106, 0.08);
     }
 
-    .guidance_notes_row .control_buttons {
-        display: none;
-    }
+    .guidance_notes_row .control_buttons { display: none; }
 
     .guidance_hours_notes,
     .guidance_hours_notes_display {

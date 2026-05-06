@@ -4,9 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
-from internal.models import Member, Quote, Secret, SystemAccess
+from internal.models import GuidanceHours, Member, Quote, Secret, SystemAccess
 from users.models import User
-from .models import GuidanceHours, Member, Quote, Secret, SystemAccess
 from web.widgets import (
     SemanticDateInput,
     SemanticMultipleSelectInput,

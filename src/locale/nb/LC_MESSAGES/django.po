@@ -3271,6 +3271,10 @@ msgstr "Velg verdi"
 msgid "Search places"
 msgstr "Søk etter steder"
 
+#: src/internal/templates/internal/create_guidance_hours_slot.html:7
+msgid "Create a new guidance hours slot."
+msgstr "Opprett en ny veiledningstime."
+
 #: src/internal/templates/internal/guidance_hours.html:9
 #: src/internal/templates/internal/guidance_hours.html:25
 #: src/internal/templates/internal/header.html:24

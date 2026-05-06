@@ -1,6 +1,6 @@
 from contextlib import suppress
-from http import HTTPStatus
 from datetime import datetime, time
+from http import HTTPStatus
 from unittest.mock import patch
 
 from django.conf import settings
@@ -13,16 +13,15 @@ from django.urls import clear_url_caches
 
 from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
-from internal.models import Secret
+from internal.forms import GuidanceHoursForm
+from internal.models import GuidanceHours, Member, Secret
 from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS
+from internal.views import GuidanceHoursView
 from users.models import User
 from util.auth_utils import get_perms, perm_to_str
 from util.url_utils import reverse_admin, reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
-from .test_urls import INTERNAL_CLIENT_DEFAULTS
-from ..models import GuidanceHours, Member, Secret
-from ..views import GuidanceHoursView
 
 
 class InternalContentBoxTests(TestCase):
@@ -335,9 +334,13 @@ class SecretTests(TestCase):
 class GuidanceHoursTests(TestCase):
 
     def setUp(self):
-        self.superuser = User.objects.create_user("superuser", is_staff=True, is_superuser=True)
+        self.superuser = User.objects.create_user(
+            "superuser", is_staff=True, is_superuser=True
+        )
         self.regular_user = User.objects.create_user("regular_user")
-        self.regular_user.add_perms('internal.is_internal', 'internal.view_guidancehours')
+        self.regular_user.add_perms(
+            "internal.is_internal", "internal.view_guidancehours"
+        )
         Member.objects.create(user=self.superuser)
         Member.objects.create(user=self.regular_user)
 
@@ -352,13 +355,17 @@ class GuidanceHoursTests(TestCase):
         self.booked_member_1 = Member.objects.create(user=booked_user_1)
         self.booked_member_2 = Member.objects.create(user=booked_user_2)
 
-        self.slot_1 = GuidanceHours.objects.create(weekday=0, from_time=time(9, 0), to_time=time(10, 0), notes="note 1")
-        self.slot_2 = GuidanceHours.objects.create(weekday=1, from_time=time(10, 0), to_time=time(11, 0), notes="note 2")
+        self.slot_1 = GuidanceHours.objects.create(
+            weekday=0, from_time=time(9, 0), to_time=time(10, 0), notes="note 1"
+        )
+        self.slot_2 = GuidanceHours.objects.create(
+            weekday=1, from_time=time(10, 0), to_time=time(11, 0), notes="note 2"
+        )
         self.slot_1.members.add(self.booked_member_1, self.booked_member_2)
         self.slot_2.members.add(self.booked_member_1)
 
     def test_superuser_can_clear_all_guidance_slots(self):
-        clear_url = reverse_internal('clear_guidance_slots')
+        clear_url = reverse_internal("clear_guidance_slots")
 
         response = self.superuser_client.post(clear_url)
 
@@ -372,7 +379,7 @@ class GuidanceHoursTests(TestCase):
         self.assertEqual(self.slot_2.notes, "")
 
     def test_user_without_change_permission_cannot_clear_all_guidance_slots(self):
-        clear_url = reverse_internal('clear_guidance_slots')
+        clear_url = reverse_internal("clear_guidance_slots")
 
         response = self.regular_user_client.post(clear_url)
 
@@ -386,11 +393,13 @@ class GuidanceHoursTests(TestCase):
 
     @patch('internal.views.timezone.localtime')
     @patch('internal.views.timezone.localdate')
-    def test_guidance_hours_view_shows_current_guidance_members(self, mock_localdate, mock_localtime):
+    def test_guidance_hours_view_shows_current_guidance_members(
+        self, mock_localdate, mock_localtime
+    ):
         mock_localdate.return_value = datetime(2026, 4, 27).date()
         mock_localtime.return_value = datetime(2026, 4, 27, 9, 30)
 
-        request = self.request_factory.get(reverse_internal('guidance_hours'))
+        request = self.request_factory.get(reverse_internal("guidance_hours"))
         request.user = self.regular_user
         view = GuidanceHoursView()
         view.setup(request)
@@ -398,4 +407,123 @@ class GuidanceHoursTests(TestCase):
         context = view.get_context_data()
 
         current_members = context['current_guidance_members']
-        self.assertEqual([member.pk for member in current_members], [self.booked_member_1.pk, self.booked_member_2.pk])
+        self.assertEqual(
+            [member.pk for member in current_members],
+            [self.booked_member_1.pk, self.booked_member_2.pk],
+        )
+
+    def test_member_can_book_an_available_slot(self):
+        book_url = reverse_internal("book_guidance_slot", self.slot_2.pk)
+        regular_member = self.regular_user.member
+
+        response = self.regular_user_client.post(book_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith('/guidance-hours/'))
+        self.assertIn(regular_member, self.slot_2.members.all())
+
+    def test_member_cannot_book_a_full_slot(self):
+        # Fill slot_1 to max_members (currently 5)
+        for i in range(3):
+            extra_user = User.objects.create_user(f"extra_user_{i}")
+            extra_member = Member.objects.create(user=extra_user)
+            self.slot_1.members.add(extra_member)
+        book_url = reverse_internal("book_guidance_slot", self.slot_1.pk)
+
+        response = self.regular_user_client.post(book_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertNotIn(self.regular_user.member, self.slot_1.members.all())
+
+    def test_member_can_cancel_their_booking(self):
+        self.slot_2.members.add(self.regular_user.member)
+        cancel_url = reverse_internal("cancel_guidance_slot", self.slot_2.pk)
+
+        response = self.regular_user_client.post(cancel_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith('/guidance-hours/'))
+        self.assertNotIn(self.regular_user.member, self.slot_2.members.all())
+
+    def test_superuser_can_create_slot(self):
+        create_url = reverse_internal("create_guidance_hours")
+
+        response = self.superuser_client.post(create_url, {
+            'weekday': 2,
+            'from_time': '13:00',
+            'to_time': '14:00',
+        })
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(
+            GuidanceHours.objects.filter(
+                weekday=2, from_time="13:00", to_time="14:00"
+            ).exists()
+        )
+
+    def test_non_superuser_cannot_create_slot(self):
+        create_url = reverse_internal("create_guidance_hours")
+        slot_count_before = GuidanceHours.objects.count()
+
+        response = self.regular_user_client.post(create_url, {
+            'weekday': 2,
+            'from_time': '13:00',
+            'to_time': '14:00',
+        })
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.assertEqual(GuidanceHours.objects.count(), slot_count_before)
+
+    def test_superuser_can_update_slot(self):
+        update_url = reverse_internal("guidance_hours_update", self.slot_1.pk)
+
+        response = self.superuser_client.post(update_url, {
+            'weekday': 0,
+            'from_time': '09:00',
+            'to_time': '11:00',
+        })
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.to_time.strftime('%H:%M'), '11:00')
+
+    def test_non_superuser_cannot_update_slot(self):
+        update_url = reverse_internal('guidance_hours_update', self.slot_1.pk)
+
+        response = self.regular_user_client.post(update_url, {
+            'weekday': 0,
+            'from_time': '09:00',
+            'to_time': '11:00',
+        })
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.to_time.strftime('%H:%M'), '10:00')
+
+    def test_superuser_can_delete_slot(self):
+        delete_url = reverse_internal("guidance_hours_delete", self.slot_1.pk)
+
+        response = self.superuser_client.post(delete_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertFalse(GuidanceHours.objects.filter(pk=self.slot_1.pk).exists())
+
+    def test_non_superuser_cannot_delete_slot(self):
+        delete_url = reverse_internal('guidance_hours_delete', self.slot_1.pk)
+
+        response = self.regular_user_client.post(delete_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.assertTrue(GuidanceHours.objects.filter(pk=self.slot_1.pk).exists())
+
+    def test_create_slot_rejects_invalid_time_range(self):
+        form = GuidanceHoursForm(data={
+            "weekday": 3,
+            "from_time": "15:00",
+            "to_time": "13:00",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "invalid_time_range",
+            [e.code for e in form.non_field_errors().as_data()],
+        )

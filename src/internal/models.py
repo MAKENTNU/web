@@ -392,7 +392,11 @@ class Quote(models.Model):
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
 
+
 class GuidanceHours(models.Model):
+    MAX_MEMBERS = 5
+    MAX_NOTES_LENGTH = 2000
+
     WEEKDAYS = [
         (0, _("Monday")),
         (1, _("Tuesday")),
@@ -405,19 +409,21 @@ class GuidanceHours(models.Model):
         choices=WEEKDAYS,
         verbose_name=_("weekday"),
     )
-
     from_time = models.TimeField(verbose_name=_("from time"))
     to_time = models.TimeField(verbose_name=_("to time"))
     notes = models.TextField(blank=True, verbose_name=_("notes"))
-    max_members = 5
     members = models.ManyToManyField(
         to=Member,
         related_name='guidance_hours',
         verbose_name=_("members"),
     )
 
+    class Meta:
+        ordering = ("weekday", "from_time")
+
     def __str__(self):
-        return f"{self.get_weekday_display()} {self.from_time:%H:%M} - {self.to_time:%H:%M}"
-    
+        weekday = self.get_weekday_display()
+        return f"{weekday} {self.from_time:%H:%M} - {self.to_time:%H:%M}"
+
     def is_full(self):
-        return self.members.count() >= self.max_members
+        return self.members.count() >= self.MAX_MEMBERS

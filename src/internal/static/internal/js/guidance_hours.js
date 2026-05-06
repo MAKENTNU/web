@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     textarea.value = data.notes;
                 } catch (error) {
                     console.error("Error loading notes:", error);
+                    alert("Failed to load notes. Please try again.");
                 }
             } else {
                 row.classList.add("guidance_notes_row_hidden");
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 await response.json();
             } catch (error) {
                 console.error("Error saving notes:", error);
+                alert("Failed to save notes. Please try again.");
             }
         });
     });

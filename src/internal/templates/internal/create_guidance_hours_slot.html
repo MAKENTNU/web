@@ -3,7 +3,5 @@
 {% load hosts %}
 
 {% block fields_post_content %}
-    {% if request.user.is_staff %}
-        <p>{% translate "Opprett en ny veiledningstime." %}</p>
-    {% endif %}
+    <p>{% translate "Create a new guidance hours slot." %}</p>
 {% endblock fields_post_content %}
