@@ -14,6 +14,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### New features
+- Internal statistics page showing site traffic, average reservations per hour of day, and per-machine-type usage with per-section time-range filters (last week/month/year/custom interval) updated via AJAX (MAKENTNU/web#819)
 
 
 ### Improvements
@@ -23,6 +24,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### Other changes
+- Added `PageView` and `Visitor` models plus a `PageViewMiddleware` that records a page view per successful `GET` request, aggregating language-prefixed paths to their canonical form (MAKENTNU/web#819)
 
 
 ## 2026-03-26 (MAKENTNU/web#810)
