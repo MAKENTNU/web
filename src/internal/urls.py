@@ -101,6 +101,12 @@ quote_urlpatterns = [
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name="home"), name="home"),
+    path("statistics/", views.StatisticsView.as_view(), name="statistics_page"),
+    path(
+        "api/statistics/data/",
+        views.APIStatisticsDataView.as_view(),
+        name="api_statistics_data",
+    ),
     path("bulletins/", include(committee_bulletin_urlpatterns)),
     # The proper `url_name` for this would be `MAKE-history`, but the validator of
     # the model's field requires it to be lowercase

@@ -1,0 +1,90 @@
+{% extends 'internal/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Statistics" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'internal/css/statistics.css' %}"/>
+    <script>var STATISTICS_DATA_URL = "{% url 'api_statistics_data' %}";</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script defer src="{% static 'web/js/date_utils.js' %}"></script>
+    <script defer src="{% static 'internal/js/statistics_charts.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+<div class="ui container statistics-page">
+    <h1 class="ui text-centered make-col-blue header">{% translate "Statistics" %}</h1>
+
+    {# Page-view summary (no filter — model stores totals only) #}
+    <section class="stats-section">
+        <h2 class="make-col-blue header">{% translate "Site traffic" %}</h2>
+        <div class="stats-grid">
+            <div class="stats-box">
+                <div class="stats-box-header">{% translate "Total page views" %}</div>
+                <div class="stats-big-number">{{ page_views.total_visits }}</div>
+            </div>
+            <div class="stats-box">
+                <div class="stats-box-header">{% translate "Unique visitors" %}</div>
+                <div class="stats-big-number">{{ page_views.unique_visitors }}</div>
+            </div>
+            <div class="stats-box stats-box-wide">
+                <div class="stats-box-header">{% translate "Most popular pages" %}</div>
+                <ol class="stats-page-list">
+                    {% for p in page_views.top_pages %}
+                        <li><span class="stats-path">{{ p.path }}</span><span class="stats-count">{{ p.count }}</span></li>
+                    {% empty %}
+                        <li>{% translate "No data yet" %}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    {# Average reservations active per hour of day #}
+    <section class="stats-section">
+        <div class="stats-section-head">
+            <h2 class="make-col-blue header">{% translate "Average reservations by hour of day" %}</h2>
+            {% include "internal/_stats_filter.html" with f=time_filter %}
+        </div>
+        <div class="stats-grid">
+            <div class="stats-box stats-box-wide">
+                <div class="stats-box-header">{% translate "Average number of reservations active during each hour, per day" %}</div>
+                {{ time|json_script:"time" }}
+                <canvas id="timespan" height="220"></canvas>
+            </div>
+        </div>
+    </section>
+
+    {# Per machine-type sections #}
+    {% for group in machine_type_groups %}
+        <section class="stats-section">
+            <div class="stats-section-head">
+                <h2 class="make-col-blue header">{{ group.name }}</h2>
+                {% include "internal/_stats_filter.html" with f=group.filter %}
+            </div>
+            <div class="stats-grid">
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total reservations" %}</div>
+                    <div class="stats-big-number">{{ group.reservation_count }}</div>
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total hours reserved" %}</div>
+                    <div class="stats-big-number">{{ group.total_hours_sum }}</div>
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total hours per machine" %}</div>
+                    {% with hid=group.slug|add:"-hours" %}{{ group.total_hours|json_script:hid }}<canvas class="machine-chart" data-source="{{ hid }}" data-kind="hours" height="260"></canvas>{% endwith %}
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Number of reservations per machine" %}</div>
+                    {% with cid=group.slug|add:"-counts" %}{{ group.counts|json_script:cid }}<canvas class="machine-chart" data-source="{{ cid }}" data-kind="counts" height="260"></canvas>{% endwith %}
+                </div>
+            </div>
+        </section>
+    {% empty %}
+        <p>{% translate "No machine data available." %}</p>
+    {% endfor %}
+</div>
+{% endblock %}
