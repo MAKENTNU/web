@@ -17,3 +17,11 @@ class WebConfig(AppConfig):
 
 class WebAdminConfig(AdminConfig):
     default_site = "web.admin.WebAdminSite"
+
+    def ready(self):
+        super().ready()
+        # Register `web` models on the admin here (rather than at module
+        # load) so the admin site is fully set up first.
+        from web import admin as web_admin
+
+        web_admin.register_models()
