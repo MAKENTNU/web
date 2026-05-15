@@ -174,6 +174,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "web.middleware.PageViewMiddleware",
     # Must be the last entry - see https://django-hosts.readthedocs.io/en/latest/#installation
     "django_hosts.middleware.HostsResponseMiddleware",
 ]
