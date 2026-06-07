@@ -3292,11 +3292,11 @@ msgstr "Er du helt sikker på at du vil melde deg på denne veiledningstimen?"
 
 #: src/internal/templates/internal/guidance_hours.html:23
 msgid "Are you sure you want to clear all bookings?"
-msgstr "Er du helt sikker på at du vil fjerne alle påmeldinger?"
+msgstr "Er du helt sikker på at du vil tømme alle påmeldinger?"
 
 #: src/internal/templates/internal/guidance_hours.html:35
 msgid "Clear all"
-msgstr "Fjern alle"
+msgstr "Tøm alle"
 
 #: src/internal/templates/internal/guidance_hours.html:41
 msgid "Your scheduled times this semester:"

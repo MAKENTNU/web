@@ -394,17 +394,16 @@ class GuidanceHoursView(ListView):
         current_weekday = timezone.localdate().weekday()
         current_time = timezone.localtime().time()
 
-        for slot in context["hours"]:
+        all_slots = list(context["hours"])
+
+        for slot in all_slots:
             slot.all_members = list(slot.members.all())
             padded = slot.all_members[: GuidanceHours.MAX_MEMBERS]
             while len(padded) < GuidanceHours.MAX_MEMBERS:
                 padded.append(None)
             slot.display_members = padded
 
-            if slot.weekday not in grouped:
-                grouped[slot.weekday] = []
-
-            grouped[slot.weekday].append(slot)
+            grouped.setdefault(slot.weekday, []).append(slot)
 
             if (
                 slot.weekday == current_weekday
@@ -424,7 +423,7 @@ class GuidanceHoursView(ListView):
             current_member = None
         context["current_member"] = current_member
         context["current_member_slots"] = [
-            slot for slot in context["hours"] if current_member in slot.all_members
+            slot for slot in all_slots if current_member in slot.all_members
         ]
 
         return context
@@ -453,7 +452,11 @@ class APIGuidanceHoursNotesView(View):
 
 class GuidanceHoursBookView(PreventGetRequestsMixin, View):
     def post(self, request, slot_id):
-        member = get_object_or_404(Member, user=request.user)
+        try:
+            member = Member.objects.get(user=request.user)
+        except Member.DoesNotExist:
+            messages.error(request, _("You need to be a member to book."))
+            return redirect("guidance_hours")
         with transaction.atomic():
             slot = get_object_or_404(
                 GuidanceHours.objects.select_for_update(), id=slot_id

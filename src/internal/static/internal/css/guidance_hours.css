@@ -21,12 +21,12 @@
 }
 
 :is(.guidance_hours_grey, .guidance_hours_yellow) th {
-    background-color: #0C426A;
+    background-color: var(--make-blue);
     color: white;
 }
 
-.guidance_hours_grey td { background-color: #DCDDDE; }
-.guidance_hours_yellow td { background-color: #F8C811; }
+.guidance_hours_grey td { background-color: var(--make-light-grey); }
+.guidance_hours_yellow td { background-color: var(--make-yellow); }
 
 :is(.guidance_hours_grey, .guidance_hours_yellow) td {
     color: #1a1a1a;
@@ -42,6 +42,7 @@
 .guidance_member_info_row {
     padding: 8px 12px;
     line-height: 1.35;
+    font-size: 0.85rem;
 }
 
 .guidance_member_info_row + .guidance_member_info_row {
@@ -49,27 +50,60 @@
 }
 
 .guidance_member_name { font-weight: 700; }
-
-.guidance_hours_notes {
-    width: 100%;
-    resize: vertical;
+.guidance_slot_action form {
+    display: flex;
+    justify-content: center;
 }
 
-.guidance_hours_notes_display { background-color: white; }
+:is(.guidance_hours_grey, .guidance_hours_yellow) td.guidance_slot_comments {
+    vertical-align: middle;
+}
 
+:is(.guidance_hours_grey, .guidance_hours_yellow) td.guidance_slot_comments {
+    width: 100%;
+    padding: 0;
+    vertical-align: stretch;
+}
+
+.guidance_hours_notes {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+    resize: vertical;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0.85rem;
+}
+
+.guidance_hours_notes_display {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+    margin: 0;
+    font-size: 0.85rem;
+    color: #1a1a1a;
+    white-space: pre-wrap;
+}
+
+.guidance_hours_notes:focus {
+    outline: none;
+    border-color: var(--make-blue);
+    background: rgba(255, 255, 255, 0.45);
+}
 .guidance_hours_my_slots {
     width: 100%;
     margin: 0 auto 10px;
     padding-left: 6px;
     background-color: #eef4f8;
-    border-left: 4px solid #0C426A;
+    border-left: 4px solid var(--make-blue);
     color: #0b2f4a;
 }
 
 .cancel_button,
 .book_button,
 .toggle_notes_button {
-    border: 1px solid #0C426A;
+    border: 1px solid var(--make-blue);
     border-radius: 6px;
     padding: 6px 12px;
     font-weight: 600;
@@ -80,20 +114,15 @@
 
 .book_button,
 .toggle_notes_button {
-    background-color: #0C426A;
+    background-color: var(--make-blue);
     color: #ffffff;
 }
 
 .cancel_button {
     background-color: #ffffff;
-    color: #0C426A;
+    color: var(--make-blue);
 }
 
-.book_button:hover,
-.toggle_notes_button:hover,
-.cancel_button:hover {
-    transform: translateY(-1px);
-}
 
 .book_button:hover,
 .toggle_notes_button:hover {
@@ -106,7 +135,7 @@
 
 .clear-all-button {
     border: 1px solid #8f1f1f;
-    background: linear-gradient(180deg, #d74242 0%, #b52d2d 100%);
+    background: #b52d2d;
     color: #ffffff;
     border-radius: 8px;
     padding: 8px 14px;
@@ -119,18 +148,16 @@
 }
 
 .clear-all-button:hover {
-    transform: translateY(-1px);
     filter: brightness(0.95);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.24);
 }
 
 .clear-all-button:active {
-    transform: translateY(0);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .clear-all-button:focus-visible {
-    outline: 2px solid #0C426A;
+    outline: 2px solid var(--make-blue);
     outline-offset: 2px;
 }
 
@@ -142,13 +169,12 @@
 }
 
 :is(.guidance_hours_grey, .guidance_hours_yellow) td.control_buttons {
-    background-color: #0C426A !important;
+    background-color: var(--make-blue) !important;
     text-align: center;
     white-space: nowrap;
     padding: 4px;
 }
 
-.guidance_notes_row_hidden { display: none; }
 
 @media (max-width: 900px) {
     .guidance_hours_grey,
@@ -174,7 +200,7 @@
         margin: 0 0 12px;
         padding: 12px 14px;
         border: 0;
-        border-left: 6px solid #0C426A;
+        border-left: 6px solid var(--make-blue);
         border-radius: 14px;
         box-shadow: 0 6px 18px rgba(12, 66, 106, 0.12);
         color: #0b2f4a;
@@ -182,8 +208,8 @@
         font-weight: 800;
     }
 
-    .guidance_hours_grey thead th { background-color: #dcdde0; }
-    .guidance_hours_yellow thead th { background-color: #f8c811; }
+    .guidance_hours_grey thead th { background-color: var(--make-light-grey); }
+    .guidance_hours_yellow thead th { background-color: var(--make-yellow); }
 
     :is(.guidance_hours_grey, .guidance_hours_yellow) tbody,
     .guidance_slot_row,
@@ -199,8 +225,8 @@
         box-shadow: 0 10px 24px rgba(12, 66, 106, 0.12);
     }
 
-    .guidance_hours_grey .guidance_slot_row { background: #dcdde0; }
-    .guidance_hours_yellow .guidance_slot_row { background: #f8c811; }
+    .guidance_hours_grey .guidance_slot_row { background: var(--make-light-grey); }
+    .guidance_hours_yellow .guidance_slot_row { background: var(--make-yellow); }
 
     .guidance_slot_row :is(th, td),
     .guidance_notes_row td {
@@ -214,7 +240,7 @@
 
     .guidance_slot_time {
         border-top: 0;
-        background-color: #0C426A;
+        background-color: var(--make-blue);
         color: #ffffff;
         font-size: 1rem;
         font-weight: 700;
@@ -234,30 +260,11 @@
         padding: 10px 12px;
     }
 
-    .guidance_notes_row { margin: -10px 0 16px; }
-
-    .guidance_notes_cell {
-        border: 1px solid rgba(12, 66, 106, 0.2);
-        border-top: 0;
-        border-radius: 0 0 16px 16px;
-        background: #eef4f8 !important;
-        box-shadow: 0 10px 24px rgba(12, 66, 106, 0.08);
-    }
-
-    .guidance_notes_row .control_buttons { display: none; }
 
     .guidance_hours_notes,
     .guidance_hours_notes_display {
         width: 100%;
         max-width: 100%;
         min-width: 100%;
-    }
-
-    .cancel_button,
-    .book_button,
-    .toggle_notes_button,
-    .clear-all-button {
-        width: 100%;
-        padding: 8px;
     }
 }

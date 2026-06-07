@@ -18,6 +18,15 @@
 
 {% block body %}
 <div class="ui container">
+    {% if messages %}
+        <div class="ui messages">
+            {% for message in messages %}
+                <div class="ui {{ message.tags }} message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% translate "Are you sure you want to cancel this slot?" as cancel_confirm_msg %}
     {% translate "Are you sure you want to book this slot?" as book_confirm_msg %}
     {% translate "Are you sure you want to clear all bookings?" as clear_all_confirm_msg %}
@@ -66,9 +75,12 @@
             <thead>
                 <tr>
                     {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
-                        <th colspan="9">{{ slots.0.get_weekday_display }}</th>
+                        <th colspan="7">{{ slots.0.get_weekday_display }}</th>
+                        <th colspan="2">{% translate "comments" %}</th>
+
                     {% else %}
-                        <th colspan="8">{{ slots.0.get_weekday_display }}</th>
+                        <th colspan="7">{{ slots.0.get_weekday_display }}</th>
+                        <th >{% translate "comments" %}</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -98,37 +110,35 @@
                         </td>
                     {% endfor %}
 
-                    {% if current_member in slot.all_members %}
-                        <td class="guidance_slot_action">
-                        <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
-                                {% translate "cancel" %}
-                            </button>
-                        </form>
-                        </td>
+<td class="guidance_slot_action">
+                        {% if current_member in slot.all_members %}
+                            <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
+                                    {% translate "cancel" %}
+                                </button>
+                            </form>
+                        {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
+                            <span class="guidance_slot_full">{% translate "full" %}</span>
+                        {% else %}
+                            <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
+                                    {% translate "book" %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
 
-                    {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
-                        <td class="guidance_slot_action guidance_slot_full">
-                            {% translate "full" %}
-                        </td>
-
-                    {% else %}
-                        <td class="guidance_slot_action">
-                        <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
-                                {% translate "book" %}
-                            </button>
-                        </form>
-                        </td>
-                    {% endif %}
                     <td class="guidance_slot_comments">
-                        <button type="button" class="toggle_notes_button"
-                            data-target="notes-row-{{ slot.id }}"
-                            data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}">
-                            {% translate "comments" %}
-                        </button>
+                        {% if current_member in slot.all_members %}
+                            <textarea class="guidance_hours_notes"
+                                data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
+                                rows="2"
+                                placeholder="{% translate "Add a comment…" %}">{{ slot.notes }}</textarea>
+                        {% elif slot.notes %}
+                            <p class="guidance_hours_notes_display">{{ slot.notes }}</p>
+                        {% endif %}
                     </td>
                     {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
                     <td class="control_buttons">
@@ -145,24 +155,6 @@
                         </a>
                         {% endif %}
                     </td>
-                    {% endif %}
-                </tr>
-
-                <tr id="notes-row-{{ slot.id }}" class="guidance_notes_row guidance_notes_row_hidden">
-                    <th class="guidance_notes_time"></th>
-                    <td class="guidance_notes_cell" colspan="7">
-                        {% if current_member in slot.all_members %}
-                            <textarea class="guidance_hours_notes"
-                            data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
-                            rows="3">{{ slot.notes }}</textarea>
-                        {% else %}
-                            <p class="guidance_hours_notes_display">
-                                {{ slot.notes }}
-                            </p>
-                        {% endif %}
-                    </td>
-                    {% if perms.internal.change_guidancehours or perms.internal.delete_guidancehours %}
-                    <td class="control_buttons" aria-hidden="true"></td>
                     {% endif %}
                 </tr>
             {% endfor %}
