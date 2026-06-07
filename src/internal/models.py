@@ -393,7 +393,7 @@ class Quote(models.Model):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
 
 
-class GuidanceHour(models.Model):
+class GuidanceHours(models.Model):
     MAX_MEMBERS = 5
     MAX_NOTES_LENGTH = 2000
 
@@ -411,10 +411,12 @@ class GuidanceHour(models.Model):
     )
     from_time = models.TimeField(verbose_name=_("from time"))
     to_time = models.TimeField(verbose_name=_("to time"))
-    notes = models.TextField(blank=True, max_length=MAX_NOTES_LENGTH, verbose_name=_("notes"))
+    notes = models.TextField(
+        blank=True, max_length=MAX_NOTES_LENGTH, verbose_name=_("notes")
+    )
     members = models.ManyToManyField(
         to=Member,
-        related_name="guidance_hour",
+        related_name="guidance_hours",
         verbose_name=_("members"),
     )
 
