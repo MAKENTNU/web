@@ -20,7 +20,7 @@ dependencies = [
   # https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
   "django-extensions==3.2.3",
   "django-ical==1.9.2",
-  "django-multiselectfield==0.1.12",
+  "django-multiselectfield==1.0.1",
   "django-phonenumber-field[phonenumbers]==7.3.0",
   "django-simple-history==3.5.0",
   "sorl-thumbnail==12.10.0",
