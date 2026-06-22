@@ -26,6 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 REPO_DIR = BASE_DIR.parent
 TESTS_DIR = BASE_DIR
 
+JS_LIBRARIES_DIR = BASE_DIR / "web/static/lib"
+
 # Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether
 # the request is actually over HTTPS, as the connection between Nginx (the proxy we're
 # using) and Django (run by Channel's Daphne server) is currently always over HTTP (due

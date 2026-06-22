@@ -1,6 +1,5 @@
-import re
 from pathlib import Path
-from typing import Final
+from typing import Any, Final
 
 from django.conf import settings
 from django.core.management.commands import makemessages
@@ -11,21 +10,20 @@ class Command(makemessages.Command):
 
     Differences from the standard command:
 
-    * Ignores files within the top-level directories that don't contain our project's
-      Python code.
-    * Ensures that the generated comments have the same format regardless of OS.
+    * Ignores files that are not part of our project.
+    * Prevents ``#:`` comments from being generated.
+    * Prevents ``#, fuzzy`` ``msgstr`` entries from being generated.
     """
 
-    # Remove leading `./` as well, in case it ever happens to be generated (see comment
-    # above `write_po_file()` for context)
-    PATH_PREFIX_REGEX: Final = re.compile(r" \.[\\/]")
-    PATH_PREFIX_REPLACEMENT: Final = " "
-
-    # Ignore all top-level directories that are not the `BASE_DIR`
+    # Ignore all top-level directories that are not the `BASE_DIR`, as well as
+    # third-party JavaScript libraries
     DEFAULT_IGNORED_DIRS: Final = [
-        path.name
-        for path in settings.REPO_DIR.iterdir()
-        if path.is_dir() and path != settings.BASE_DIR
+        *(
+            path.name
+            for path in settings.REPO_DIR.iterdir()
+            if path.is_dir() and path != settings.BASE_DIR
+        ),
+        settings.JS_LIBRARIES_DIR.relative_to(settings.REPO_DIR).as_posix(),
     ]
     IGNORED_DIRS_HELP_SUFFIX: Final = (
         "\n\nIf no --ignore options are provided, the following directories are"
@@ -34,6 +32,20 @@ class Command(makemessages.Command):
 
     help = f"{makemessages.Command.help}{IGNORED_DIRS_HELP_SUFFIX}"
 
+    msgmerge_options = [
+        *makemessages.Command.msgmerge_options,
+        # https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#index-_002d_002dno_002dfuzzy_002dmatching_002c-msgmerge-option
+        # We don't have any dedicated translators for whom the pre-filled `#, fuzzy`
+        # `msgstr`s could help, and since the matching is so often very wrong - which
+        # can cause a lot of user confusion if not caught - it's easier for us to just
+        # not do any fuzzy matching and instead always generate new, blank translations.
+        # This does mean that if you run `makemessages` after changing e.g. one
+        # character in an existing message in the code, the previous `msgstr` will be
+        # wiped - albeit with the previous `msgid` and `msgstr` commented out with `#~`
+        # and moved to the bottom of the `.po` file.
+        "--no-fuzzy-matching",
+    ]
+
     def execute(self, *args, **options):
         ignore_patterns: list[str] = options["ignore_patterns"]
         if len(ignore_patterns) == 0:
@@ -41,31 +53,11 @@ class Command(makemessages.Command):
 
         return super().execute(*args, **options)
 
-    # On Windows, it seems like the `.po` files consistently have their file location
-    # comments formatted with backslashes (\) instead of forward slashes (/) - which is
-    # the standard file path format on Windows - and a leading `.\` path prefix.
-    # The code below converts those comments to the format generated on Linux (forward
-    # slashes and no leading `.\`), to ensure that the command output is not dependent
-    # on each developer's operating system.
-    def write_po_file(self, potfile, locale):
-        super().write_po_file(potfile=potfile, locale=locale)
+    def handle(self, *args: Any, **options: Any) -> str | None:
+        # The `#:` comments cause merge conflicts too often, so we'd like to omit them
+        options["no_location"] = True
 
-        # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L683-L685
-        locale_dir = Path(potfile).parent / locale / "LC_MESSAGES"
-        po_file = locale_dir / f"{self.domain}.po"
-
-        original_po_file_contents = po_file.read_text(encoding="utf-8")
-        po_file_lines = original_po_file_contents.splitlines(keepends=True)
-        for i, line in enumerate(po_file_lines):
-            if line.startswith("#:"):
-                po_file_lines[i] = self.PATH_PREFIX_REGEX.sub(
-                    self.PATH_PREFIX_REPLACEMENT, line
-                ).replace("\\", "/")
-
-        new_po_file_contents = "".join(po_file_lines)
-        if new_po_file_contents != original_po_file_contents:
-            # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
-            po_file.write_text(new_po_file_contents, "utf-8")
+        return super().handle(*args, **options)
 
     @classmethod
     def get_default_ignore_patterns(cls) -> list[str]:
