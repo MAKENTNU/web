@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="stats-filter-inline" data-key="{{ f.key }}">
+    <select class="stats-filter-select" onchange="statsFilter.onChange(this)">
+        <option value="all"    {% if f.selected_range == "all"    %}selected{% endif %}>{% translate "All time" %}</option>
+        <option value="week"   {% if f.selected_range == "week"   %}selected{% endif %}>{% translate "Last week" %}</option>
+        <option value="month"  {% if f.selected_range == "month"  %}selected{% endif %}>{% translate "Last month" %}</option>
+        <option value="year"   {% if f.selected_range == "year"   %}selected{% endif %}>{% translate "Last year" %}</option>
+        <option value="custom" {% if f.selected_range == "custom" %}selected{% endif %}>{% translate "Custom" %}</option>
+    </select>
+    <div class="stats-custom-range" {% if f.selected_range != "custom" %}hidden{% endif %}>
+        <div class="ui calendar stats-datepicker" data-role="from" data-iso="{{ f.custom_from }}">
+            <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" class="stats-from" placeholder="{% translate "From" %}"/>
+            </div>
+        </div>
+        <span class="stats-dash">—</span>
+        <div class="ui calendar stats-datepicker" data-role="to" data-iso="{{ f.custom_to }}">
+            <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" class="stats-to" placeholder="{% translate "To" %}"/>
+            </div>
+        </div>
+        <button type="button" class="ui mini make-bg-blue button" onclick="statsFilter.applyCustom(this)">{% translate "Apply" %}</button>
+    </div>
+</div>
