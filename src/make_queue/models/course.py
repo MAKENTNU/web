@@ -128,3 +128,85 @@ class Printer3DCourse(models.Model):
     def get_user_display_name(self):
         full_name = self.user.get_full_name() if self.user else self.name
         return str(full_name or self.user or self.username)
+
+
+class CourseRegistrationRequest(models.Model):
+    """
+    A logged-in user asking to be registered as having taken the 3D printer course.
+
+    This is deliberately kept separate from :class:`Printer3DCourse`, as merely having
+    a ``Printer3DCourse`` grants access to the 3D printers (see
+    ``Machine.can_use_3d_printer()``) - a request must therefore be approved by someone
+    with the permission to do so before it becomes a registration.
+    """
+
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Awaiting approval")
+        APPROVED = "approved", _("Approved")
+        REJECTED = "rejected", _("Rejected")
+
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name="course_registration_requests",
+        verbose_name=_("user"),
+    )
+    # Not unique, as the card number is only moved onto the user when the request is
+    # approved; until then, two users may well have submitted the same (mistyped) one
+    card_number = CardNumberField(null=True, blank=True, verbose_name=_("card number"))
+    course_date = models.DateField(verbose_name=_("course date"))
+    status = models.CharField(
+        choices=Status.choices,
+        max_length=20,
+        default=Status.PENDING,
+        verbose_name=_("status"),
+    )
+    submitted = models.DateTimeField(auto_now_add=True, verbose_name=_("submitted"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=("user",),
+                condition=Q(status="pending"),
+                name="%(class)s_at_most_one_pending_request_per_user",
+            ),
+        )
+        ordering = ("submitted",)
+        verbose_name = _("course registration request")
+        verbose_name_plural = _("course registration requests")
+
+    def __str__(self):
+        return f"{self.user} - {self.get_status_display()}"
+
+    def approve(self, course_permissions) -> Printer3DCourse:
+        """
+        Turn the request into a course registration.
+
+        :param course_permissions: The permissions to give the registration, in
+                                   addition to the 3D printer course permission
+        :return: The created registration
+        """
+        registration = Printer3DCourse(
+            username=self.user.username,
+            name=self.user.get_full_name(),
+            date=self.course_date,
+            status=Printer3DCourse.Status.REGISTERED,
+        )
+        # Setting this before saving lets `Printer3DCourse.save()` move the card number
+        # onto the user it connects the registration to
+        registration.card_number = self.card_number
+        registration.save()
+
+        base_permission = CoursePermission.objects.get(
+            short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE
+        )
+        registration.course_permissions.set({base_permission, *course_permissions})
+
+        self.status = self.Status.APPROVED
+        self.save()
+        return registration
+
+    def reject(self) -> None:
+        self.status = self.Status.REJECTED
+        self.save()
