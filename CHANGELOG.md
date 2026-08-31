@@ -14,7 +14,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### New features
-- Course registrations can be imported in bulk from a CSV or XLSX file, previewed row by row - including card numbers - and written only once the preview is confirmed (MAKENTNU/web#834)
+- Course registrations can be imported in bulk from a CSV or XLSX file, previewed row by row - including card numbers and the resolved course date - and written only once the preview is confirmed (MAKENTNU/web#834)
 
 
 ### Improvements
