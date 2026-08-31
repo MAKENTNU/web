@@ -1,4 +1,6 @@
 import io
+from dataclasses import asdict
+from datetime import date
 
 import xlsxwriter
 from django.contrib import messages
@@ -21,11 +23,12 @@ from django.views.generic import (
 
 from make_queue.course_import import (
     HEADER_ROW,
+    ImportedRow,
     ImportResult,
     import_registrations,
 )
 from make_queue.forms.course import Printer3DCourseForm, Printer3DCourseImportForm
-from make_queue.models.course import Printer3DCourse
+from make_queue.models.course import CoursePermission, Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 
 
@@ -61,15 +64,26 @@ class Printer3DCourseCreateView(PermissionRequiredMixin, CreateView):
 class Printer3DCourseImportView(
     PermissionRequiredMixin, CustomFieldsetFormMixin, FormView
 ):
+    """
+    Imports course registrations from a file, in two steps.
+
+    Uploading the file only runs the import as a dry run, and shows the outcome of
+    every row; nothing is written to the database until the outcome has been confirmed.
+    """
+
     permission_required = ("make_queue.add_printer3dcourse",)
     form_class = Printer3DCourseImportForm
     template_name = "make_queue/course/printer_3d_course_import.html"
+
+    # The key that the previewed rows and the chosen options are stored under, between
+    # the request that uploads the file and the one that confirms the import
+    session_key = "printer_3d_course_import"
 
     narrow = False
     back_button_link = reverse_lazy("printer_3d_course_list")
     back_button_text = _("Course registrations")
     form_title = _("Import Course Registrations")
-    save_button_text = _("Import")
+    save_button_text = _("Preview")
     custom_fieldsets = [
         {"fields": ("file",)},
         {"heading": _("Values given to all the imported registrations")},
@@ -81,23 +95,75 @@ class Printer3DCourseImportView(
 
     extra_context = {"header_row": HEADER_ROW}
 
+    def get(self, request, *args, **kwargs):
+        # Starting over should discard whatever was previewed before
+        request.session.pop(self.session_key, None)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if "confirm" in request.POST:
+            return self.confirm_import()
+        return super().post(request, *args, **kwargs)
+
     def get_initial(self):
         return {**super().get_initial(), "date": timezone.localdate()}
 
     def form_valid(self, form):
-        result = import_registrations(
-            form.imported_rows,
-            default_date=form.cleaned_data["date"],
-            status=form.cleaned_data["status"],
-            course_permissions=list(form.cleaned_data["course_permissions"]),
-            skip_already_registered=form.cleaned_data["skip_already_registered"],
-            import_valid_rows_only=form.cleaned_data["import_valid_rows_only"],
-        )
-        self.add_result_message(result)
-        # Render the form again instead of redirecting, to be able to show the outcome
-        # of every single row
+        options = {
+            "default_date": form.cleaned_data["date"].isoformat(),
+            "status": form.cleaned_data["status"],
+            "course_permission_pks": [
+                permission.pk for permission in form.cleaned_data["course_permissions"]
+            ],
+            "skip_already_registered": form.cleaned_data["skip_already_registered"],
+            "import_valid_rows_only": form.cleaned_data["import_valid_rows_only"],
+        }
+        self.request.session[self.session_key] = {
+            "rows": [asdict(row) for row in form.imported_rows],
+            "options": options,
+        }
+
+        result = self.run_import(form.imported_rows, options, dry_run=True)
         return self.render_to_response(
-            self.get_context_data(form=form, import_result=result)
+            self.get_context_data(
+                form=form,
+                import_result=result,
+                previewing=True,
+                # A dry run is always rolled back, so whether confirming would actually
+                # write anything has to be worked out from the outcome of the rows
+                will_import=bool(result.created)
+                and (not result.failed or options["import_valid_rows_only"]),
+            )
+        )
+
+    def confirm_import(self):
+        previewed = self.request.session.pop(self.session_key, None)
+        if not previewed:
+            messages.error(
+                self.request,
+                _("The preview has expired. Please upload the file again."),
+            )
+            return redirect("printer_3d_course_import")
+
+        rows = [ImportedRow(**row) for row in previewed["rows"]]
+        result = self.run_import(rows, previewed["options"])
+        self.add_result_message(result)
+        return self.render_to_response(
+            self.get_context_data(import_result=result, previewing=False)
+        )
+
+    @staticmethod
+    def run_import(rows, options: dict, *, dry_run=False) -> ImportResult:
+        return import_registrations(
+            rows,
+            default_date=date.fromisoformat(options["default_date"]),
+            status=options["status"],
+            course_permissions=list(
+                CoursePermission.objects.filter(pk__in=options["course_permission_pks"])
+            ),
+            skip_already_registered=options["skip_already_registered"],
+            import_valid_rows_only=options["import_valid_rows_only"],
+            dry_run=dry_run,
         )
 
     def add_result_message(self, result: ImportResult) -> None:

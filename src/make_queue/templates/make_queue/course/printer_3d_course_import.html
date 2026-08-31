@@ -45,7 +45,16 @@
 
 {% block extra_post_content %}
     {% if import_result %}
-        <h2>{% translate "Result" %}</h2>
+        {% if previewing %}
+            <h2>{% translate "Preview" %}</h2>
+            <p>
+                {% blocktranslate trimmed %}
+                    Nothing has been imported yet. Check the rows below, then confirm.
+                {% endblocktranslate %}
+            </p>
+        {% else %}
+            <h2>{% translate "Result" %}</h2>
+        {% endif %}
 
         <table class="ui very simple celled table">
             <thead>
@@ -53,6 +62,8 @@
                 <th>{% translate "row"|capfirst %}</th>
                 <th>{% translate "name"|capfirst %}</th>
                 <th>{% translate "username"|capfirst %}</th>
+                <th>{% translate "card number"|capfirst %}</th>
+                <th>{% translate "course date"|capfirst %}</th>
                 <th>{% translate "result"|capfirst %}</th>
             </tr>
             </thead>
@@ -62,6 +73,8 @@
                     <td>{{ outcome.row.line_number }}</td>
                     <td>{{ outcome.row.name }}</td>
                     <td>{{ outcome.row.username }}</td>
+                    <td class="right aligned">{{ outcome.row.card_number }}</td>
+                    <td>{{ outcome.row.date_string }}</td>
                     <td>{{ outcome.message }}</td>
                 </tr>
             {% endfor %}
@@ -70,16 +83,26 @@
                     <td>{{ outcome.row.line_number }}</td>
                     <td>{{ outcome.row.name }}</td>
                     <td>{{ outcome.row.username }}</td>
+                    <td class="right aligned">{{ outcome.row.card_number }}</td>
+                    <td>{{ outcome.row.date_string }}</td>
                     <td>{{ outcome.message }}</td>
                 </tr>
             {% endfor %}
             {% for outcome in import_result.created %}
-                <tr class="{% if import_result.committed %}positive{% endif %}">
+                <tr class="{% if will_import or import_result.committed %}positive{% endif %}">
                     <td>{{ outcome.row.line_number }}</td>
                     <td>{{ outcome.row.name }}</td>
                     <td>{{ outcome.row.username }}</td>
+                    <td class="right aligned">{{ outcome.row.card_number }}</td>
+                    <td>{{ outcome.row.date_string }}</td>
                     <td>
-                        {% if import_result.committed %}
+                        {% if previewing %}
+                            {% if will_import %}
+                                {% translate "Will be registered" %}
+                            {% else %}
+                                {% translate "Valid, but will not be imported" %}
+                            {% endif %}
+                        {% elif import_result.committed %}
                             {{ outcome.message }}
                         {% else %}
                             {% translate "Valid, but not imported" %}
@@ -89,5 +112,48 @@
             {% endfor %}
             </tbody>
         </table>
+
+        {% if previewing %}
+            <div class="ui warning segment">
+                <h3 class="ui header">
+                    {% if will_import %}
+                        {% blocktranslate trimmed count counter=import_result.created|length %}
+                            Import this one registration?
+                        {% plural %}
+                            Import these {{ counter }} registrations?
+                        {% endblocktranslate %}
+                    {% else %}
+                        {% translate "Nothing can be imported" %}
+                    {% endif %}
+                </h3>
+                <p>
+                    {% blocktranslate trimmed with num_skipped=import_result.skipped|length num_failed=import_result.failed|length %}
+                        {{ num_skipped }} rows will be skipped, and {{ num_failed }} have errors.
+                    {% endblocktranslate %}
+                    {% if not will_import and import_result.failed %}
+                        {% blocktranslate trimmed %}
+                            Fix the errors and upload the file again, or go back and
+                            check “Import the valid rows even if some rows have
+                            errors”.
+                        {% endblocktranslate %}
+                    {% elif import_result.failed %}
+                        {% blocktranslate trimmed %}
+                            The rows with errors will not be imported.
+                        {% endblocktranslate %}
+                    {% endif %}
+                </p>
+
+                <form class="dont-prevent-leaving" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="confirm" value="1"/>
+                    <button class="ui green button" type="submit" {% if not will_import %}disabled{% endif %}>
+                        {% translate "Confirm import" %}
+                    </button>
+                    <a class="ui red button" href="{% url 'printer_3d_course_import' %}">
+                        {% translate "Cancel" context "abort action" %}
+                    </a>
+                </form>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock extra_post_content %}

@@ -230,6 +230,34 @@ class TestImportRegistrations(TestCase):
         self.assertFalse(result.committed)
         self.assertEqual(Printer3DCourse.objects.count(), 0)
 
+    def test_a_dry_run_reports_the_outcome_without_writing_anything(self):
+        Printer3DCourse.objects.create(username="karin", date=DEFAULT_DATE)
+
+        result = self.import_(
+            [
+                ImportedRow(line_number=1, username="olan"),
+                ImportedRow(line_number=2, username="karin"),
+                ImportedRow(line_number=3, username=""),
+            ],
+            dry_run=True,
+        )
+
+        self.assertEqual(len(result.created), 1)
+        self.assertEqual(len(result.skipped), 1)
+        self.assertEqual(len(result.failed), 1)
+        self.assertFalse(result.committed)
+        # Only the registration that existed before the dry run should remain
+        self.assertEqual(Printer3DCourse.objects.count(), 1)
+
+    def test_a_dry_run_of_a_valid_file_writes_nothing(self):
+        result = self.import_(
+            [ImportedRow(line_number=1, username="olan")], dry_run=True
+        )
+
+        self.assertEqual(len(result.created), 1)
+        self.assertFalse(result.committed)
+        self.assertEqual(Printer3DCourse.objects.count(), 0)
+
     def test_valid_rows_are_created_when_asked_to_ignore_the_invalid_ones(self):
         result = self.import_(
             [

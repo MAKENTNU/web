@@ -142,6 +142,7 @@ def import_registrations(
     course_permissions: list[CoursePermission],
     skip_already_registered: bool = True,
     import_valid_rows_only: bool = False,
+    dry_run: bool = False,
 ) -> ImportResult:
     """
     Create a course registration per row, inside a single transaction.
@@ -157,6 +158,8 @@ def import_registrations(
                                     skipped instead of counted as an error
     :param import_valid_rows_only: Whether the valid rows should be created even if
                                    some of the rows are invalid
+    :param dry_run: Whether to roll back afterwards no matter the outcome, which makes
+                    it possible to show exactly what an import would do before doing it
     :return: The outcome of each of the rows
     """
     # Imported here to prevent a circular import
@@ -212,9 +215,9 @@ def import_registrations(
         form.save()
         result.created.append(RowOutcome(row, str(_("Registered"))))
 
-    if result.failed and not import_valid_rows_only:
-        # Roll back, so that a file with errors in it is either imported in full or
-        # not at all
+    if dry_run or (result.failed and not import_valid_rows_only):
+        # Roll back, so that a file with errors in it is either imported in full or not
+        # at all - and so that a dry run leaves nothing behind
         transaction.set_rollback(True)
         result.committed = False
     return result
