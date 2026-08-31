@@ -1,10 +1,15 @@
 from django import forms
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
-from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.course import (
+    CoursePermission,
+    CourseRegistrationRequest,
+    Printer3DCourse,
+)
 from users.models import User
 from web.widgets import (
     SemanticChoiceInput,
@@ -95,3 +100,44 @@ class Printer3DCourseForm(forms.ModelForm):
         course.course_permissions.set(self.cleaned_data["course_permissions"])
 
         return course
+
+
+class CourseRegistrationRequestForm(forms.ModelForm):
+    """Asking to be registered as having taken the 3D printer course."""
+
+    card_number = CardNumberField(required=False)
+
+    class Meta:
+        model = CourseRegistrationRequest
+        fields = ("card_number", "course_date")
+        widgets = {
+            "course_date": SemanticDateInput(),
+        }
+
+    def __init__(self, *, user: User, **kwargs):
+        super().__init__(**kwargs)
+        self.user = user
+
+    def clean_card_number(self):
+        card_number: str = self.cleaned_data["card_number"]
+        if card_number and card_utils.is_duplicate(card_number, self.user.username):
+            raise forms.ValidationError(
+                _(
+                    "This card number is already registered on someone else. Contact"
+                    " MAKE NTNU if you think this is a mistake."
+                )
+            )
+        return card_number
+
+    def clean_course_date(self):
+        course_date = self.cleaned_data["course_date"]
+        if course_date > timezone.localdate():
+            raise forms.ValidationError(_("The course date cannot be in the future."))
+        return course_date
+
+    def save(self, commit=True):
+        request = super().save(commit=False)
+        request.user = self.user
+        if commit:
+            request.save()
+        return request

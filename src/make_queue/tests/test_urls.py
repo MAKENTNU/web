@@ -234,6 +234,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(reverse("reservation_create", args=[machine.pk]), public=False)
                 for machine in self.machines
             ],
+            # course_urlpatterns
+            Get(reverse("course_registration_request_create"), public=False),
             # machine_urlpatterns
             Get(reverse("machine_list"), public=True),
             # specific_reservation_urlpatterns
@@ -340,6 +342,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # course_adminpatterns
             Get(reverse("printer_3d_course_list"), public=False),
             Get(reverse("printer_3d_course_create"), public=False),
+            # registration_request_adminpatterns
+            Get(reverse("course_registration_request_list"), public=False),
             # specific_quota_adminpatterns
             *[
                 Get(reverse("quota_update", args=[quota.pk]), public=False)

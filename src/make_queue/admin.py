@@ -4,7 +4,11 @@ from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.models.course import (
+    CoursePermission,
+    CourseRegistrationRequest,
+    Printer3DCourse,
+)
 from make_queue.models.machine import Machine, MachineType, MachineUsageRule
 from make_queue.models.reservation import Quota, Reservation, ReservationRule
 from util import html_utils
@@ -148,6 +152,22 @@ class Printer3DCourseAdmin(
         return html_utils.block_join(perm_strings, sep="<b>&bull;</b>") or None
 
 
+class CourseRegistrationRequestAdmin(
+    DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin
+):
+    list_display = ("user", "card_number", "course_date", "status", "submitted")
+    list_filter = ("status",)
+    search_fields = (
+        "card_number",
+        # The user search fields are appended in `UserSearchFieldsMixin`
+    )
+    user_lookup, name_for_full_name_lookup = "user__", "user_full_name"
+    ordering = ("-submitted",)
+    list_select_related = ("user",)
+
+    readonly_fields = ("submitted", "last_modified")
+
+
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(MachineUsageRule, MachineUsageRuleAdmin)
@@ -156,4 +176,5 @@ admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(ReservationRule, ReservationRuleAdmin)
 
 admin.site.register(Printer3DCourse, Printer3DCourseAdmin)
+admin.site.register(CourseRegistrationRequest, CourseRegistrationRequestAdmin)
 admin.site.register(CoursePermission)

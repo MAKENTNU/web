@@ -2,17 +2,27 @@ import io
 
 import xlsxwriter
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Case, Q, When
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template.defaultfilters import capfirst
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
+from django.views.generic.detail import SingleObjectMixin
 
-from make_queue.forms.course import Printer3DCourseForm
-from make_queue.models.course import Printer3DCourse
+from card import utils as card_utils
+from make_queue.forms.course import (
+    CourseRegistrationRequestForm,
+    Printer3DCourseForm,
+)
+from make_queue.models.course import (
+    CoursePermission,
+    CourseRegistrationRequest,
+    Printer3DCourse,
+)
 from util.view_utils import PreventGetRequestsMixin
 
 
@@ -28,6 +38,14 @@ class Printer3DCourseListView(PermissionRequiredMixin, ListView):
     extra_context = {
         "possible_statuses": Printer3DCourse.Status.choices,
     }
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "num_pending_requests": CourseRegistrationRequest.objects.filter(
+                status=CourseRegistrationRequest.Status.PENDING
+            ).count(),
+        }
 
 
 class Printer3DCourseCreateView(PermissionRequiredMixin, CreateView):
@@ -164,3 +182,129 @@ class Printer3DCourseXLSXView(PermissionRequiredMixin, View):
         response["Content-Disposition"] = f'attachment; filename="{filename}.xlsx"'
 
         return response
+
+
+class CourseRegistrationRequestCreateView(LoginRequiredMixin, CreateView):
+    """
+    Lets a logged-in user ask to be registered as having taken the 3D printer course.
+
+    The request does not grant any access on its own; someone with the permission to
+    add course registrations has to approve it first.
+    """
+
+    model = CourseRegistrationRequest
+    form_class = CourseRegistrationRequestForm
+    template_name = "make_queue/course/course_registration_request_form.html"
+    success_url = reverse_lazy("course_registration_request_create")
+
+    def get_form_kwargs(self):
+        return {**super().get_form_kwargs(), "user": self.request.user}
+
+    def get_initial(self):
+        return {**super().get_initial(), "course_date": timezone.localdate()}
+
+    def get_existing_registration(self) -> Printer3DCourse | None:
+        return Printer3DCourse.objects.filter(
+            Q(user=self.request.user) | Q(username=self.request.user.username)
+        ).first()
+
+    def get_pending_request(self) -> CourseRegistrationRequest | None:
+        return self.request.user.course_registration_requests.filter(
+            status=CourseRegistrationRequest.Status.PENDING
+        ).first()
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "existing_registration": self.get_existing_registration(),
+            "pending_request": self.get_pending_request(),
+        }
+
+    def form_valid(self, form):
+        # Guard against a second request being submitted from a stale page
+        if self.get_existing_registration() or self.get_pending_request():
+            messages.error(self.request, _("You have already submitted a request."))
+            return redirect(self.success_url)
+
+        messages.success(
+            self.request,
+            _(
+                "Your request has been submitted, and will show up here once it has"
+                " been approved."
+            ),
+        )
+        return super().form_valid(form)
+
+
+class CourseRegistrationRequestListView(PermissionRequiredMixin, ListView):
+    permission_required = ("make_queue.add_printer3dcourse",)
+    model = CourseRegistrationRequest
+    queryset = CourseRegistrationRequest.objects.select_related("user").order_by(
+        # Show the requests that need to be handled first
+        Case(When(status=CourseRegistrationRequest.Status.PENDING, then=0), default=1),
+        "submitted",
+    )
+    template_name = "make_queue/course/course_registration_request_list.html"
+    context_object_name = "registration_requests"
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "course_permissions": CoursePermission.objects.exclude(
+                short_name__in=(
+                    CoursePermission.DefaultPerms.IS_AUTHENTICATED,
+                    CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE,
+                )
+            ).order_by("name"),
+        }
+
+
+class CourseRegistrationRequestApproveView(
+    PermissionRequiredMixin, PreventGetRequestsMixin, SingleObjectMixin, View
+):
+    permission_required = ("make_queue.add_printer3dcourse",)
+    model = CourseRegistrationRequest
+
+    def post(self, request, *args, **kwargs):
+        registration_request = self.get_object()
+        if registration_request.status != CourseRegistrationRequest.Status.PENDING:
+            messages.error(request, _("The request has already been handled."))
+            return redirect("course_registration_request_list")
+
+        card_number = registration_request.card_number
+        username = registration_request.user.username
+        if card_number and card_utils.is_duplicate(card_number, username):
+            messages.error(
+                request,
+                _("The card number of %(user)s is already in use by someone else.")
+                % {"user": registration_request.user},
+            )
+            return redirect("course_registration_request_list")
+
+        course_permissions = CoursePermission.objects.filter(
+            pk__in=request.POST.getlist("course_permissions")
+        )
+        registration_request.approve(course_permissions)
+        messages.success(
+            request,
+            _("%(user)s was registered as having taken the course.")
+            % {"user": registration_request.user},
+        )
+        return redirect("course_registration_request_list")
+
+
+class CourseRegistrationRequestRejectView(
+    PermissionRequiredMixin, PreventGetRequestsMixin, SingleObjectMixin, View
+):
+    permission_required = ("make_queue.add_printer3dcourse",)
+    model = CourseRegistrationRequest
+
+    def post(self, request, *args, **kwargs):
+        registration_request = self.get_object()
+        registration_request.reject()
+        messages.success(
+            request,
+            _("The request from %(user)s was rejected.")
+            % {"user": registration_request.user},
+        )
+        return redirect("course_registration_request_list")

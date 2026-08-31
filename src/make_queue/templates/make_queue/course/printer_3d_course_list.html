@@ -18,6 +18,12 @@
             <a href="{% url 'printer_3d_course_create' %}" data-tooltip="{% translate "Add" %}">
                 <i class="green plus icon"></i>
             </a>
+            <a href="{% url 'course_registration_request_list' %}" data-tooltip="{% translate "Registration requests" %}">
+                <i class="blue inbox icon"></i>
+                {% if num_pending_requests %}
+                    <span class="ui red circular label">{{ num_pending_requests }}</span>
+                {% endif %}
+            </a>
         </h1>
 
         <form id="download-users" class="dont-prevent-leaving ui form" method="POST" action="{% url 'printer_3d_course_xlsx' %}">

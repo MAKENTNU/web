@@ -54,7 +54,16 @@ reservation_urlpatterns = [
     ),
 ]
 
+course_urlpatterns = [
+    path(
+        "register/",
+        course_views.CourseRegistrationRequestCreateView.as_view(),
+        name="course_registration_request_create",
+    ),
+]
+
 urlpatterns = [
+    path("courses/", include(course_urlpatterns)),
     path("machinetypes/<int:pk>/", include(specific_machinetype_urlpatterns)),
     path("machines/", include(machine_urlpatterns)),
     path("reservations/", include(reservation_urlpatterns)),
@@ -143,6 +152,27 @@ machine_adminpatterns = [
     path("<int:pk>/", include(specific_machine_adminpatterns)),
 ]
 
+specific_registration_request_adminpatterns = [
+    path(
+        "approve/",
+        course_views.CourseRegistrationRequestApproveView.as_view(),
+        name="course_registration_request_approve",
+    ),
+    path(
+        "reject/",
+        course_views.CourseRegistrationRequestRejectView.as_view(),
+        name="course_registration_request_reject",
+    ),
+]
+registration_request_adminpatterns = [
+    path(
+        "",
+        course_views.CourseRegistrationRequestListView.as_view(),
+        name="course_registration_request_list",
+    ),
+    path("<int:pk>/", include(specific_registration_request_adminpatterns)),
+]
+
 specific_course_adminpatterns = [
     path(
         "change/",
@@ -167,6 +197,7 @@ course_adminpatterns = [
         name="printer_3d_course_create",
     ),
     path("<int:pk>/", include(specific_course_adminpatterns)),
+    path("requests/", include(registration_request_adminpatterns)),
     path(
         "status/change/",
         course_views.Printer3DCourseStatusBulkUpdateView.as_view(),

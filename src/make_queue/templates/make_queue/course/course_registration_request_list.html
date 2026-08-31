@@ -1,0 +1,86 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{% block title %}{% translate "Course Registration Requests" %} | {% translate "Admin panel" %}{% endblock title %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{% translate "Course Registration Requests" %}</h1>
+
+        {% for message in messages %}
+            <div class="ui {{ message.tags }} message">
+                <i class="close icon"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <a href="{% url 'printer_3d_course_list' %}">
+            <i class="angle double left icon"></i>{% translate "Course registrations" %}
+        </a>
+
+        <table class="ui very simple celled table">
+            <thead>
+            <tr>
+                <th>{% translate "name"|capfirst %}</th>
+                <th>{% translate "username"|capfirst %}</th>
+                <th>{% translate "card number"|capfirst %}</th>
+                <th>{% translate "course date"|capfirst %}</th>
+                <th>{% translate "status"|capfirst %}</th>
+                <th>{% translate "Actions" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for registration_request in registration_requests %}
+                <tr class="{% if registration_request.status == "pending" %}warning{% endif %}">
+                    <td>{{ registration_request.user.get_full_name }}</td>
+                    <td>{{ registration_request.user.username }}</td>
+                    {% if registration_request.card_number %}
+                        <td class="right aligned">{{ registration_request.card_number }}</td>
+                    {% else %}
+                        <td class="error"></td>
+                    {% endif %}
+                    <td>{{ registration_request.course_date|iso_date }}</td>
+                    <td>{{ registration_request.get_status_display }}</td>
+                    <td>
+                        {% if registration_request.status == "pending" %}
+                            <form class="dont-prevent-leaving" method="POST"
+                                  action="{% url 'course_registration_request_approve' registration_request.pk %}">
+                                {% csrf_token %}
+                                {% for course_permission in course_permissions %}
+                                    <div class="ui checkbox">
+                                        <input id="permission-{{ registration_request.pk }}-{{ course_permission.pk }}"
+                                               type="checkbox" name="course_permissions"
+                                               value="{{ course_permission.pk }}"
+                                               {% if course_permission.short_name == "VRON" %}checked{% endif %}/>
+                                        <label for="permission-{{ registration_request.pk }}-{{ course_permission.pk }}">
+                                            {{ course_permission.name }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                                <button class="ui green small button" type="submit">
+                                    {% translate "Approve" %}
+                                </button>
+                            </form>
+                            <form class="dont-prevent-leaving" method="POST"
+                                  action="{% url 'course_registration_request_reject' registration_request.pk %}">
+                                {% csrf_token %}
+                                <button class="ui red small button" type="submit">
+                                    {% translate "Reject" %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">{% translate "No one has asked to be registered yet." %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock body %}

@@ -1,0 +1,100 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{% block title %}{% translate "Register Course Participation" %}{% endblock title %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock extra_head %}
+
+{% block body %}
+
+    <div class="ui text container">
+        <h1>{% translate "Register Course Participation" %}</h1>
+
+        {% for message in messages %}
+            <div class="ui {{ message.tags }} message">
+                <i class="close icon"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% if existing_registration %}
+            <div class="ui success message">
+                <div class="header">
+                    {% translate "You are registered as having taken the course" %}
+                </div>
+                <p>
+                    {% blocktranslate trimmed with date=existing_registration.date|iso_date %}
+                        Your course registration is dated {{ date }}.
+                    {% endblocktranslate %}
+                </p>
+            </div>
+        {% elif pending_request %}
+            <div class="ui info message">
+                <div class="header">
+                    {% translate "Your request is awaiting approval" %}
+                </div>
+                <p>
+                    {% blocktranslate trimmed with date=pending_request.course_date|iso_date %}
+                        You have asked to be registered for the course held {{ date }}.
+                        Someone at MAKE NTNU will look at it shortly.
+                    {% endblocktranslate %}
+                </p>
+            </div>
+        {% else %}
+            <p>
+                {% blocktranslate trimmed %}
+                    Fill in this form after having taken the 3D printer course, to be
+                    registered as a participant. Someone at MAKE NTNU has to approve
+                    the request before you can reserve the printers.
+                {% endblocktranslate %}
+            </p>
+
+            <form class="ui form" method="POST">
+                {% csrf_token %}
+                {% for error in form.non_field_errors %}
+                    <div class="ui negative message">
+                        <i class="close icon"></i>
+                        <b>{{ error }}</b>
+                    </div>
+                {% endfor %}
+
+                <div class="ui two fields">
+                    <div class="ui disabled field">
+                        <label>{% translate "name"|capfirst %}</label>
+                        <input type="text" value="{{ user.get_full_name }}" disabled/>
+                    </div>
+                    <div class="ui disabled field">
+                        <label>{% translate "username"|capfirst %}</label>
+                        <input type="text" value="{{ user.username }}" disabled/>
+                    </div>
+                </div>
+
+                <div class="ui two fields">
+                    <div class="ui field {% if form.card_number.errors %}error{% endif %}">
+                        <label>{{ form.card_number.label }}</label>
+                        {{ form.card_number }}
+                        {% for error in form.card_number.errors %}
+                            <div class="ui negative small message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="ui field {% if form.course_date.errors %}error{% endif %}">
+                        <label>{{ form.course_date.label|capfirst }}</label>
+                        {{ form.course_date }}
+                        {% for error in form.course_date.errors %}
+                            <div class="ui negative small message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button class="ui make-bg-yellow button" type="submit">
+                    {% translate "Send request" %}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock body %}
