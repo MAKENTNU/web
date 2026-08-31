@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 11:58+0200\n"
+"POT-Creation-Date: 2026-08-31 20:36+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -146,10 +146,10 @@ msgstr "Endre kunngjøring"
 #: src/card/formfields.py:22 src/card/modelfields.py:18
 #: src/checkin/models.py:133
 #: src/internal/templates/internal/member_list.html:306
-#: src/make_queue/models/course.py:156
+#: src/make_queue/models/course.py:186
 #: src/make_queue/templates/make_queue/course/course_registration_request_list.html:29
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:105
-#: src/make_queue/views/course.py:157
+#: src/make_queue/views/course.py:158
 msgid "card number"
 msgstr "kortnummer"
 
@@ -238,7 +238,7 @@ msgid "Placeholder image"
 msgstr "Plassholderbilde"
 
 #: src/checkin/templates/checkin/admin_suggest_skill.html:95
-#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:64
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:68
 msgid "Approve"
 msgstr "Godkjenn"
 
@@ -326,7 +326,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: src/checkin/templates/checkin/profile_detail_internal.html:97
-#: src/internal/forms.py:58 src/make_queue/forms/course.py:92
+#: src/internal/forms.py:58 src/make_queue/forms/course.py:95
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -406,8 +406,8 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 #: src/internal/models.py:264 src/internal/models.py:345
 #: src/internal/templates/internal/secret_list.html:67
 #: src/make_queue/models/course.py:25 src/make_queue/models/course.py:66
-#: src/make_queue/models/course.py:165 src/make_queue/models/machine.py:202
-#: src/make_queue/models/machine.py:276
+#: src/make_queue/models/course.py:152 src/make_queue/models/course.py:202
+#: src/make_queue/models/machine.py:202 src/make_queue/models/machine.py:276
 #: src/make_queue/models/reservation.py:374 src/makerspace/models.py:39
 #: src/news/models.py:68 src/news/models.py:274
 msgid "last modified"
@@ -786,7 +786,7 @@ msgstr ""
 "«pang»."
 
 #: src/internal/models.py:33 src/make_queue/forms/quota.py:19
-#: src/make_queue/models/course.py:45 src/make_queue/models/course.py:152
+#: src/make_queue/models/course.py:45 src/make_queue/models/course.py:182
 #: src/make_queue/models/reservation.py:34 src/news/admin.py:423
 #: src/news/models.py:317
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:16
@@ -943,8 +943,9 @@ msgstr "tilgang"
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
-#: src/internal/models.py:332 src/make_queue/models/machine.py:54
-#: src/make_queue/models/machine.py:194 src/makerspace/models.py:36
+#: src/internal/models.py:332 src/make_queue/models/course.py:149
+#: src/make_queue/models/machine.py:54 src/make_queue/models/machine.py:194
+#: src/makerspace/models.py:36
 msgid "priority"
 msgstr "prioritet"
 
@@ -978,7 +979,7 @@ msgstr "kontekst"
 
 #: src/internal/models.py:381
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:106
-#: src/make_queue/views/course.py:158
+#: src/make_queue/views/course.py:159
 #: src/news/templates/news/event/event_list_contents.html:26
 #: src/web/templates/web/forms/widgets/semantic_date.html:11
 #: src/web/templates/web/forms/widgets/semantic_datetime.html:11
@@ -1064,7 +1065,8 @@ msgstr "Medlemsliste"
 #: src/internal/templates/internal/member_list.html:17
 #: src/internal/templates/internal/member_list.html:81
 #: src/internal/templates/internal/member_list.html:82
-#: src/internal/templatetags/member.py:29 src/news/models.py:340
+#: src/internal/templatetags/member.py:29 src/make_queue/models/course.py:144
+#: src/news/models.py:340
 #: src/news/templates/news/event/admin_event_ticket_list.html:50
 msgid "active"
 msgstr "aktiv"
@@ -1113,7 +1115,7 @@ msgstr "Filtrer komiteer"
 #: src/make_queue/templates/make_queue/course/course_registration_request_form.html:67
 #: src/make_queue/templates/make_queue/course/course_registration_request_list.html:27
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:103
-#: src/make_queue/views/course.py:155
+#: src/make_queue/views/course.py:156
 msgid "name"
 msgstr "navn"
 
@@ -1124,9 +1126,9 @@ msgstr "komité"
 
 #: src/internal/templates/internal/member_list.html:141
 #: src/internal/templates/internal/member_list.html:350
-#: src/make_queue/models/course.py:61 src/make_queue/models/course.py:162
+#: src/make_queue/models/course.py:61 src/make_queue/models/course.py:199
 #: src/make_queue/models/machine.py:174
-#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:31
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:32
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:107
 #: src/make_queue/templates/make_queue/machine_detail.html:100
 msgid "status"
@@ -1185,7 +1187,7 @@ msgid "system accesses"
 msgstr "systemtilganger"
 
 #: src/internal/templates/internal/member_list.html:423
-#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:32
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:33
 #: src/make_queue/templates/make_queue/reservation_actions.html:8
 msgid "Actions"
 msgstr "Handlinger"
@@ -1296,22 +1298,27 @@ msgstr "Legg til sitat"
 msgid "Change Quote"
 msgstr "Endre sitat"
 
-#: src/make_queue/admin.py:35
+#: src/make_queue/admin.py:40
 #: src/make_queue/templates/make_queue/machine_list.html:7
 #: src/make_queue/templates/make_queue/machine_list.html:19
 #: src/make_queue/templates/make_queue/reservation_list.html:44
 msgid "machines"
 msgstr "maskiner"
 
-#: src/make_queue/admin.py:75 src/make_queue/models/machine.py:160
+#: src/make_queue/admin.py:80 src/make_queue/models/machine.py:160
 #: src/make_queue/templates/make_queue/machine_detail.html:79
 #: src/news/admin.py:339 src/news/models.py:261
 msgid "location"
 msgstr "sted"
 
-#: src/make_queue/admin.py:143 src/make_queue/models/course.py:64
+#: src/make_queue/admin.py:148 src/make_queue/models/course.py:64
 msgid "course permissions"
 msgstr "kurs tillatelser"
+
+#: src/make_queue/admin.py:190 src/make_queue/models/course.py:193
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:31
+msgid "confirmations"
+msgstr "bekreftelser"
 
 #: src/make_queue/api/views.py:182
 msgid "Cannot mark reservation as finished when it has not started yet."
@@ -1333,14 +1340,14 @@ msgstr ""
 msgid "Cannot delete reservation when it has already ended."
 msgstr "Kan ikke slette reservasjonen når den allerede er over."
 
-#: src/make_queue/forms/course.py:43 src/make_queue/forms/quota.py:17
+#: src/make_queue/forms/course.py:46 src/make_queue/forms/quota.py:17
 #: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:70
 msgid "Select user"
 msgstr "Velg bruker"
 
 #. Translators: See the Norwegian and English versions of this page
 #. for a translation of "Building security": https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
-#: src/make_queue/forms/course.py:74
+#: src/make_queue/forms/course.py:77
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -1348,13 +1355,20 @@ msgstr ""
 "Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
 "NTNU. Vennligst fyll inn et gyldig kortnummer."
 
-#: src/make_queue/forms/course.py:126
+#: src/make_queue/forms/course.py:137
+#, python-format
+msgid "You have to confirm every point: %(points)s"
+msgstr "Du må bekrefte alle punktene: %(points)s"
+
+#: src/make_queue/forms/course.py:147
 msgid ""
 "This card number is already registered on someone else. Contact MAKE NTNU if "
 "you think this is a mistake."
-msgstr "Dette kortnummeret er allerede registrert på noen andre. Ta kontakt med MAKE NTNU hvis du tror dette er en feil."
+msgstr ""
+"Dette kortnummeret er allerede registrert på noen andre. Ta kontakt med MAKE "
+"NTNU hvis du tror dette er en feil."
 
-#: src/make_queue/forms/course.py:135
+#: src/make_queue/forms/course.py:156
 msgid "The course date cannot be in the future."
 msgstr "Kursdatoen kan ikke være i fremtiden."
 
@@ -1455,11 +1469,11 @@ msgstr "Tilgang gitt"
 #: src/make_queue/templates/make_queue/course/course_registration_request_form.html:71
 #: src/make_queue/templates/make_queue/course/course_registration_request_list.html:28
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:104
-#: src/make_queue/views/course.py:156
+#: src/make_queue/views/course.py:157
 msgid "username"
 msgstr "brukernavn"
 
-#: src/make_queue/models/course.py:56 src/make_queue/models/course.py:157
+#: src/make_queue/models/course.py:56 src/make_queue/models/course.py:187
 #: src/make_queue/templates/make_queue/course/course_registration_request_list.html:30
 msgid "course date"
 msgstr "kursdato"
@@ -1472,27 +1486,47 @@ msgstr "3D-printerkurs"
 msgid "3D printer courses"
 msgstr "3D-printerkurs"
 
-#: src/make_queue/models/course.py:144
+#: src/make_queue/models/course.py:141
+msgid "text"
+msgstr "tekst"
+
+#: src/make_queue/models/course.py:145
+msgid "Only the active statements have to be confirmed."
+msgstr "Bare de aktive punktene må bekreftes."
+
+#: src/make_queue/models/course.py:150
+msgid "The statements are sorted ascending by this value."
+msgstr "Punktene sorteres stigende på denne verdien."
+
+#: src/make_queue/models/course.py:156
+msgid "course registration confirmation"
+msgstr "kursregistreringsbekreftelse"
+
+#: src/make_queue/models/course.py:157
+msgid "course registration confirmations"
+msgstr "kursregistreringsbekreftelser"
+
+#: src/make_queue/models/course.py:174
 msgid "Awaiting approval"
 msgstr "Venter på godkjenning"
 
-#: src/make_queue/models/course.py:145
+#: src/make_queue/models/course.py:175
 msgid "Approved"
 msgstr "Godkjent"
 
-#: src/make_queue/models/course.py:146
+#: src/make_queue/models/course.py:176
 msgid "Rejected"
 msgstr "Avvist"
 
-#: src/make_queue/models/course.py:164
+#: src/make_queue/models/course.py:201
 msgid "submitted"
 msgstr "sendt inn"
 
-#: src/make_queue/models/course.py:176
+#: src/make_queue/models/course.py:213
 msgid "course registration request"
 msgstr "kursregistreringsforespørsel"
 
-#: src/make_queue/models/course.py:177
+#: src/make_queue/models/course.py:214
 msgid "course registration requests"
 msgstr "kursregistreringsforespørsler"
 
@@ -1750,16 +1784,25 @@ msgstr "Forespørselen din venter på godkjenning"
 msgid ""
 "You have asked to be registered for the course held %(date)s. Someone at "
 "MAKE NTNU will look at it shortly."
-msgstr "Du har bedt om å bli registrert for kurset som ble holdt %(date)s. Noen i MAKE NTNU ser på det snart."
+msgstr ""
+"Du har bedt om å bli registrert for kurset som ble holdt %(date)s. Noen i "
+"MAKE NTNU ser på det snart."
 
 #: src/make_queue/templates/make_queue/course/course_registration_request_form.html:49
 msgid ""
 "Fill in this form after having taken the 3D printer course, to be registered "
 "as a participant. Someone at MAKE NTNU has to approve the request before you "
 "can reserve the printers."
-msgstr "Fyll ut dette skjemaet etter at du har tatt 3D-printerkurset, for å bli registrert som deltaker. Noen i MAKE NTNU må godkjenne forespørselen før du kan reservere printerne."
+msgstr ""
+"Fyll ut dette skjemaet etter at du har tatt 3D-printerkurset, for å bli "
+"registrert som deltaker. Noen i MAKE NTNU må godkjenne forespørselen før du "
+"kan reservere printerne."
 
-#: src/make_queue/templates/make_queue/course/course_registration_request_form.html:94
+#: src/make_queue/templates/make_queue/course/course_registration_request_form.html:95
+msgid "Confirm before sending"
+msgstr "Bekreft før du sender"
+
+#: src/make_queue/templates/make_queue/course/course_registration_request_form.html:107
 msgid "Send request"
 msgstr "Send forespørsel"
 
@@ -1772,11 +1815,11 @@ msgstr "Kursregistreringsforespørsler"
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
-#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:71
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:75
 msgid "Reject"
 msgstr "Avvis"
 
-#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:79
+#: src/make_queue/templates/make_queue/course/course_registration_request_list.html:83
 msgid "No one has asked to be registered yet."
 msgstr "Ingen har bedt om å bli registrert ennå."
 
@@ -2229,39 +2272,39 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
-#: src/make_queue/views/course.py:61
+#: src/make_queue/views/course.py:62
 msgid "Registration of course participation successful"
 msgstr "Registrering av kursdeltakelse vellykket"
 
-#: src/make_queue/views/course.py:121 src/make_queue/views/course.py:181
+#: src/make_queue/views/course.py:122 src/make_queue/views/course.py:182
 msgid "Course participants"
 msgstr "Kursdeltakere"
 
-#: src/make_queue/views/course.py:226
+#: src/make_queue/views/course.py:227
 msgid "You have already submitted a request."
 msgstr "Du har allerede sendt inn en forespørsel."
 
-#: src/make_queue/views/course.py:232
+#: src/make_queue/views/course.py:233
 msgid ""
 "Your request has been submitted, and will show up here once it has been "
 "approved."
 msgstr "Forespørselen din er sendt inn, og dukker opp her når den er godkjent."
 
-#: src/make_queue/views/course.py:271
+#: src/make_queue/views/course.py:281
 msgid "The request has already been handled."
 msgstr "Forespørselen er allerede behandlet."
 
-#: src/make_queue/views/course.py:279
+#: src/make_queue/views/course.py:289
 #, python-format
 msgid "The card number of %(user)s is already in use by someone else."
 msgstr "Kortnummeret til %(user)s er allerede i bruk av noen andre."
 
-#: src/make_queue/views/course.py:290
+#: src/make_queue/views/course.py:300
 #, python-format
 msgid "%(user)s was registered as having taken the course."
 msgstr "%(user)s ble registrert som å ha tatt kurset."
 
-#: src/make_queue/views/course.py:307
+#: src/make_queue/views/course.py:317
 #, python-format
 msgid "The request from %(user)s was rejected."
 msgstr "Forespørselen fra %(user)s ble avvist."
