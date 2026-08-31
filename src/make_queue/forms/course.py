@@ -7,11 +7,14 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from make_queue.models.course import (
     CoursePermission,
+    CourseRegistrationConfirmation,
     CourseRegistrationRequest,
     Printer3DCourse,
 )
 from users.models import User
 from web.widgets import (
+    Direction,
+    DirectionalCheckboxSelectMultiple,
     SemanticChoiceInput,
     SemanticDateInput,
     SemanticSearchableChoiceInput,
@@ -109,14 +112,32 @@ class CourseRegistrationRequestForm(forms.ModelForm):
 
     class Meta:
         model = CourseRegistrationRequest
-        fields = ("card_number", "course_date")
+        fields = ("card_number", "course_date", "confirmations")
         widgets = {
             "course_date": SemanticDateInput(),
+            "confirmations": DirectionalCheckboxSelectMultiple(Direction.VERTICAL),
         }
 
     def __init__(self, *, user: User, **kwargs):
         super().__init__(**kwargs)
         self.user = user
+        self.active_confirmations = CourseRegistrationConfirmation.objects.filter(
+            active=True
+        )
+        self.fields["confirmations"].queryset = self.active_confirmations
+        self.fields["confirmations"].required = bool(self.active_confirmations)
+
+    def clean_confirmations(self):
+        confirmations = self.cleaned_data["confirmations"]
+        unconfirmed = self.active_confirmations.exclude(
+            pk__in=[confirmation.pk for confirmation in confirmations]
+        )
+        if unconfirmed:
+            raise forms.ValidationError(
+                _("You have to confirm every point: %(points)s")
+                % {"points": "; ".join(str(point) for point in unconfirmed)}
+            )
+        return confirmations
 
     def clean_card_number(self):
         card_number: str = self.cleaned_data["card_number"]
@@ -140,4 +161,6 @@ class CourseRegistrationRequestForm(forms.ModelForm):
         request.user = self.user
         if commit:
             request.save()
+            # `save(commit=False)` above defers saving the confirmations to this
+            self.save_m2m()
         return request

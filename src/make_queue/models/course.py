@@ -130,6 +130,36 @@ class Printer3DCourse(models.Model):
         return str(full_name or self.user or self.username)
 
 
+class CourseRegistrationConfirmation(models.Model):
+    """
+    Something a course participant has to confirm before asking to be registered.
+
+    The statements are edited in the admin panel, so that they can be reworded - or
+    new ones added - without a deployment.
+    """
+
+    text = models.CharField(max_length=500, verbose_name=_("text"))
+    active = models.BooleanField(
+        default=True,
+        verbose_name=_("active"),
+        help_text=_("Only the active statements have to be confirmed."),
+    )
+    priority = models.IntegerField(
+        default=0,
+        verbose_name=_("priority"),
+        help_text=_("The statements are sorted ascending by this value."),
+    )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    class Meta:
+        ordering = ("priority", "pk")
+        verbose_name = _("course registration confirmation")
+        verbose_name_plural = _("course registration confirmations")
+
+    def __str__(self):
+        return self.text
+
+
 class CourseRegistrationRequest(models.Model):
     """
     A logged-in user asking to be registered as having taken the 3D printer course.
@@ -155,6 +185,13 @@ class CourseRegistrationRequest(models.Model):
     # approved; until then, two users may well have submitted the same (mistyped) one
     card_number = CardNumberField(null=True, blank=True, verbose_name=_("card number"))
     course_date = models.DateField(verbose_name=_("course date"))
+    # Kept as a record of what was confirmed, as the statements can change later
+    confirmations = models.ManyToManyField(
+        to=CourseRegistrationConfirmation,
+        blank=True,
+        related_name="registration_requests",
+        verbose_name=_("confirmations"),
+    )
     status = models.CharField(
         choices=Status.choices,
         max_length=20,

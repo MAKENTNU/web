@@ -28,6 +28,7 @@
                 <th>{% translate "username"|capfirst %}</th>
                 <th>{% translate "card number"|capfirst %}</th>
                 <th>{% translate "course date"|capfirst %}</th>
+                <th>{% translate "confirmations"|capfirst %}</th>
                 <th>{% translate "status"|capfirst %}</th>
                 <th>{% translate "Actions" %}</th>
             </tr>
@@ -43,6 +44,9 @@
                         <td class="error"></td>
                     {% endif %}
                     <td>{{ registration_request.course_date|iso_date }}</td>
+                    <td data-tooltip="{{ registration_request.confirmations.all|join:" · " }}">
+                        {{ registration_request.confirmations.count }}/{{ num_active_confirmations }}
+                    </td>
                     <td>{{ registration_request.get_status_display }}</td>
                     <td>
                         {% if registration_request.status == "pending" %}
@@ -76,7 +80,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="6">{% translate "No one has asked to be registered yet." %}</td>
+                    <td colspan="7">{% translate "No one has asked to be registered yet." %}</td>
                 </tr>
             {% endfor %}
             </tbody>

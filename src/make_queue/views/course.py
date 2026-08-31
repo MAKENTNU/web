@@ -20,6 +20,7 @@ from make_queue.forms.course import (
 )
 from make_queue.models.course import (
     CoursePermission,
+    CourseRegistrationConfirmation,
     CourseRegistrationRequest,
     Printer3DCourse,
 )
@@ -239,10 +240,16 @@ class CourseRegistrationRequestCreateView(LoginRequiredMixin, CreateView):
 class CourseRegistrationRequestListView(PermissionRequiredMixin, ListView):
     permission_required = ("make_queue.add_printer3dcourse",)
     model = CourseRegistrationRequest
-    queryset = CourseRegistrationRequest.objects.select_related("user").order_by(
-        # Show the requests that need to be handled first
-        Case(When(status=CourseRegistrationRequest.Status.PENDING, then=0), default=1),
-        "submitted",
+    queryset = (
+        CourseRegistrationRequest.objects.select_related("user")
+        .prefetch_related("confirmations")
+        .order_by(
+            # Show the requests that need to be handled first
+            Case(
+                When(status=CourseRegistrationRequest.Status.PENDING, then=0), default=1
+            ),
+            "submitted",
+        )
     )
     template_name = "make_queue/course/course_registration_request_list.html"
     context_object_name = "registration_requests"
@@ -250,6 +257,9 @@ class CourseRegistrationRequestListView(PermissionRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         return {
             **super().get_context_data(**kwargs),
+            "num_active_confirmations": CourseRegistrationConfirmation.objects.filter(
+                active=True
+            ).count(),
             "course_permissions": CoursePermission.objects.exclude(
                 short_name__in=(
                     CoursePermission.DefaultPerms.IS_AUTHENTICATED,

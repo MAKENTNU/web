@@ -7,6 +7,7 @@ from django_hosts import reverse
 
 from make_queue.models.course import (
     CoursePermission,
+    CourseRegistrationConfirmation,
     CourseRegistrationRequest,
     Printer3DCourse,
 )
@@ -81,6 +82,38 @@ class TestCourseRegistrationRequestCreateView(TestCase):
         response = self.client.get(self.url)
 
         self.assertIsNotNone(response.context["existing_registration"])
+
+    def test_every_active_confirmation_must_be_ticked(self):
+        first = CourseRegistrationConfirmation.objects.create(text="I know the rules")
+        CourseRegistrationConfirmation.objects.create(text="I know the emergency stop")
+        self.client.force_login(self.user)
+
+        response = self.post_request(confirmations=[first.pk])
+
+        self.assertTrue(response.context["form"].errors)
+        self.assertFalse(CourseRegistrationRequest.objects.exists())
+
+    def test_ticking_every_confirmation_is_recorded_on_the_request(self):
+        confirmations = [
+            CourseRegistrationConfirmation.objects.create(text="I know the rules"),
+            CourseRegistrationConfirmation.objects.create(text="I know the stop"),
+        ]
+        self.client.force_login(self.user)
+
+        self.post_request(confirmations=[c.pk for c in confirmations])
+
+        registration_request = CourseRegistrationRequest.objects.get(user=self.user)
+        self.assertCountEqual(registration_request.confirmations.all(), confirmations)
+
+    def test_inactive_confirmations_do_not_have_to_be_ticked(self):
+        CourseRegistrationConfirmation.objects.create(
+            text="No longer relevant", active=False
+        )
+        self.client.force_login(self.user)
+
+        self.post_request()
+
+        self.assertTrue(CourseRegistrationRequest.objects.exists())
 
     def test_card_number_of_someone_else_is_rejected(self):
         User.objects.create_user("user2", card_number="0123456789")

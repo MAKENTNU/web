@@ -6,6 +6,7 @@ from simple_history.admin import SimpleHistoryAdmin
 
 from make_queue.models.course import (
     CoursePermission,
+    CourseRegistrationConfirmation,
     CourseRegistrationRequest,
     Printer3DCourse,
 )
@@ -152,10 +153,26 @@ class Printer3DCourseAdmin(
         return html_utils.block_join(perm_strings, sep="<b>&bull;</b>") or None
 
 
+class CourseRegistrationConfirmationAdmin(admin.ModelAdmin):
+    list_display = ("text", "active", "priority", "last_modified")
+    list_filter = ("active",)
+    list_editable = ("active", "priority")
+    search_fields = ("text",)
+
+    readonly_fields = ("last_modified",)
+
+
 class CourseRegistrationRequestAdmin(
     DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin
 ):
-    list_display = ("user", "card_number", "course_date", "status", "submitted")
+    list_display = (
+        "user",
+        "card_number",
+        "course_date",
+        "status",
+        "get_num_confirmations",
+        "submitted",
+    )
     list_filter = ("status",)
     search_fields = (
         "card_number",
@@ -167,6 +184,13 @@ class CourseRegistrationRequestAdmin(
 
     readonly_fields = ("submitted", "last_modified")
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("confirmations")
+
+    @admin.display(description=_("confirmations"))
+    def get_num_confirmations(self, obj: CourseRegistrationRequest) -> str:
+        return f"{obj.confirmations.count()}"
+
 
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
@@ -177,4 +201,5 @@ admin.site.register(ReservationRule, ReservationRuleAdmin)
 
 admin.site.register(Printer3DCourse, Printer3DCourseAdmin)
 admin.site.register(CourseRegistrationRequest, CourseRegistrationRequestAdmin)
+admin.site.register(CourseRegistrationConfirmation, CourseRegistrationConfirmationAdmin)
 admin.site.register(CoursePermission)

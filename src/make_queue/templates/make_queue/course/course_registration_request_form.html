@@ -90,6 +90,19 @@
                     </div>
                 </div>
 
+                {% if form.fields.confirmations.queryset %}
+                    <div class="ui horizontal divider">
+                        {% translate "Confirm before sending" %}
+                    </div>
+
+                    <div class="ui field {% if form.confirmations.errors %}error{% endif %}">
+                        {{ form.confirmations }}
+                        {% for error in form.confirmations.errors %}
+                            <div class="ui negative small message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <button class="ui make-bg-yellow button" type="submit">
                     {% translate "Send request" %}
                 </button>
