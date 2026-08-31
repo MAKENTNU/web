@@ -112,6 +112,10 @@ urlpatterns += i18n_patterns(
     path("api/", include(api_urlpatterns)),
     # App paths, sorted by app label:
     path("announcements/", include("announcements.urls")),
+    # Lives in `make_queue`, but is not prefixed with `reservation/` like the rest of
+    # that app, as it is filled in by course participants who are not reserving
+    # anything
+    path("courses/", include(make_queue_urls.course_urlpatterns)),
     path("checkin/", include("checkin.urls")),
     path("faq/", include("faq.urls")),
     path("committees/", include("groups.urls")),

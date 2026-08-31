@@ -54,6 +54,8 @@ reservation_urlpatterns = [
     ),
 ]
 
+# Included at the top level in `web/urls.py`, as the participants filling this in are
+# not reserving anything - see the comment there
 course_urlpatterns = [
     path(
         "register/",
@@ -63,7 +65,6 @@ course_urlpatterns = [
 ]
 
 urlpatterns = [
-    path("courses/", include(course_urlpatterns)),
     path("machinetypes/<int:pk>/", include(specific_machinetype_urlpatterns)),
     path("machines/", include(machine_urlpatterns)),
     path("reservations/", include(reservation_urlpatterns)),
