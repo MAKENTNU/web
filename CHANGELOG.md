@@ -14,6 +14,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### New features
+- Course registrations can be imported in bulk from a CSV or XLSX file, with a per-row report of what was created, skipped and rejected (MAKENTNU/web#834)
 
 
 ### Improvements
