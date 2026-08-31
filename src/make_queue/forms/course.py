@@ -10,6 +10,8 @@ from make_queue.models.course import CoursePermission, Printer3DCourse
 from users.models import User
 from util.spreadsheet_utils import SUPPORTED_SUFFIXES, SpreadsheetReadError, read_rows
 from web.widgets import (
+    Direction,
+    DirectionalCheckboxSelectMultiple,
     SemanticChoiceInput,
     SemanticDateInput,
     SemanticSearchableChoiceInput,
@@ -131,7 +133,7 @@ class Printer3DCourseImportForm(forms.Form):
         label=capfirst(
             Printer3DCourse._meta.get_field("course_permissions").verbose_name
         ),
-        widget=forms.CheckboxSelectMultiple(attrs={"class": "ui fluid checkbox"}),
+        widget=DirectionalCheckboxSelectMultiple(Direction.VERTICAL),
     )
     skip_already_registered = forms.BooleanField(
         required=False,
