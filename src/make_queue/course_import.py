@@ -52,6 +52,11 @@ class RowOutcome:
 
     row: ImportedRow
     message: str
+    # The date the registration got, which is `None` for a row that was not far enough
+    # along to have one worked out
+    course_date: date | None = None
+    # Whether the date above came from the default, because the row had none of its own
+    date_from_default: bool = False
 
 
 @dataclass
@@ -190,18 +195,24 @@ def import_registrations(
                 result.failed.append(RowOutcome(row, message))
             continue
 
+        if not row.card_number:
+            result.failed.append(RowOutcome(row, str(_("Missing card number"))))
+            continue
+
         course_date = parse_date(row.date_string)
         if course_date is None and row.date_string:
             message = _("Invalid date: “%(date)s”") % {"date": row.date_string}
             result.failed.append(RowOutcome(row, str(message)))
             continue
+        date_from_default = course_date is None
+        course_date = course_date or default_date
 
         form = Printer3DCourseForm(
             data={
                 "username": row.username,
                 "name": row.name,
                 "card_number": row.card_number,
-                "date": course_date or default_date,
+                "date": course_date,
                 "status": status,
                 "course_permissions": [
                     permission.pk for permission in course_permissions
@@ -213,7 +224,14 @@ def import_registrations(
             continue
 
         form.save()
-        result.created.append(RowOutcome(row, str(_("Registered"))))
+        result.created.append(
+            RowOutcome(
+                row,
+                str(_("Registered")),
+                course_date=course_date,
+                date_from_default=date_from_default,
+            )
+        )
 
     if dry_run or (result.failed and not import_valid_rows_only):
         # Roll back, so that a file with errors in it is either imported in full or not

@@ -10,7 +10,9 @@ from users.models import User
 
 COURSE_DATE = date(2026, 8, 25)
 VALID_FILE = (
-    "username,name,card_number,date\nolan,Ola Nordmann,,\nkarin,Kari Nordmann,,\n"
+    "username,name,card_number,date\n"
+    "olan,Ola Nordmann,0123456789,\n"
+    "karin,Kari Nordmann,1123456789,\n"
 )
 PARTLY_INVALID_FILE = (
     "username,name,card_number,date\nolan,,0123456789,\nkarin,,not a number,\n"

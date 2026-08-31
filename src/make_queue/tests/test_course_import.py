@@ -118,6 +118,15 @@ class TestParseDate(TestCase):
                 self.assertIsNone(parse_date(date_string))
 
 
+def make_row(line_number: int, username: str, **kwargs) -> ImportedRow:
+    """An importable row, with a unique card number unless one is given."""
+    return ImportedRow(
+        line_number=line_number,
+        username=username,
+        **{"card_number": f"012345678{line_number}", **kwargs},
+    )
+
+
 class TestImportRegistrations(TestCase):
     def setUp(self):
         self.course_permissions = list(
@@ -136,8 +145,8 @@ class TestImportRegistrations(TestCase):
     def test_creates_a_registration_per_row(self):
         result = self.import_(
             [
-                ImportedRow(line_number=1, name="Ola Nordmann", username="olan"),
-                ImportedRow(line_number=2, name="Kari Nordmann", username="karin"),
+                make_row(1, "olan", name="Ola Nordmann"),
+                make_row(2, "karin", name="Kari Nordmann"),
             ]
         )
 
@@ -152,78 +161,80 @@ class TestImportRegistrations(TestCase):
         self.assertSetEqual(set(registration.permission_names), {"3DPR", "R3DP"})
 
     def test_uses_the_date_of_the_row_when_it_has_one(self):
-        self.import_(
-            [ImportedRow(line_number=1, username="olan", date_string="2003-02-01")]
-        )
+        result = self.import_([make_row(1, "olan", date_string="2003-02-01")])
+
         self.assertEqual(
             Printer3DCourse.objects.get(username="olan").date, date(2003, 2, 1)
         )
+        self.assertEqual(result.created[0].course_date, date(2003, 2, 1))
+        self.assertFalse(result.created[0].date_from_default)
+
+    def test_falls_back_to_the_default_date_and_says_so(self):
+        result = self.import_([make_row(1, "olan")])
+
+        self.assertEqual(
+            Printer3DCourse.objects.get(username="olan").date, DEFAULT_DATE
+        )
+        self.assertEqual(result.created[0].course_date, DEFAULT_DATE)
+        self.assertTrue(result.created[0].date_from_default)
 
     def test_usernames_are_lowercased(self):
-        self.import_([ImportedRow(line_number=1, username="OlaN")])
+        self.import_([make_row(1, "OlaN")])
         self.assertTrue(Printer3DCourse.objects.filter(username="olan").exists())
+
+    def test_rows_without_a_card_number_are_errors(self):
+        result = self.import_([ImportedRow(line_number=1, username="olan")])
+
+        self.assertEqual(len(result.failed), 1)
+        self.assertEqual(Printer3DCourse.objects.count(), 0)
 
     def test_already_registered_usernames_are_skipped(self):
         Printer3DCourse.objects.create(username="olan", date=DEFAULT_DATE)
 
-        result = self.import_(
-            [
-                ImportedRow(line_number=1, username="olan"),
-                ImportedRow(line_number=2, username="karin"),
-            ]
-        )
+        result = self.import_([make_row(1, "olan"), make_row(2, "karin")])
 
         self.assertEqual(len(result.skipped), 1)
         self.assertEqual(len(result.created), 1)
         self.assertTrue(result.committed)
         self.assertEqual(Printer3DCourse.objects.count(), 2)
 
+    def test_already_registered_usernames_are_skipped_even_without_a_card_number(self):
+        Printer3DCourse.objects.create(username="olan", date=DEFAULT_DATE)
+
+        result = self.import_([ImportedRow(line_number=1, username="olan")])
+
+        self.assertEqual(len(result.skipped), 1)
+        self.assertEqual(len(result.failed), 0)
+
     def test_already_registered_usernames_are_errors_when_not_skipping(self):
         Printer3DCourse.objects.create(username="olan", date=DEFAULT_DATE)
 
-        result = self.import_(
-            [ImportedRow(line_number=1, username="olan")],
-            skip_already_registered=False,
-        )
+        result = self.import_([make_row(1, "olan")], skip_already_registered=False)
 
         self.assertEqual(len(result.failed), 1)
         self.assertFalse(result.committed)
 
     def test_rows_without_a_username_are_errors(self):
-        result = self.import_([ImportedRow(line_number=1, name="Ola Nordmann")])
+        result = self.import_([make_row(1, "", name="Ola Nordmann")])
         self.assertEqual(len(result.failed), 1)
         self.assertEqual(Printer3DCourse.objects.count(), 0)
 
     def test_duplicate_usernames_within_the_file_are_errors(self):
-        result = self.import_(
-            [
-                ImportedRow(line_number=1, username="olan"),
-                ImportedRow(line_number=2, username="OLAN"),
-            ]
-        )
+        result = self.import_([make_row(1, "olan"), make_row(2, "OLAN")])
         self.assertEqual(len(result.failed), 1)
         self.assertEqual(len(result.created), 1)
 
     def test_unparsable_dates_are_errors(self):
-        result = self.import_(
-            [ImportedRow(line_number=1, username="olan", date_string="25.08.2026")]
-        )
+        result = self.import_([make_row(1, "olan", date_string="25.08.2026")])
         self.assertEqual(len(result.failed), 1)
 
     def test_invalid_card_numbers_are_errors(self):
-        result = self.import_(
-            [ImportedRow(line_number=1, username="olan", card_number="not a number")]
-        )
+        result = self.import_([make_row(1, "olan", card_number="not a number")])
         self.assertEqual(len(result.failed), 1)
         self.assertFalse(result.committed)
 
     def test_nothing_is_created_when_any_row_is_invalid(self):
-        result = self.import_(
-            [
-                ImportedRow(line_number=1, username="olan"),
-                ImportedRow(line_number=2, username=""),
-            ]
-        )
+        result = self.import_([make_row(1, "olan"), make_row(2, "")])
 
         self.assertEqual(len(result.created), 1)
         self.assertEqual(len(result.failed), 1)
@@ -234,11 +245,7 @@ class TestImportRegistrations(TestCase):
         Printer3DCourse.objects.create(username="karin", date=DEFAULT_DATE)
 
         result = self.import_(
-            [
-                ImportedRow(line_number=1, username="olan"),
-                ImportedRow(line_number=2, username="karin"),
-                ImportedRow(line_number=3, username=""),
-            ],
+            [make_row(1, "olan"), make_row(2, "karin"), make_row(3, "")],
             dry_run=True,
         )
 
@@ -250,9 +257,7 @@ class TestImportRegistrations(TestCase):
         self.assertEqual(Printer3DCourse.objects.count(), 1)
 
     def test_a_dry_run_of_a_valid_file_writes_nothing(self):
-        result = self.import_(
-            [ImportedRow(line_number=1, username="olan")], dry_run=True
-        )
+        result = self.import_([make_row(1, "olan")], dry_run=True)
 
         self.assertEqual(len(result.created), 1)
         self.assertFalse(result.committed)
@@ -260,11 +265,7 @@ class TestImportRegistrations(TestCase):
 
     def test_valid_rows_are_created_when_asked_to_ignore_the_invalid_ones(self):
         result = self.import_(
-            [
-                ImportedRow(line_number=1, username="olan"),
-                ImportedRow(line_number=2, username=""),
-            ],
-            import_valid_rows_only=True,
+            [make_row(1, "olan"), make_row(2, "")], import_valid_rows_only=True
         )
 
         self.assertEqual(len(result.created), 1)

@@ -1,5 +1,6 @@
 {% extends 'web/generic_form.html' %}
 {% load i18n %}
+{% load datetime_tags %}
 
 
 {% block extra_pre_content %}
@@ -28,9 +29,9 @@
             </li>
             <li>
                 {% blocktranslate trimmed %}
-                    Only the username has to be filled in; the other cells can be left
-                    empty. Rows without a date get the default course date selected
-                    below.
+                    The username and the card number must be filled in. The name can be
+                    left empty, and rows without a date get the default course date
+                    selected below.
                 {% endblocktranslate %}
             </li>
             <li>
@@ -94,7 +95,18 @@
                     <td>{{ outcome.row.name }}</td>
                     <td>{{ outcome.row.username }}</td>
                     <td class="right aligned">{{ outcome.row.card_number }}</td>
-                    <td>{{ outcome.row.date_string }}</td>
+                    <td>
+                        {% if outcome.course_date %}
+                            {{ outcome.course_date|iso_date }}
+                            {% if outcome.date_from_default %}
+                                <span class="make-col-dkgrey">
+                                    ({% translate "default" %})
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            {{ outcome.row.date_string }}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if previewing %}
                             {% if will_import %}
