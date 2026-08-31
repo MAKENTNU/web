@@ -44,7 +44,9 @@ class TestPrinter3DCourseImportView(TestCase):
 
     def test_posting_a_file_creates_the_registrations(self):
         response = self.post_file(
-            "Name,Username\nOla Nordmann,olan\nKari Nordmann,karin\n"
+            "username,name,card_number,date\n"
+            "olan,Ola Nordmann,,\n"
+            "karin,Kari Nordmann,,\n"
         )
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -56,7 +58,7 @@ class TestPrinter3DCourseImportView(TestCase):
 
     def test_nothing_is_created_when_a_row_is_invalid(self):
         response = self.post_file(
-            "Username,Card number\nolan,0123456789\nkarin,not a number\n"
+            "username,name,card_number,date\nolan,,0123456789,\nkarin,,not a number,\n"
         )
 
         result = response.context["import_result"]
@@ -67,7 +69,7 @@ class TestPrinter3DCourseImportView(TestCase):
 
     def test_the_valid_rows_are_created_when_asked_to_ignore_the_invalid_ones(self):
         response = self.post_file(
-            "Username,Card number\nolan,0123456789\nkarin,not a number\n",
+            "username,name,card_number,date\nolan,,0123456789,\nkarin,,not a number,\n",
             import_valid_rows_only="on",
         )
 
@@ -78,7 +80,7 @@ class TestPrinter3DCourseImportView(TestCase):
     def test_already_registered_participants_are_skipped(self):
         Printer3DCourse.objects.create(username="olan", date=COURSE_DATE)
 
-        response = self.post_file("Username\nolan\nkarin\n")
+        response = self.post_file("username,name,card_number,date\nolan,,,\nkarin,,,\n")
 
         result = response.context["import_result"]
         self.assertEqual(len(result.skipped), 1)
@@ -100,8 +102,8 @@ class TestPrinter3DCourseImportView(TestCase):
         self.assertNotIn("import_result", response.context)
         self.assertEqual(Printer3DCourse.objects.count(), 0)
 
-    def test_file_without_a_username_column_is_rejected(self):
-        response = self.post_file("Name,Card number\nOla Nordmann,0123456789\n")
+    def test_file_with_the_wrong_columns_is_rejected(self):
+        response = self.post_file("name,card_number\nOla Nordmann,0123456789\n")
 
         self.assertTrue(response.context["form"].errors)
         self.assertEqual(Printer3DCourse.objects.count(), 0)

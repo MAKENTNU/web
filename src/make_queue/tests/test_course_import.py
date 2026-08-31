@@ -3,6 +3,7 @@ from datetime import date
 from django.test import TestCase
 
 from make_queue.course_import import (
+    COLUMNS,
     MAX_NUM_ROWS,
     CourseImportError,
     ImportedRow,
@@ -16,11 +17,11 @@ DEFAULT_DATE = date(2026, 8, 25)
 
 
 class TestParseRows(TestCase):
-    def test_recognizes_english_headers(self):
+    def test_reads_a_file_with_the_expected_columns(self):
         rows = parse_rows(
             [
-                ["Name", "Username", "Card number", "Date"],
-                ["Ola Nordmann", "olan", "0123456789", "2026-08-25"],
+                ["username", "name", "card_number", "date"],
+                ["olan", "Ola Nordmann", "0123456789", "2026-08-25"],
             ]
         )
         self.assertEqual(
@@ -36,33 +37,48 @@ class TestParseRows(TestCase):
             ],
         )
 
-    def test_recognizes_norwegian_headers_in_any_order(self):
-        rows = parse_rows([["Brukernavn", "Kortnummer", "Navn"], ["olan", "1", "Ola"]])
-        self.assertEqual(
-            rows,
-            [ImportedRow(line_number=2, name="Ola", username="olan", card_number="1")],
+    def test_the_header_row_is_matched_regardless_of_case_and_padding(self):
+        rows = parse_rows(
+            [[" Username", "NAME ", "Card_Number", "Date"], ["olan", "", "", ""]]
         )
+        self.assertEqual(rows, [ImportedRow(line_number=2, username="olan")])
 
-    def test_reads_file_without_headers_positionally(self):
-        rows = parse_rows([["Ola Nordmann", "olan", "0123456789", "2026-08-25"]])
-        self.assertEqual(rows[0].line_number, 1)
-        self.assertEqual(rows[0].name, "Ola Nordmann")
-        self.assertEqual(rows[0].username, "olan")
-
-    def test_reads_file_with_a_single_column_as_usernames(self):
-        rows = parse_rows([["olan"], ["karin"]])
-        self.assertEqual([row.username for row in rows], ["olan", "karin"])
-        self.assertEqual([row.name for row in rows], ["", ""])
+    def test_only_the_username_has_to_be_filled_in(self):
+        rows = parse_rows([list(COLUMNS), ["olan", "", "", ""]])
+        self.assertEqual(rows, [ImportedRow(line_number=2, username="olan")])
 
     def test_skips_empty_rows(self):
-        rows = parse_rows([["Username"], ["olan"], [""], ["karin"]])
+        rows = parse_rows(
+            [
+                list(COLUMNS),
+                ["olan", "", "", ""],
+                ["", "", "", ""],
+                ["karin", "", "", ""],
+            ]
+        )
         self.assertEqual([row.username for row in rows], ["olan", "karin"])
         # The line numbers should still match the ones of the file
         self.assertEqual([row.line_number for row in rows], [2, 4])
 
-    def test_file_without_a_username_column_is_rejected(self):
+    def test_file_with_the_columns_in_another_order_is_rejected(self):
         with self.assertRaises(CourseImportError):
-            parse_rows([["Name", "Card number"], ["Ola Nordmann", "0123456789"]])
+            parse_rows(
+                [["name", "username", "card_number", "date"], ["Ola", "olan", "", ""]]
+            )
+
+    def test_file_with_differently_named_columns_is_rejected(self):
+        with self.assertRaises(CourseImportError):
+            parse_rows(
+                [["brukernavn", "navn", "kortnummer", "dato"], ["olan", "", "", ""]]
+            )
+
+    def test_file_with_missing_columns_is_rejected(self):
+        with self.assertRaises(CourseImportError):
+            parse_rows([["username"], ["olan"]])
+
+    def test_file_without_a_header_row_is_rejected(self):
+        with self.assertRaises(CourseImportError):
+            parse_rows([["olan", "Ola Nordmann", "", ""]])
 
     def test_empty_file_is_rejected(self):
         with self.assertRaises(CourseImportError):
@@ -70,25 +86,34 @@ class TestParseRows(TestCase):
 
     def test_file_with_only_a_header_row_is_rejected(self):
         with self.assertRaises(CourseImportError):
-            parse_rows([["Name", "Username"]])
+            parse_rows([list(COLUMNS)])
 
     def test_too_long_file_is_rejected(self):
-        rows = [["Username"], *[[f"user{i}"] for i in range(MAX_NUM_ROWS + 1)]]
+        rows = [
+            list(COLUMNS),
+            *[[f"user{i}", "", "", ""] for i in range(MAX_NUM_ROWS + 1)],
+        ]
         with self.assertRaises(CourseImportError):
             parse_rows(rows)
 
 
 class TestParseDate(TestCase):
-    def test_parses_the_supported_formats(self):
-        for date_string in ("2026-08-25", "25.08.2026", "25/08/2026", "2026/08/25"):
-            with self.subTest(date_string=date_string):
-                self.assertEqual(parse_date(date_string), date(2026, 8, 25))
+    def test_parses_iso_formatted_dates(self):
+        self.assertEqual(parse_date("2026-08-25"), date(2026, 8, 25))
+        self.assertEqual(parse_date(" 2026-08-25 "), date(2026, 8, 25))
 
     def test_parses_excel_serial_numbers(self):
         self.assertEqual(parse_date("46259"), date(2026, 8, 25))
 
-    def test_returns_none_for_unparsable_values(self):
-        for date_string in ("", "  ", "the 25th", "2026-13-25"):
+    def test_returns_none_for_values_in_any_other_format(self):
+        for date_string in (
+            "",
+            "  ",
+            "the 25th",
+            "2026-13-25",
+            "25.08.2026",
+            "25/08/2026",
+        ):
             with self.subTest(date_string=date_string):
                 self.assertIsNone(parse_date(date_string))
 
@@ -128,7 +153,7 @@ class TestImportRegistrations(TestCase):
 
     def test_uses_the_date_of_the_row_when_it_has_one(self):
         self.import_(
-            [ImportedRow(line_number=1, username="olan", date_string="01.02.2003")]
+            [ImportedRow(line_number=1, username="olan", date_string="2003-02-01")]
         )
         self.assertEqual(
             Printer3DCourse.objects.get(username="olan").date, date(2003, 2, 1)
@@ -181,7 +206,7 @@ class TestImportRegistrations(TestCase):
 
     def test_unparsable_dates_are_errors(self):
         result = self.import_(
-            [ImportedRow(line_number=1, username="olan", date_string="the 25th")]
+            [ImportedRow(line_number=1, username="olan", date_string="25.08.2026")]
         )
         self.assertEqual(len(result.failed), 1)
 

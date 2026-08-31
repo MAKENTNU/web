@@ -109,9 +109,8 @@ class Printer3DCourseImportForm(forms.Form):
     file = forms.FileField(
         label=_("File"),
         help_text=_(
-            "A CSV or XLSX file with one course participant per row. The columns are"
-            " recognized by their header, which means that a file downloaded from the"
-            " course registration list can be edited and uploaded back."
+            "A CSV or XLSX file with one course participant per row, and the columns"
+            " named by a header row."
         ),
         widget=forms.ClearableFileInput(attrs={"accept": ",".join(SUPPORTED_SUFFIXES)}),
     )

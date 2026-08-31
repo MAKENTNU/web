@@ -19,7 +19,11 @@ from django.views.generic import (
     View,
 )
 
-from make_queue.course_import import ImportResult, import_registrations
+from make_queue.course_import import (
+    HEADER_ROW,
+    ImportResult,
+    import_registrations,
+)
 from make_queue.forms.course import Printer3DCourseForm, Printer3DCourseImportForm
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
@@ -74,6 +78,8 @@ class Printer3DCourseImportView(
         {"heading": _("Options")},
         {"fields": ("skip_already_registered", "import_valid_rows_only")},
     ]
+
+    extra_context = {"header_row": HEADER_ROW}
 
     def get_initial(self):
         return {**super().get_initial(), "date": timezone.localdate()}

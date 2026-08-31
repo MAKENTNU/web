@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 10:32+0200\n"
+"POT-Creation-Date: 2026-08-31 10:52+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -146,7 +146,7 @@ msgstr "Endre kunngjøring"
 #: src/checkin/models.py:133
 #: src/internal/templates/internal/member_list.html:306
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:102
-#: src/make_queue/views/course.py:225
+#: src/make_queue/views/course.py:231
 msgid "card number"
 msgstr "kortnummer"
 
@@ -972,7 +972,7 @@ msgstr "kontekst"
 
 #: src/internal/models.py:381
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:103
-#: src/make_queue/views/course.py:226
+#: src/make_queue/views/course.py:232
 #: src/news/templates/news/event/event_list_contents.html:26
 #: src/web/templates/web/forms/widgets/semantic_date.html:11
 #: src/web/templates/web/forms/widgets/semantic_datetime.html:11
@@ -1104,9 +1104,9 @@ msgstr "Filtrer komiteer"
 #: src/internal/templates/internal/member_list.html:132
 #: src/internal/templates/internal/member_list.html:268
 #: src/make_queue/models/course.py:23 src/make_queue/models/machine.py:144
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:56
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:54
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:100
-#: src/make_queue/views/course.py:223
+#: src/make_queue/views/course.py:229
 msgid "name"
 msgstr "navn"
 
@@ -1323,23 +1323,20 @@ msgstr ""
 msgid "Cannot delete reservation when it has already ended."
 msgstr "Kan ikke slette reservasjonen når den allerede er over."
 
-#: src/make_queue/course_import.py:61
+#: src/make_queue/course_import.py:46
 msgid "(no name)"
 msgstr "(uten navn)"
 
-#: src/make_queue/course_import.py:95
+#: src/make_queue/course_import.py:80
 msgid "The file is empty."
 msgstr "Filen er tom."
 
-#: src/make_queue/course_import.py:107
-msgid ""
-"Found no column with usernames. Name one of the columns “username” (or "
-"“brukernavn”), or remove the header row."
-msgstr ""
-"Fant ingen kolonne med brukernavn. Gi en av kolonnene navnet "
-"«brukernavn» (eller «username»), eller fjern overskriftsraden."
+#: src/make_queue/course_import.py:85
+#, python-format
+msgid "The first row of the file must name the columns: %(header_row)s"
+msgstr "Den første raden i filen må navngi kolonnene: %(header_row)s"
 
-#: src/make_queue/course_import.py:114
+#: src/make_queue/course_import.py:93
 #, python-format
 msgid ""
 "The file has %(num_rows)d rows, but at most %(max_num_rows)d can be imported "
@@ -1348,28 +1345,28 @@ msgstr ""
 "Filen har %(num_rows)d rader, men maksimalt %(max_num_rows)d kan importeres "
 "om gangen."
 
-#: src/make_queue/course_import.py:140
+#: src/make_queue/course_import.py:115
 msgid "The file contains no rows with data."
 msgstr "Filen inneholder ingen rader med data."
 
-#: src/make_queue/course_import.py:195
+#: src/make_queue/course_import.py:174
 msgid "Missing username"
 msgstr "Mangler brukernavn"
 
-#: src/make_queue/course_import.py:198
+#: src/make_queue/course_import.py:177
 msgid "The username appears multiple times in the file"
 msgstr "Brukernavnet forekommer flere ganger i filen"
 
-#: src/make_queue/course_import.py:204
+#: src/make_queue/course_import.py:183
 msgid "Already registered"
 msgstr "Allerede registrert"
 
-#: src/make_queue/course_import.py:213
+#: src/make_queue/course_import.py:192
 #, python-format
 msgid "Invalid date: “%(date)s”"
 msgstr "Ugyldig dato: «%(date)s»"
 
-#: src/make_queue/course_import.py:234 src/make_queue/models/course.py:34
+#: src/make_queue/course_import.py:213 src/make_queue/models/course.py:34
 msgid "Registered"
 msgstr "Registrert"
 
@@ -1394,27 +1391,23 @@ msgstr "Fil"
 
 #: src/make_queue/forms/course.py:112
 msgid ""
-"A CSV or XLSX file with one course participant per row. The columns are "
-"recognized by their header, which means that a file downloaded from the "
-"course registration list can be edited and uploaded back."
-msgstr ""
-"En CSV- eller XLSX-fil med én kursdeltaker per rad. Kolonnene gjenkjennes ut "
-"fra overskriften, som gjør at en fil lastet ned fra kursregistreringslisten "
-"kan redigeres og lastes opp igjen."
+"A CSV or XLSX file with one course participant per row, and the columns "
+"named by a header row."
+msgstr "En CSV- eller XLSX-fil med én kursdeltaker per rad, og kolonnene navngitt av en overskriftsrad."
 
-#: src/make_queue/forms/course.py:119
+#: src/make_queue/forms/course.py:118
 msgid "default course date"
 msgstr "standard kursdato"
 
-#: src/make_queue/forms/course.py:120
+#: src/make_queue/forms/course.py:119
 msgid "Used for the rows that have no course date of their own."
 msgstr "Brukes for radene som ikke har sin egen kursdato."
 
-#: src/make_queue/forms/course.py:140
+#: src/make_queue/forms/course.py:139
 msgid "Skip participants that are already registered"
 msgstr "Hopp over deltakere som allerede er registrert"
 
-#: src/make_queue/forms/course.py:142
+#: src/make_queue/forms/course.py:141
 msgid ""
 "When unchecked, an already registered username is counted as an error "
 "instead of being silently skipped."
@@ -1422,11 +1415,11 @@ msgstr ""
 "Når denne ikke er huket av, telles et allerede registrert brukernavn som en "
 "feil i stedet for å bli hoppet over."
 
-#: src/make_queue/forms/course.py:148
+#: src/make_queue/forms/course.py:147
 msgid "Import the valid rows even if some rows have errors"
 msgstr "Importer de gyldige radene selv om noen rader har feil"
 
-#: src/make_queue/forms/course.py:150
+#: src/make_queue/forms/course.py:149
 msgid ""
 "When unchecked, nothing is imported unless every row is valid, which makes "
 "it safe to upload the same file again after fixing the errors."
@@ -1435,7 +1428,7 @@ msgstr ""
 "gyldige, som gjør det trygt å laste opp den samme filen igjen etter at "
 "feilene er rettet."
 
-#: src/make_queue/forms/course.py:172
+#: src/make_queue/forms/course.py:171
 #, python-format
 msgid "The file is too big; the maximum size is %(max_size)d MB."
 msgstr "Filen er for stor; maksimal størrelse er %(max_size)d MB."
@@ -1530,9 +1523,9 @@ msgid "Access granted"
 msgstr "Tilgang gitt"
 
 #: src/make_queue/models/course.py:48
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:57
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:55
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:101
-#: src/make_queue/views/course.py:224
+#: src/make_queue/views/course.py:230
 msgid "username"
 msgstr "brukernavn"
 
@@ -1843,46 +1836,36 @@ msgid "Expected file format"
 msgstr "Forventet filformat"
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:19
-msgid "One participant per row, in a CSV or XLSX file."
-msgstr "Én deltaker per rad, i en CSV- eller XLSX-fil."
+msgid "A CSV or XLSX file, with one course participant per row."
+msgstr "En CSV- eller XLSX-fil, med én kursdeltaker per rad."
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:24
+msgid "The first row must name the columns, exactly like this:"
+msgstr "Den første raden må navngi kolonnene, nøyaktig slik:"
+
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:30
 msgid ""
-"The first row should name the columns; recognized names are “name”, "
-"“username”, “card number” and “date” (or “navn”, “brukernavn”, “kortnummer” "
-"and “dato”). Only the username column is required."
-msgstr ""
-"Den første raden bør navngi kolonnene; gjenkjente navn er «name», "
-"«username», «card number» og «date» (eller «navn», «brukernavn», "
-"«kortnummer» og «dato»). Bare kolonnen med brukernavn er påkrevd."
+"Only the username has to be filled in; the other cells can be left empty. "
+"Rows without a date get the default course date selected below."
+msgstr "Bare brukernavnet må fylles inn; de andre cellene kan stå tomme. Rader uten dato får standard kursdato valgt nedenfor."
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:32
-msgid ""
-"Without a header row, the columns are read in the order name, username, card "
-"number, date - except in a file with only one column, which is read as "
-"usernames."
-msgstr ""
-"Uten en overskriftsrad leses kolonnene i rekkefølgen navn, brukernavn, "
-"kortnummer, dato - bortsett fra i en fil med bare én kolonne, som leses som "
-"brukernavn."
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:37
+msgid "Dates must be written as YYYY-MM-DD - for example 2026-08-25."
+msgstr "Datoer må skrives som ÅÅÅÅ-MM-DD - for eksempel 2026-08-25."
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:39
-msgid "Rows without a date get the default course date selected below."
-msgstr "Rader uten dato får standard kursdato valgt nedenfor."
-
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:50
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:48
 msgid "Result"
 msgstr "Resultat"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:55
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:53
 msgid "row"
 msgstr "rad"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:58
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:56
 msgid "result"
 msgstr "resultat"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:87
+#: src/make_queue/templates/make_queue/course/printer_3d_course_import.html:85
 msgid "Valid, but not imported"
 msgstr "Gyldig, men ikke importert"
 
@@ -2276,31 +2259,31 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
-#: src/make_queue/views/course.py:52
+#: src/make_queue/views/course.py:56
 msgid "Registration of course participation successful"
 msgstr "Registrering av kursdeltakelse vellykket"
 
-#: src/make_queue/views/course.py:66
+#: src/make_queue/views/course.py:70
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
-#: src/make_queue/views/course.py:67
+#: src/make_queue/views/course.py:71
 msgid "Import Course Registrations"
 msgstr "Importer kursregistreringer"
 
-#: src/make_queue/views/course.py:68
+#: src/make_queue/views/course.py:72
 msgid "Import"
 msgstr "Importer"
 
-#: src/make_queue/views/course.py:71
+#: src/make_queue/views/course.py:75
 msgid "Values given to all the imported registrations"
 msgstr "Verdier som gis til alle de importerte registreringene"
 
-#: src/make_queue/views/course.py:74
+#: src/make_queue/views/course.py:78
 msgid "Options"
 msgstr "Valg"
 
-#: src/make_queue/views/course.py:108
+#: src/make_queue/views/course.py:114
 #, python-format
 msgid ""
 "Nothing was imported, as %(num_failed)d of the %(num_read)d rows have "
@@ -2311,7 +2294,7 @@ msgstr ""
 "har feil. Rett feilene og last opp filen igjen, eller huk av «Importer de "
 "gyldige radene selv om noen rader har feil»."
 
-#: src/make_queue/views/course.py:118
+#: src/make_queue/views/course.py:124
 #, python-format
 msgid ""
 "Registered %(num_created)d of the %(num_read)d rows (%(num_skipped)d "
@@ -2320,7 +2303,7 @@ msgstr ""
 "Registrerte %(num_created)d av de %(num_read)d radene (%(num_skipped)d "
 "hoppet over, %(num_failed)d med feil)."
 
-#: src/make_queue/views/course.py:127
+#: src/make_queue/views/course.py:133
 #, python-format
 msgid ""
 "No registrations were created; all the %(num_read)d rows were either skipped "
@@ -2329,7 +2312,7 @@ msgstr ""
 "Ingen registreringer ble opprettet; alle de %(num_read)d radene ble enten "
 "hoppet over eller har feil."
 
-#: src/make_queue/views/course.py:189 src/make_queue/views/course.py:249
+#: src/make_queue/views/course.py:195 src/make_queue/views/course.py:255
 msgid "Course participants"
 msgstr "Kursdeltakere"
 
@@ -3478,6 +3461,43 @@ msgstr "Velg verdi"
 #: src/web/widgets.py:230
 msgid "Search places"
 msgstr "Søk etter steder"
+
+#~ msgid ""
+#~ "Found no column with usernames. Name one of the columns “username” (or "
+#~ "“brukernavn”), or remove the header row."
+#~ msgstr ""
+#~ "Fant ingen kolonne med brukernavn. Gi en av kolonnene navnet "
+#~ "«brukernavn» (eller «username»), eller fjern overskriftsraden."
+
+#~ msgid ""
+#~ "A CSV or XLSX file with one course participant per row. The columns are "
+#~ "recognized by their header, which means that a file downloaded from the "
+#~ "course registration list can be edited and uploaded back."
+#~ msgstr ""
+#~ "En CSV- eller XLSX-fil med én kursdeltaker per rad. Kolonnene gjenkjennes "
+#~ "ut fra overskriften, som gjør at en fil lastet ned fra "
+#~ "kursregistreringslisten kan redigeres og lastes opp igjen."
+
+#~ msgid "One participant per row, in a CSV or XLSX file."
+#~ msgstr "Én deltaker per rad, i en CSV- eller XLSX-fil."
+
+#~ msgid ""
+#~ "The first row should name the columns; recognized names are “name”, "
+#~ "“username”, “card number” and “date” (or “navn”, “brukernavn”, "
+#~ "“kortnummer” and “dato”). Only the username column is required."
+#~ msgstr ""
+#~ "Den første raden bør navngi kolonnene; gjenkjente navn er «name», "
+#~ "«username», «card number» og «date» (eller «navn», «brukernavn», "
+#~ "«kortnummer» og «dato»). Bare kolonnen med brukernavn er påkrevd."
+
+#~ msgid ""
+#~ "Without a header row, the columns are read in the order name, username, "
+#~ "card number, date - except in a file with only one column, which is read "
+#~ "as usernames."
+#~ msgstr ""
+#~ "Uten en overskriftsrad leses kolonnene i rekkefølgen navn, brukernavn, "
+#~ "kortnummer, dato - bortsett fra i en fil med bare én kolonne, som leses "
+#~ "som brukernavn."
 
 #~ msgid "You have completed the Raise3D printer course"
 #~ msgstr "Du har fullført Raise3D-printerkurset"

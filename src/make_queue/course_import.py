@@ -1,8 +1,9 @@
 """
 Importing of 3D printer course registrations from a spreadsheet.
 
-The columns of the spreadsheet are recognized by their header, which makes it possible
-to import a file that was previously exported from the course registration list.
+The file must have exactly the columns of ``COLUMNS``, in that order, named by a
+header row. Accepting only one format keeps both the code and the error messages
+short, and makes it unambiguous what a file that is rejected has to look like.
 """
 
 from dataclasses import dataclass, field
@@ -14,28 +15,12 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.models.course import CoursePermission, Printer3DCourse
 from util.spreadsheet_utils import excel_serial_to_date
 
-# The columns that can be imported, mapped to the headers that are recognized as them.
-# The headers are compared after having been lowercased and stripped of everything but
-# letters and digits
-COLUMN_HEADER_ALIASES = {
-    "name": (
-        "name",
-        "fullname",
-        "navn",
-        "fulltnavn",
-        "coursename",
-        "participant",
-        "deltaker",
-    ),
-    "username": ("username", "user", "ntnuusername", "brukernavn", "ntnubrukernavn"),
-    "card_number": ("cardnumber", "card", "kortnummer", "kort", "kortnr"),
-    "date": ("date", "coursedate", "dato", "kursdato"),
-}
-# The order of the columns of a file without a recognizable header row, which is the
-# same order as the columns of the exported course registration list
-POSITIONAL_COLUMNS = ("name", "username", "card_number", "date")
+# The columns of an importable file, in the order they must appear in. Only the
+# username is required to have a value; the rest of the cells may be left empty
+COLUMNS = ("username", "name", "card_number", "date")
+HEADER_ROW = ", ".join(COLUMNS)
 
-DATE_FORMATS = ("%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y", "%Y/%m/%d", "%d-%m-%Y")
+DATE_FORMAT = "%Y-%m-%d"
 
 # Importing more rows than this is far more likely to be a mistake than intentional,
 # and would in any case time out the request
@@ -89,25 +74,19 @@ def parse_rows(rows: list[list[str]]) -> list[ImportedRow]:
     :param rows: The rows of the spreadsheet, as returned by
                  :func:`util.spreadsheet_utils.read_rows`
     :return: One :class:`ImportedRow` per non-empty row
-    :raises CourseImportError: If the file is empty, too long, or has no username column
+    :raises CourseImportError: If the file is empty, too long, or has the wrong columns
     """
     if not rows:
         raise CourseImportError(_("The file is empty."))
 
-    columns = _match_header_row(rows[0])
-    if columns is None:
-        columns = _positional_columns(len(rows[0]))
-        data_rows = list(enumerate(rows, start=1))
-    else:
-        data_rows = list(enumerate(rows[1:], start=2))
-
-    if "username" not in columns.values():
+    header = tuple(column.strip().lower() for column in rows[0])
+    if header != COLUMNS:
         raise CourseImportError(
-            _(
-                "Found no column with usernames. Name one of the columns"
-                " “username” (or “brukernavn”), or remove the header row."
-            )
+            _("The first row of the file must name the columns: %(header_row)s")
+            % {"header_row": HEADER_ROW}
         )
+
+    data_rows = list(enumerate(rows[1:], start=2))
     if len(data_rows) > MAX_NUM_ROWS:
         raise CourseImportError(
             _(
@@ -121,18 +100,14 @@ def parse_rows(rows: list[list[str]]) -> list[ImportedRow]:
     for line_number, row in data_rows:
         if not any(row):
             continue
-        values = {
-            column: row[index].strip()
-            for index, column in columns.items()
-            if index < len(row)
-        }
+        username, name, card_number, date_string = (cell.strip() for cell in row)
         imported_rows.append(
             ImportedRow(
                 line_number=line_number,
-                name=values.get("name", ""),
-                username=values.get("username", ""),
-                card_number=values.get("card_number", ""),
-                date_string=values.get("date", ""),
+                name=name,
+                username=username,
+                card_number=card_number,
+                date_string=date_string,
             )
         )
 
@@ -142,16 +117,20 @@ def parse_rows(rows: list[list[str]]) -> list[ImportedRow]:
 
 
 def parse_date(date_string: str) -> date | None:
-    """Parse a date written in one of the common formats, or as an Excel serial."""
+    """
+    Parse a date written on the form ``YYYY-MM-DD``.
+
+    A date typed into a spreadsheet is stored as a serial number rather than as text,
+    so those are converted as well - it is the same format, just written by the file
+    format instead of by the user.
+    """
     date_string = date_string.strip()
     if not date_string:
         return None
-    for date_format in DATE_FORMATS:
-        try:
-            return datetime.strptime(date_string, date_format).date()
-        except ValueError:
-            continue
-    return excel_serial_to_date(date_string)
+    try:
+        return datetime.strptime(date_string, DATE_FORMAT).date()
+    except ValueError:
+        return excel_serial_to_date(date_string)
 
 
 @transaction.atomic
@@ -239,29 +218,6 @@ def import_registrations(
         transaction.set_rollback(True)
         result.committed = False
     return result
-
-
-def _match_header_row(row: list[str]) -> dict[int, str] | None:
-    """Map the index of each recognized header to its column, or ``None`` if no
-    header was recognized."""
-    columns = {}
-    for index, header in enumerate(row):
-        normalized_header = "".join(
-            character for character in header.lower() if character.isalnum()
-        )
-        for column, aliases in COLUMN_HEADER_ALIASES.items():
-            if normalized_header in aliases and column not in columns.values():
-                columns[index] = column
-                break
-    return columns or None
-
-
-def _positional_columns(num_columns: int) -> dict[int, str]:
-    # A file with a single column is far more useful as a list of usernames than as a
-    # list of names, which cannot be registered on their own
-    if num_columns <= 1:
-        return {0: "username"}
-    return dict(enumerate(POSITIONAL_COLUMNS[:num_columns]))
 
 
 def _format_form_errors(form) -> str:
