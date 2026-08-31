@@ -14,7 +14,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 ### New features
-- Course participants can register themselves at `/reservation/courses/register/` after having taken the 3D printer course, replacing the Google Form; the requests are listed for approval next to the course registrations, and grant no access until approved (MAKENTNU/web#PR_NUMBER)
+- Course participants can register themselves at `/courses/register/` after having taken the 3D printer course, replacing the Google Form; they have to tick every confirmation statement (edited in the admin panel), and the requests are listed for approval next to the course registrations, granting no access until approved (MAKENTNU/web#PR_NUMBER)
 
 
 ### Improvements
