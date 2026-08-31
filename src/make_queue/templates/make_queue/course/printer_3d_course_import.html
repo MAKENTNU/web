@@ -1,0 +1,95 @@
+{% extends 'web/generic_form.html' %}
+{% load i18n %}
+
+
+{% block extra_pre_content %}
+    {% for message in messages %}
+        <div class="ui {{ message.tags }} message">
+            <i class="close icon"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="ui info message">
+        <div class="header">
+            {% translate "Expected file format" %}
+        </div>
+        <ul class="ui list">
+            <li>
+                {% blocktranslate trimmed %}
+                    One participant per row, in a CSV or XLSX file.
+                {% endblocktranslate %}
+            </li>
+            <li>
+                {% blocktranslate trimmed %}
+                    The first row should name the columns; recognized names are
+                    “name”, “username”, “card number” and “date”
+                    (or “navn”, “brukernavn”, “kortnummer” and “dato”).
+                    Only the username column is required.
+                {% endblocktranslate %}
+            </li>
+            <li>
+                {% blocktranslate trimmed %}
+                    Without a header row, the columns are read in the order
+                    name, username, card number, date -
+                    except in a file with only one column, which is read as usernames.
+                {% endblocktranslate %}
+            </li>
+            <li>
+                {% blocktranslate trimmed %}
+                    Rows without a date get the default course date selected below.
+                {% endblocktranslate %}
+            </li>
+        </ul>
+    </div>
+{% endblock extra_pre_content %}
+
+
+{% block extra_post_content %}
+    {% if import_result %}
+        <h2>{% translate "Result" %}</h2>
+
+        <table class="ui very simple celled table">
+            <thead>
+            <tr>
+                <th>{% translate "row"|capfirst %}</th>
+                <th>{% translate "name"|capfirst %}</th>
+                <th>{% translate "username"|capfirst %}</th>
+                <th>{% translate "result"|capfirst %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for outcome in import_result.failed %}
+                <tr class="error">
+                    <td>{{ outcome.row.line_number }}</td>
+                    <td>{{ outcome.row.name }}</td>
+                    <td>{{ outcome.row.username }}</td>
+                    <td>{{ outcome.message }}</td>
+                </tr>
+            {% endfor %}
+            {% for outcome in import_result.skipped %}
+                <tr class="warning">
+                    <td>{{ outcome.row.line_number }}</td>
+                    <td>{{ outcome.row.name }}</td>
+                    <td>{{ outcome.row.username }}</td>
+                    <td>{{ outcome.message }}</td>
+                </tr>
+            {% endfor %}
+            {% for outcome in import_result.created %}
+                <tr class="{% if import_result.committed %}positive{% endif %}">
+                    <td>{{ outcome.row.line_number }}</td>
+                    <td>{{ outcome.row.name }}</td>
+                    <td>{{ outcome.row.username }}</td>
+                    <td>
+                        {% if import_result.committed %}
+                            {{ outcome.message }}
+                        {% else %}
+                            {% translate "Valid, but not imported" %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock extra_post_content %}

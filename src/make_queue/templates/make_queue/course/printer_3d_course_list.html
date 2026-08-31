@@ -18,6 +18,9 @@
             <a href="{% url 'printer_3d_course_create' %}" data-tooltip="{% translate "Add" %}">
                 <i class="green plus icon"></i>
             </a>
+            <a href="{% url 'printer_3d_course_import' %}" data-tooltip="{% translate "Import from file" %}">
+                <i class="blue upload icon"></i>
+            </a>
         </h1>
 
         <form id="download-users" class="dont-prevent-leaving ui form" method="POST" action="{% url 'printer_3d_course_xlsx' %}">

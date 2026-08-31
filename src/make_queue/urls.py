@@ -166,6 +166,11 @@ course_adminpatterns = [
         course_views.Printer3DCourseCreateView.as_view(),
         name="printer_3d_course_create",
     ),
+    path(
+        "import/",
+        course_views.Printer3DCourseImportView.as_view(),
+        name="printer_3d_course_import",
+    ),
     path("<int:pk>/", include(specific_course_adminpatterns)),
     path(
         "status/change/",

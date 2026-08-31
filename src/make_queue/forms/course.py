@@ -1,11 +1,14 @@
 from django import forms
 from django.db.models import Q
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
+from make_queue.course_import import CourseImportError, ImportedRow, parse_rows
 from make_queue.models.course import CoursePermission, Printer3DCourse
 from users.models import User
+from util.spreadsheet_utils import SUPPORTED_SUFFIXES, SpreadsheetReadError, read_rows
 from web.widgets import (
     SemanticChoiceInput,
     SemanticDateInput,
@@ -95,3 +98,85 @@ class Printer3DCourseForm(forms.ModelForm):
         course.course_permissions.set(self.cleaned_data["course_permissions"])
 
         return course
+
+
+class Printer3DCourseImportForm(forms.Form):
+    """Uploading of a spreadsheet with several course registrations at once."""
+
+    # Uploading a bigger file than this would in any case time out the request
+    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MiB
+
+    file = forms.FileField(
+        label=_("File"),
+        help_text=_(
+            "A CSV or XLSX file with one course participant per row. The columns are"
+            " recognized by their header, which means that a file downloaded from the"
+            " course registration list can be edited and uploaded back."
+        ),
+        widget=forms.ClearableFileInput(attrs={"accept": ",".join(SUPPORTED_SUFFIXES)}),
+    )
+    date = forms.DateField(
+        label=capfirst(_("default course date")),
+        help_text=_("Used for the rows that have no course date of their own."),
+        widget=SemanticDateInput(),
+    )
+    status = forms.ChoiceField(
+        choices=Printer3DCourse.Status.choices,
+        initial=Printer3DCourse.Status.REGISTERED,
+        label=capfirst(Printer3DCourse._meta.get_field("status").verbose_name),
+        widget=SemanticChoiceInput(),
+    )
+    course_permissions = forms.ModelMultipleChoiceField(
+        queryset=CoursePermission.objects.none(),
+        required=False,
+        label=capfirst(
+            Printer3DCourse._meta.get_field("course_permissions").verbose_name
+        ),
+        widget=forms.CheckboxSelectMultiple(attrs={"class": "ui fluid checkbox"}),
+    )
+    skip_already_registered = forms.BooleanField(
+        required=False,
+        initial=True,
+        label=_("Skip participants that are already registered"),
+        help_text=_(
+            "When unchecked, an already registered username is counted as an error"
+            " instead of being silently skipped."
+        ),
+    )
+    import_valid_rows_only = forms.BooleanField(
+        required=False,
+        label=_("Import the valid rows even if some rows have errors"),
+        help_text=_(
+            "When unchecked, nothing is imported unless every row is valid, which"
+            " makes it safe to upload the same file again after fixing the errors."
+        ),
+    )
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.fields["course_permissions"].queryset = (
+            CoursePermission.objects.exclude(short_name="AUTH")
+            .exclude(short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE)
+            .order_by("name")
+        )
+        self.initial.setdefault(
+            "course_permissions",
+            self.fields["course_permissions"].queryset.filter(short_name="VRON"),
+        )
+        # The rows of the uploaded file, set by `clean_file()`
+        self.imported_rows: list[ImportedRow] = []
+
+    def clean_file(self):
+        uploaded_file = self.cleaned_data["file"]
+        if uploaded_file.size > self.MAX_FILE_SIZE:
+            message = _("The file is too big; the maximum size is %(max_size)d MB.")
+            raise forms.ValidationError(
+                message % {"max_size": self.MAX_FILE_SIZE // (1024 * 1024)}
+            )
+
+        try:
+            rows = read_rows(uploaded_file)
+            self.imported_rows = parse_rows(rows)
+        except (SpreadsheetReadError, CourseImportError) as e:
+            raise forms.ValidationError(str(e)) from e
+        return uploaded_file

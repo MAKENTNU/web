@@ -340,6 +340,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # course_adminpatterns
             Get(reverse("printer_3d_course_list"), public=False),
             Get(reverse("printer_3d_course_create"), public=False),
+            Get(reverse("printer_3d_course_import"), public=False),
             # specific_quota_adminpatterns
             *[
                 Get(reverse("quota_update", args=[quota.pk]), public=False)
