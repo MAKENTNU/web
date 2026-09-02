@@ -27,17 +27,18 @@ schedule = {
     ],
     4: [
         (datetime.time(12, 15), datetime.time(14, 7)),
-        (datetime.time(14, 7), datetime.time(16, 0)),
+        (datetime.time(14, 7), datetime.time(16, 7)),
+        (datetime.time(16, 7), datetime.time(18, 0)),
     ],
 }
 
 
-def add_guidance_hours(apps, schema_editor):
-    GuidanceHours = apps.get_model("internal", "GuidanceHours")
+def add_guidance_hour(apps, schema_editor):
+    GuidanceHour = apps.get_model("internal", "GuidanceHour")
 
     for weekday in range(0, 5):
         for from_time, to_time in schedule[weekday]:
-            GuidanceHours.objects.get_or_create(
+            GuidanceHour.objects.get_or_create(
                 weekday=weekday,
                 from_time=from_time,
                 to_time=to_time,
@@ -51,7 +52,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="GuidanceHours",
+            name="GuidanceHour",
             fields=[
                 (
                     "id",
@@ -80,7 +81,7 @@ class Migration(migrations.Migration):
                 (
                     "members",
                     models.ManyToManyField(
-                        related_name="guidance_hours",
+                        related_name="guidance_hour",
                         to="internal.member",
                         verbose_name="members",
                     ),
@@ -88,5 +89,5 @@ class Migration(migrations.Migration):
                 ("notes", models.TextField(blank=True, verbose_name="notes")),
             ],
         ),
-        migrations.RunPython(add_guidance_hours, migrations.RunPython.noop),
+        migrations.RunPython(add_guidance_hour, migrations.RunPython.noop),
     ]
