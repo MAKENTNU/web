@@ -1,0 +1,65 @@
+{% extends 'internal/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Statistics" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'internal/css/statistics.css' %}"/>
+    <script defer src="{% static 'lib/chartsjs/chart.umd.min.js' %}"></script>
+    <script defer src="{% static 'web/js/date_utils.js' %}"></script>
+    <script defer src="{% static 'internal/js/statistics_charts.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+<div class="ui container statistics-page">
+    <h1 class="ui text-centered make-col-blue header">{% translate "Statistics" %}</h1>
+
+    {# Average reservations per hour of day #}
+    <section class="stats-section">
+        <div class="stats-section-head">
+            <h2 class="make-col-blue header">{% translate "Average reservations by hour of day" %}</h2>
+            {% include "internal/_stats_filter.html" with f=time_filter %}
+        </div>
+        <div class="stats-grid">
+            <div class="stats-box stats-box-wide">
+                <div class="stats-box-header">{% translate "Average number of reservations active during each hour, per day" %}</div>
+                {{ time|json_script:"time" }}
+                <canvas id="timespan" height="220"></canvas>
+            </div>
+        </div>
+    </section>
+
+    {# Per machine-type sections #}
+    {% for group in machine_type_groups %}
+        <section class="stats-section">
+            <div class="stats-section-head">
+                <h2 class="make-col-blue header">{{ group.name }}</h2>
+                {% include "internal/_stats_filter.html" with f=group.filter %}
+            </div>
+            <div class="stats-grid">
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total reservations" %}</div>
+                    <div class="stats-big-number" data-field="reservation_count">{{ group.reservation_count }}</div>
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total hours reserved" %}</div>
+                    <div class="stats-big-number" data-field="total_hours_sum">{{ group.total_hours_sum }}</div>
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Total hours per machine" %}</div>
+                    {{ group.per_machine|json_script:group.slug }}
+                    <canvas class="machine-chart" data-source="{{ group.slug }}" data-kind="hours" height="260"></canvas>
+                </div>
+                <div class="stats-box">
+                    <div class="stats-box-header">{% translate "Number of reservations per machine" %}</div>
+                    <canvas class="machine-chart" data-source="{{ group.slug }}" data-kind="counts" height="260"></canvas>
+                </div>
+            </div>
+        </section>
+    {% empty %}
+        <p>{% translate "No machine data available." %}</p>
+    {% endfor %}
+</div>
+{% endblock %}

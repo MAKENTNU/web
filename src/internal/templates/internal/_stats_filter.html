@@ -1,0 +1,24 @@
+{% load i18n %}
+{# Filters one section. `other_params` keeps the other sections' filters #}
+<form class="stats-filter-inline" method="get">
+    {% for name, value in f.other_params %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+    {% endfor %}
+
+    <select class="stats-filter-select" name="range_{{ f.key }}" onchange="this.form.submit()">
+        <option value="all"    {% if f.range == "all"    %}selected{% endif %}>{% translate "All time" %}</option>
+        <option value="week"   {% if f.range == "week"   %}selected{% endif %}>{% translate "Last week" %}</option>
+        <option value="month"  {% if f.range == "month"  %}selected{% endif %}>{% translate "Last month" %}</option>
+        <option value="year"   {% if f.range == "year"   %}selected{% endif %}>{% translate "Last year" %}</option>
+        <option value="custom" {% if f.range == "custom" %}selected{% endif %}>{% translate "Custom" %}</option>
+    </select>
+
+    <div class="stats-custom-range">
+        <input type="date" name="from_{{ f.key }}" value="{{ f.date_from }}"
+               aria-label="{% translate "From" %}"/>
+        <span class="stats-dash">—</span>
+        <input type="date" name="to_{{ f.key }}" value="{{ f.date_to }}"
+               aria-label="{% translate "To" %}"/>
+        <button type="submit" class="ui mini make-bg-blue button">{% translate "Apply" %}</button>
+    </div>
+</form>
