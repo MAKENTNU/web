@@ -15,6 +15,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### New features
 
+- Internal statistics page for reservation and machine usage (MAKENTNU/web#819)
 
 ### Improvements
 
