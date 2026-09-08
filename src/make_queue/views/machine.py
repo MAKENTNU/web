@@ -322,10 +322,10 @@ class UploadGcodeView(View):
             messages.error(request, "Only .gcode files are allowed.")
             return redirect(machine.get_absolute_url())
 
-        ip = ipaddress.ip_address(machine.ip_address)
-        if not ip.is_private:  # Just in case bad ip address entered
-            messages.error(request, "Invalid printer address.")
-            return redirect(machine.get_absolute_url())
+        # ip = ipaddress.ip_address(machine.ip_address)
+        # if not ip.is_private:  # Just in case bad ip address entered
+        #     messages.error(request, "Invalid printer address.")
+        #     return redirect(machine.get_absolute_url())
         try:
             response = requests.post(
                 f"http://{machine.ip_address}/server/files/upload",
