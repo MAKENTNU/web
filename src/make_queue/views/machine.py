@@ -2,10 +2,9 @@ import ipaddress
 from abc import ABC
 
 import requests
-from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -302,6 +301,7 @@ class MachineRelatedViewMixin:
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
 
+
 GCODE_MAX_SIZE_MB = 250
 GCODE_MAX_SIZE_BYTES = GCODE_MAX_SIZE_MB * 1024 * 1024
 
@@ -338,42 +338,63 @@ class UploadGcodeView(View):
 
         if not machine.show_upload_button(request.user):
             return JsonResponse(
-                {"success": False, "message": str(_("You are not allowed to upload to this printer."))},
+                {
+                    "success": False,
+                    "message": str(_("You are not allowed to upload to this printer.")),
+                },
                 status=403,
             )
 
         file = request.FILES.get("file")
         if not file:
             return JsonResponse(
-                {"success": False, "message": str(_("No file was selected."))}, status=400
+                {"success": False, "message": str(_("No file was selected."))},
+                status=400,
             )
 
         if not file.name.lower().endswith(".gcode"):
             return JsonResponse(
-                {"success": False, "message": str(_("Only .gcode files are allowed."))}, status=400
+                {"success": False, "message": str(_("Only .gcode files are allowed."))},
+                status=400,
             )
 
         if file.size > GCODE_MAX_SIZE_BYTES:
             return JsonResponse(
-                {"success": False, "message": str(_("File is too large (max %(max)s MB).")) % {"max": GCODE_MAX_SIZE_MB}},
+                {
+                    "success": False,
+                    "message": str(_("File is too large (max %(max)s MB)."))
+                    % {"max": GCODE_MAX_SIZE_MB},
+                },
                 status=400,
             )
 
         if not _looks_like_gcode(file):
             return JsonResponse(
-                {"success": False, "message": str(_("This doesn't look like a valid G-code file."))}, status=400
+                {
+                    "success": False,
+                    "message": str(_("This doesn't look like a valid G-code file.")),
+                },
+                status=400,
             )
 
         try:
             ip = ipaddress.ip_address(machine.ip_address)
         except (ValueError, TypeError):
             return JsonResponse(
-                {"success": False, "message": str(_("Invalid printer address configured."))}, status=500
+                {
+                    "success": False,
+                    "message": str(_("Invalid printer address configured.")),
+                },
+                status=500,
             )
 
         if not (ip.is_private or ip in TAILSCALE_CGNAT):
             return JsonResponse(
-                {"success": False, "message": str(_("Invalid printer address configured."))}, status=500
+                {
+                    "success": False,
+                    "message": str(_("Invalid printer address configured.")),
+                },
+                status=500,
             )
 
         try:
@@ -385,14 +406,24 @@ class UploadGcodeView(View):
             )
         except requests.RequestException as e:
             return JsonResponse(
-                {"success": False, "message": str(_("Could not reach the printer: %(error)s")) % {"error": e}},
+                {
+                    "success": False,
+                    "message": str(_("Could not reach the printer: %(error)s"))
+                    % {"error": e},
+                },
                 status=502,
             )
 
         if response.status_code == 201:
-            return JsonResponse({"success": True, "message": str(_("File uploaded successfully."))})
+            return JsonResponse(
+                {"success": True, "message": str(_("File uploaded successfully."))}
+            )
 
         return JsonResponse(
-            {"success": False, "message": str(_("Printer rejected the upload (status %(code)s).")) % {"code": response.status_code}},
+            {
+                "success": False,
+                "message": str(_("Printer rejected the upload (status %(code)s)."))
+                % {"code": response.status_code},
+            },
             status=502,
         )
