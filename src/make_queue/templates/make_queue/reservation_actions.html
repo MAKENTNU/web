@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusText = document.getElementById("upload-status");
     const message = document.getElementById("upload-message");
     const icon = document.getElementById("upload-icon");
+    let uploading = false;
 
     const TXT = {
         uploading: "{% translate 'Uploading' %}...",
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!fileInput.files.length) return;
 
             button.disabled = true;
+            uploading = true;
             button.textContent = TXT.uploading;
             statusText.textContent = "";
 
@@ -41,21 +43,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
                 }
             })
-            .then(res => res.text())
+            .then(async res => {
+                let data = null;
+                try {
+                    data = await res.json();
+                } catch {}
+                if (!res.ok || !data || !data.success) {
+                    throw new Error((data && data.message) || TXT.uploadFailed);
+                }
+                return data;
+            })
             .then(() => {
                 button.textContent = TXT.upload;
                 statusText.textContent = TXT.uploadComplete;
             })
-            .catch(() => {
+            .catch(err => {
                 button.textContent = TXT.upload;
-                statusText.textContent = TXT.uploadFailed;
+                statusText.textContent = err.message || TXT.uploadFailed; //TODO make not show error message later
             })
             .finally(() => {
+                uploading = false;
                 button.disabled = false;
+                fileInput.value = "";
             });
         });
     }
     function updateStatus() {
+        if (uploading) return;
         fetch("{% url 'printer_status' machine.pk %}")
             .then(res => res.json())
             .then(data => {
@@ -91,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     updateStatus();
+    setInterval(updateStatus, 10000);
 });
 </script>
 {% endif %}

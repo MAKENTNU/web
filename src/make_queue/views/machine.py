@@ -302,44 +302,97 @@ class MachineRelatedViewMixin:
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
 
+GCODE_MAX_SIZE_MB = 250
+GCODE_MAX_SIZE_BYTES = GCODE_MAX_SIZE_MB * 1024 * 1024
+
+TAILSCALE_CGNAT = ipaddress.ip_network("100.64.0.0/10")
+
+
+def _looks_like_gcode(file) -> bool:
+    """Heuristic: most non-empty lines in the first chunk should look like G-code."""
+    try:
+        file.seek(0)
+        chunk = file.read(8192)
+        file.seek(0)
+    except Exception:
+        return False
+
+    if isinstance(chunk, bytes):
+        try:
+            chunk = chunk.decode("utf-8", errors="ignore")
+        except Exception:
+            return False
+
+    lines = [line.strip() for line in chunk.splitlines() if line.strip()]
+    if not lines:
+        return False
+
+    valid_prefixes = ("G", "M", "T", "N", ";")
+    valid_count = sum(1 for line in lines if line.upper().startswith(valid_prefixes))
+    return valid_count / len(lines) >= 0.8
+
 
 class UploadGcodeView(View):
     def post(self, request, pk):
         machine = get_object_or_404(Machine, pk=pk)
 
         if not machine.show_upload_button(request.user):
-            messages.error(request, "You are not allowed to upload to this printer.")
-            return redirect(machine.get_absolute_url())
+            return JsonResponse(
+                {"success": False, "message": str(_("You are not allowed to upload to this printer."))},
+                status=403,
+            )
 
         file = request.FILES.get("file")
-
         if not file:
-            messages.error(request, "No file uploaded.")
-            return redirect(machine.get_absolute_url())
+            return JsonResponse(
+                {"success": False, "message": str(_("No file was selected."))}, status=400
+            )
 
-        # Only allow .gcode
-        if not file.name.endswith(".gcode"):
-            messages.error(request, "Only .gcode files are allowed.")
-            return redirect(machine.get_absolute_url())
+        if not file.name.lower().endswith(".gcode"):
+            return JsonResponse(
+                {"success": False, "message": str(_("Only .gcode files are allowed."))}, status=400
+            )
 
-        # ip = ipaddress.ip_address(machine.ip_address)
-        # if not ip.is_private:  # Just in case bad ip address entered
-        #     messages.error(request, "Invalid printer address.")
-        #     return redirect(machine.get_absolute_url())
+        if file.size > GCODE_MAX_SIZE_BYTES:
+            return JsonResponse(
+                {"success": False, "message": str(_("File is too large (max %(max)s MB).")) % {"max": GCODE_MAX_SIZE_MB}},
+                status=400,
+            )
+
+        if not _looks_like_gcode(file):
+            return JsonResponse(
+                {"success": False, "message": str(_("This doesn't look like a valid G-code file."))}, status=400
+            )
+
+        try:
+            ip = ipaddress.ip_address(machine.ip_address)
+        except (ValueError, TypeError):
+            return JsonResponse(
+                {"success": False, "message": str(_("Invalid printer address configured."))}, status=500
+            )
+
+        if not (ip.is_private or ip in TAILSCALE_CGNAT):
+            return JsonResponse(
+                {"success": False, "message": str(_("Invalid printer address configured."))}, status=500
+            )
+
         try:
             response = requests.post(
                 f"http://{machine.ip_address}/server/files/upload",
                 files={"file": (file.name, file, "application/octet-stream")},
                 data={"root": "gcodes", "path": ""},
-                timeout=10,
+                timeout=(5, 120),
+            )
+        except requests.RequestException as e:
+            return JsonResponse(
+                {"success": False, "message": str(_("Could not reach the printer: %(error)s")) % {"error": e}},
+                status=502,
             )
 
-            if response.status_code == 200:
-                messages.success(request, "File uploaded successfully.")
-            else:
-                messages.error(request, f"Upload failed: {response.text}")
+        if response.status_code == 201:
+            return JsonResponse({"success": True, "message": str(_("File uploaded successfully."))})
 
-        except requests.RequestException as e:
-            messages.error(request, f"Printer connection failed: {e}")
-
-        return redirect(machine.get_absolute_url())
+        return JsonResponse(
+            {"success": False, "message": str(_("Printer rejected the upload (status %(code)s).")) % {"code": response.status_code}},
+            status=502,
+        )
