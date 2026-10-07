@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => {
                 button.textContent = TXT.upload;
-                statusText.textContent = err.message || TXT.uploadFailed; //TODO make not show error message later
+                statusText.textContent = err.message || TXT.uploadFailed;
             })
             .finally(() => {
                 uploading = false;

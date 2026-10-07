@@ -414,7 +414,7 @@ class UploadGcodeView(View):
                 status=502,
             )
 
-        if response.status_code == 201:
+        if response.ok:
             return JsonResponse(
                 {"success": True, "message": str(_("File uploaded successfully."))}
             )
