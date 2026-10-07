@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ready: "{% translate 'Ready for upload' %}",
         unknown: "{% translate 'Current printer status' %}:",
         fetchError: "{% translate 'Unable to retrieve printer status.' %}",
+        tooLarge: "{% translate 'File is too large.' %}",
     };
     if (button && fileInput) {
         button.addEventListener("click", () => fileInput.click());
@@ -49,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     data = await res.json();
                 } catch {}
                 if (!res.ok || !data || !data.success) {
+                    if (res.status === 413) {
+                        throw new Error(TXT.tooLarge);
+                    }
                     throw new Error((data && data.message) || TXT.uploadFailed);
                 }
                 return data;
@@ -139,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </a>
 {% if show_upload_button %}
 <form id="upload-form"
-      class="item disabled"
+      class="item disabled dont-prevent-leaving"
       method="post"
       enctype="multipart/form-data"
       action="{% url 'upload_gcode' machine.pk %}">
@@ -150,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="content">
         <div class="header">{% translate "Upload Gcode" %}</div>
 
-        <input id="file-input" type="file" name="file" accept=".gcode" hidden required>
+        <input id="file-input" type="file" name="file" accept=".gcode" hidden>
 
         <button id="upload-button" type="button" class="ui button small" disabled>
             {% translate "Upload" %}
