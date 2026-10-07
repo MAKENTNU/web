@@ -1,10 +1,13 @@
 from collections.abc import Sequence
 from html.entities import html5
+from typing import Final
 
 from django.db.models import QuerySet
 from django.utils.html import escape, format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django_hosts import reverse_host
+
+_FIRST_NON_ASCII_ORD_VALUE: Final = 128
 
 
 def _should_include_escape_entry(unicode_character: str, named_character: str):
@@ -18,7 +21,7 @@ def _should_include_escape_entry(unicode_character: str, named_character: str):
     # The character should be escaped (and therefore included in the dict) if it's not
     # ASCII. Might have to tweak the condition below, e.g. by checking if the character
     # is part of `string.printable` instead.
-    should_escape = ord(unicode_character) >= 128
+    should_escape = ord(unicode_character) >= _FIRST_NON_ASCII_ORD_VALUE
     return should_escape
 
 

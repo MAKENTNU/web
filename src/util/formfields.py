@@ -66,7 +66,7 @@ class CompressedImageField(forms.ImageField):
                                     content_type_extra=cleaned_data.content_type_extra,
                                 )
                                 self._save_reduced_image(pillow_image, new_file)
-                                new_size = os.path.getsize(new_file.file.name)
+                                new_size = os.path.getsize(new_file.file.name)  # noqa: PTH202
                             case _:
                                 raise forms.ValidationError(
                                     "Unexpected type of uploaded file:"

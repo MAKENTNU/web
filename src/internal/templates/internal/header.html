@@ -1,6 +1,7 @@
 {% extends 'web/header.html' %}
 {% load i18n %}
 {% load hosts %}
+{% load permission_tags %}
 
 
 {# Linking `web/header.css` and `web/header.js` is required when including this template #}
@@ -38,6 +39,11 @@
     <a class="item" href="{% host_url 'index_page' host 'main' %}">
         <div class="text">{% translate "Public pages" %}</div>
     </a>
+    {% if user|can_view_admin_panel %}
+        <a class="item" href="{% host_url 'admin_panel' host 'main' %}">
+            <div class="text">{% translate "Administration" %}</div>
+        </a>
+    {% endif %}
     {% if user.is_staff %}
         <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
             <div class="text">{% translate "Django admin" %}</div>

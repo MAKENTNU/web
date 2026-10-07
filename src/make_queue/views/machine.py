@@ -301,10 +301,6 @@ class MachineRelatedViewMixin:
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
 
-
-GCODE_MAX_SIZE_MB = 250
-GCODE_MAX_SIZE_BYTES = GCODE_MAX_SIZE_MB * 1024 * 1024
-
 TAILSCALE_CGNAT = ipaddress.ip_network("100.64.0.0/10")
 
 
@@ -358,15 +354,6 @@ class UploadGcodeView(View):
                 status=400,
             )
 
-        if file.size > GCODE_MAX_SIZE_BYTES:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": str(_("File is too large (max %(max)s MB)."))
-                    % {"max": GCODE_MAX_SIZE_MB},
-                },
-                status=400,
-            )
 
         if not _looks_like_gcode(file):
             return JsonResponse(

@@ -370,7 +370,7 @@ class EventTicket(models.Model):
         )
 
     def __str__(self):
-        return f"{self.name} - {self.event if self.event else self.timeplace}"
+        return f"{self.name} - {self.event or self.timeplace}"
 
     def save(self, *args, **kwargs):
         adding = self._state.adding

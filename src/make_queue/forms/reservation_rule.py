@@ -1,9 +1,13 @@
+from typing import Final
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from make_queue.models.machine import MachineType
 from make_queue.models.reservation import ReservationRule
 from web.widgets import Direction, DirectionalCheckboxSelectMultiple, SemanticTimeInput
+
+_NUM_DAYS_IN_WEEK: Final = 7
 
 
 class ReservationRuleForm(forms.ModelForm):
@@ -43,13 +47,13 @@ class ReservationRuleForm(forms.ModelForm):
             # Check if the time period is a valid time period (within a week)
             if (
                 (start_time > end_time and days_changed == 0)
-                or days_changed > 7
-                or (days_changed == 7 and start_time < end_time)
+                or days_changed > _NUM_DAYS_IN_WEEK
+                or (days_changed == _NUM_DAYS_IN_WEEK and start_time < end_time)
             ):
                 message = _(
-                    "Period is either too long (7+ days) or start time is earlier than"
-                    " end time."
-                )
+                    "Period is either too long ({n}+ days) or start time is earlier"
+                    " than end time."
+                ).format(n=_NUM_DAYS_IN_WEEK)
                 raise forms.ValidationError(message)
 
             start_days = [int(day) for day in start_days]
@@ -61,7 +65,7 @@ class ReservationRuleForm(forms.ModelForm):
                 t1.overlap(t2)
                 for t1 in time_periods
                 for t2 in time_periods
-                if t1.exact_end_weekday != t2.exact_end_weekday
+                if t1.exact_end_weekday != t2.exact_end_weekday  # noqa: PLR1714
                 and t1.exact_start_weekday != t2.exact_end_weekday
             ):
                 raise forms.ValidationError(

@@ -1,4 +1,6 @@
+from collections.abc import Iterable
 from math import ceil
+from typing import Final
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
@@ -210,18 +212,21 @@ class DocumentationPageDeleteView(
 
 
 class DocumentationPageSearchView(QueryParameterFormMixin, TemplateView):
+    PAGE_SIZE: Final = 10
+    NUM_PAGINATION_BUTTONS_ON_EITHER_END: Final = 3
+
     form_class = DocumentationPageSearchQueryForm
     template_name = "docs/documentation_page_search.html"
 
-    page_size = 10
+    @classmethod
+    def pages_to_show(cls, current_page: int, n_pages: int) -> Iterable[int]:
+        n_buttons = cls.NUM_PAGINATION_BUTTONS_ON_EITHER_END
 
-    @staticmethod
-    def pages_to_show(current_page, n_pages):
-        if current_page <= 3:
+        if current_page <= n_buttons:
             return range(1, min(n_pages + 1, 8))
-        if current_page >= n_pages - 3:
+        if current_page >= n_pages - n_buttons:
             return range(max(1, n_pages - 6), n_pages + 1)
-        return range(current_page - 3, current_page + 4)
+        return range(current_page - n_buttons, current_page + n_buttons + 1)
 
     def get_context_data(self, **kwargs):
         query = self.query_params["query"]
@@ -230,11 +235,11 @@ class DocumentationPageSearchView(QueryParameterFormMixin, TemplateView):
         pages = Page.objects.filter(
             Q(title__icontains=query) | Q(current_content__content__icontains=query)
         )
-        n_pages = ceil(pages.count() / self.page_size)
+        n_pages = ceil(pages.count() / self.PAGE_SIZE)
 
         return {
             **super().get_context_data(**kwargs),
-            "pages": pages[(page - 1) * self.page_size : page * self.page_size],
+            "pages": pages[(page - 1) * self.PAGE_SIZE : page * self.PAGE_SIZE],
             "page": page,
             "pages_to_show": self.pages_to_show(page, n_pages),
             "query": query,

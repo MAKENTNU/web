@@ -34,8 +34,10 @@ class AdminAPISuggestSkillVoteView(
             return UTF8JsonResponse(response_dict)
 
         suggestion.voters.add(request.user.profile)
-        response_dict["skill_passed"] = suggestion.voters.count() >= 5
-        if response_dict["skill_passed"]:
+
+        skill_passed = suggestion.voters.count() >= SuggestSkill.NUM_VOTES_TO_ADD_SKILL
+        response_dict["skill_passed"] = skill_passed
+        if skill_passed:
             Skill.objects.create(
                 title=suggestion.title,
                 title_en=suggestion.title_en,

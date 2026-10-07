@@ -21,7 +21,7 @@ class ArticleEventAndTimePlaceTests(TestCase):
         *,
         relative_publication_time,
         relative_start_time,
-        hidden=TimePlace._meta.get_field("hidden").default,
+        hidden=TimePlace._meta.get_field("hidden").default,  # noqa: B008
     ):
         now = timezone.localtime()
         start_time = now + timedelta(hours=relative_start_time)

@@ -67,10 +67,10 @@ class ContentBoxUpdateView(
 
     narrow = False
 
-    # Caches `get_absolute_url()`, as it will be called multiple times
-    # (`maxsize` need only be 1, since the cached value is not supposed to last longer
-    # than each request)
-    @lru_cache(maxsize=1)
+    # Don't need to set `maxsize` any higher than 1, because the passed argument should
+    # be the same throughout the handling of the request, and because the cache should
+    # be replaced when the next request is handled
+    @lru_cache(maxsize=1)  # noqa: B019 - memory leaks is not a problem when `maxsize` is so low
     def _absolute_url(self, content_box: ContentBox):
         try:
             return content_box.get_absolute_url()
@@ -120,10 +120,10 @@ class ContentBoxUpdateView(
     def get_permission_required(self):
         return self.permission_required + self.get_object().extra_change_perms_str_tuple
 
-    # Cache this method, as it will be called multiple times
-    # (`maxsize` need only be 1, since the cached value is not supposed to last longer
-    # than each request)
-    @lru_cache(maxsize=1)
+    # Don't need to set `maxsize` any higher than 1, because the passed arguments should
+    # be the same throughout the handling of the request, and because the cache should
+    # be replaced when the next request is handled
+    @lru_cache(maxsize=1)  # noqa: B019 - memory leaks is not a problem when `maxsize` is so low
     def get_object(self, queryset=None):
         return super().get_object()
 

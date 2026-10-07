@@ -77,14 +77,14 @@ class EventListView(ListView):
                     }
                 )
             else:
-                for timeplace in event.future_timeplaces:
-                    future_event_dicts.append(
-                        {
-                            "event": event,
-                            "shown_occurrence": timeplace,
-                            "number_of_occurrences": 1,
-                        }
-                    )
+                future_event_dicts.extend(
+                    {
+                        "event": event,
+                        "shown_occurrence": timeplace,
+                        "number_of_occurrences": 1,
+                    }
+                    for timeplace in event.future_timeplaces
+                )
 
         past = (
             queryset.past()
@@ -609,7 +609,7 @@ class EventTicketCreateView(
         else:
             try:
                 async_to_sync(get_channel_layer().send)("email", email_message_dict)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 log_request_exception(
                     "Sending event ticket email failed.", e, self.request
                 )

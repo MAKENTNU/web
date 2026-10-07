@@ -80,7 +80,7 @@ def login_wrapper(request, backend, *args, **kwargs):
         # Try to retrieve username from NTNUs LDAP server. Otherwise, use the first part
         # of the email as the username
         ldap_data = get_user_details_from_email(user.email, use_cached=False)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         log_request_exception(
             "Looking up user details through LDAP failed.", e, request
         )

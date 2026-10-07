@@ -164,7 +164,7 @@ def assertRedirectsWithPathPrefix(
     self.assertEqual(redirected_response.status_code, HTTPStatus.OK)
 
 
-class PathPredicate(ABC):
+class PathPredicate(ABC):  # noqa: B024
     LANGUAGE_PREFIXES = ["", "/en"]
 
     def __init__(self, path: str, *, public: bool, translated=True):

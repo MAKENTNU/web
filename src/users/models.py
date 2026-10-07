@@ -28,10 +28,11 @@ class User(AbstractUser):
         :return: A concatenation of the user's two outermost names.
         """
         full_name = self.get_full_name()
-        names = full_name.split(" ")
-        if len(names) <= 2:
-            return full_name
-        return f"{names[0]} {names[-1]}"
+        match full_name.split(" "):
+            case [first_name, *_, last_name]:
+                return f"{first_name} {last_name}"
+            case _:
+                return full_name
 
     def has_any_permissions_for(self, model: Type[models.Model]):
         app_label = model._meta.app_label

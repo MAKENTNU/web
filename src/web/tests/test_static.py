@@ -69,7 +69,7 @@ class InterpolatedStaticFilesTests(LiveServerTestCase):
                         # Remove the manifest regex, as when in debug mode,
                         # static files are served directly from the source directory
                         # (instead of from the `STATIC_ROOT` directory)
-                        after_string = after_string.replace(
+                        after_string = after_string.replace(  # noqa: PLW2901
                             MANIFEST_HEX_SUFFIX_REGEX, ""
                         )
                     self.assertRegex(served_file_contents, after_string)

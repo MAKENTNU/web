@@ -7,6 +7,15 @@ from django.core.management.commands import makemessages
 
 
 class Command(makemessages.Command):
+    """A custom override of the ``compilemessages`` command.
+
+    Differences from the standard command:
+
+    * Ignores files within the top-level directories that don't contain our project's
+      Python code.
+    * Ensures that the generated comments have the same format regardless of OS.
+    """
+
     # Remove leading `./` as well, in case it ever happens to be generated (see comment
     # above `write_po_file()` for context)
     PATH_PREFIX_REGEX: Final = re.compile(r" \.[\\/]")
@@ -56,8 +65,7 @@ class Command(makemessages.Command):
         new_po_file_contents = "".join(po_file_lines)
         if new_po_file_contents != original_po_file_contents:
             # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
-            with open(po_file, "w", encoding="utf-8") as fp:
-                fp.write(new_po_file_contents)
+            po_file.write_text(new_po_file_contents, "utf-8")
 
     @classmethod
     def get_default_ignore_patterns(cls) -> list[str]:

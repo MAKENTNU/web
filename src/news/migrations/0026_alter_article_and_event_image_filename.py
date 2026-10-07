@@ -52,9 +52,9 @@ def move_article_and_event_images(apps, schema_editor):
         for old_path, new_path in old_paths_renamed_to_new_paths.items():
             try:
                 Path(new_path).rename(old_path)
-            except Exception as e2:
+            except Exception as e2:  # noqa: BLE001
                 print("Exception while undoing renaming:\n", e2)
-        raise e
+        raise e  # noqa: TRY201
 
 
 class Migration(migrations.Migration):

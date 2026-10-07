@@ -1,8 +1,13 @@
-from datetime import date
+from datetime import MAXYEAR, date
+from typing import Final
 
 from django.utils import timezone
 
 from internal.validators import semester_string_regex
+
+_JUNE: Final = 6
+_AUGUST: Final = 8
+_LATEST_SEMESTER_START_DAY: Final = 20
 
 
 def date_to_semester(date_: date) -> str:
@@ -16,9 +21,11 @@ def date_to_semester(date_: date) -> str:
         and a letter for the semester.
     """
     semester = "H"
-    if date_.month < 6:
+    if date_.month < _JUNE:
         semester = "V"
-    elif date_.month < 8 or date_.month == 8 and date_.day < 20:
+    elif date_.month < _AUGUST or (
+        date_.month == _AUGUST and date_.day < _LATEST_SEMESTER_START_DAY
+    ):
         semester = "S"
     return f"{semester}{date_.year % 100}"
 
@@ -39,7 +46,7 @@ def semester_to_year(semester: str) -> float:
 
     year_half, year_str = regex_match.groups()
     year = float(year_str)
-    if len(year_str) == 2:
+    if len(year_str) == 2:  # noqa: PLR2004
         current_year = timezone.now().year
         current_century = current_year - current_year % 100
         year += current_century
@@ -54,7 +61,7 @@ def year_to_semester(year: float) -> str:
     representation. This function does the opposite of ``semester_to_year()``; see its
     documentation for more details.
     """
-    if not 0 <= year <= 9999:
+    if not 0 <= year <= MAXYEAR:
         raise ValueError(f"'{year}' is not a valid year")
 
     current_year = timezone.now().year
@@ -64,5 +71,5 @@ def year_to_semester(year: float) -> str:
         year_str = str(year_str).rjust(2, "0")
     else:
         year_str = str(int(year))
-    year_half = "V" if year % 1 < 0.5 else "H"
+    year_half = "V" if year % 1 < 0.5 else "H"  # noqa: PLR2004
     return f"{year_half}{year_str}"

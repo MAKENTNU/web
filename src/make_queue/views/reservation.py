@@ -191,7 +191,7 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             form = ReservationForm(request.POST)
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_request_exception("Validating reservation failed.", e, request)
         return self.get(request, **kwargs)
 
@@ -386,7 +386,9 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         )
 
         # Find all periods between reservations
-        for period_start, period_end in zip(reservations, reservations[1:]):
+        for period_start, period_end in zip(
+            reservations, reservations[1:], strict=False
+        ):
             duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
             if duration >= required_time:
                 periods.append(
@@ -426,8 +428,12 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
 
         periods = []
         for machine in form.cleaned_data["machine_type"].machines.all():
-            if not machine.get_status() == Machine.Status.OUT_OF_ORDER:
-                periods.extend(self.get_periods(machine, required_time))
+            if machine.get_status() in (
+                Machine.Status.OUT_OF_ORDER,
+                Machine.Status.MAINTENANCE,
+            ):
+                continue
+            periods.extend(self.get_periods(machine, required_time))
 
         # Periods in the near future is more interesting than in the distant
         # future

@@ -52,6 +52,10 @@ class Printer3DCourseForm(forms.ModelForm):
         self.base_permission = CoursePermission.objects.get(
             short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE
         )
+        if not self.instance.pk:
+            self.initial["course_permissions"] = self.fields[
+                "course_permissions"
+            ].queryset.filter(short_name="VRON")
 
     def clean_card_number(self):
         card_number: str = self.cleaned_data["card_number"]
@@ -59,10 +63,9 @@ class Printer3DCourseForm(forms.ModelForm):
             # This accident prevention was requested by the Mentor committee.
             # Phone number is from https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
             if card_number.lstrip("0") == "91897373":
-                # Translators: See the Norwegian and English versions of this page for
-                # a translation of "Building security":
-                # https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
                 message = _(
+                    # Translators: See the Norwegian and English versions of this page
+                    # for a translation of "Building security": https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
                     "The card number was detected to be the phone number of"
                     " Building security at NTNU. Please enter a valid card number."
                 )

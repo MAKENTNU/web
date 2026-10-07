@@ -59,7 +59,7 @@ class QueryParameterFormMixin(FormMixin, ABC):
         if self._query_param_errors:
             return self.form_invalid(form=None)
         else:
-            return self.form_valid(form=None, *args, **kwargs)
+            return self.form_valid(*args, form=None, **kwargs)
 
     def validate_query_params(self):
         form: Form = self.get_form()
@@ -81,7 +81,7 @@ class QueryParameterFormMixin(FormMixin, ABC):
             fields_not_on_form = self.request.GET.keys() - form.base_fields.keys()
             if fields_not_on_form:
                 errors["undefined_fields"] = {
-                    "message": "These provided fields are not defined in the API.",
+                    "message": _("These provided fields are not defined in the API."),
                     "fields": list(fields_not_on_form),
                 }
 

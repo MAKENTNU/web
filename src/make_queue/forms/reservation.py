@@ -44,8 +44,10 @@ class ReservationForm(forms.Form):
         # Check that the given machine exists
         try:
             cleaned_data["machine"] = Machine.objects.get(pk=machine_pk)
-        except Machine.DoesNotExist:
-            raise forms.ValidationError("Machine name and machine type do not match")
+        except Machine.DoesNotExist as e:
+            raise forms.ValidationError(
+                "Machine name and machine type do not match"
+            ) from e
 
         # If the reservation is an event, check that it exists
         if has_event:

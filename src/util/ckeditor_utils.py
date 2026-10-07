@@ -29,7 +29,7 @@ def get_filename(upload_name: str, request):
 
     try:
         folder_name = get_folder_name(request)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         log_request_exception(
             "Failed to determine the proper folder name for the file with name"
             f" '{upload_name}'",
@@ -46,7 +46,7 @@ def get_folder_name(request):
     http_headers = request.headers
     origin_full_url = http_headers.get("REFERER")  # REFERER is supposed to have a typo
     if not origin_full_url:
-        raise Exception("Could not find HTTP_REFERER among the request's headers")
+        raise KeyError("Could not find HTTP_REFERER among the request's headers")
 
     origin_path = urlparse(origin_full_url).path
     # Replace `%xx` escapes with their single-character equivalent, to prevent errors in
