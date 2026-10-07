@@ -354,6 +354,9 @@ class UploadGcodeView(View):
                 status=400,
             )
 
+        username = request.user.username
+        if username.lower() not in file.name.lower():
+            file.name = f"{username}-{file.name}"
 
         if not _looks_like_gcode(file):
             return JsonResponse(
