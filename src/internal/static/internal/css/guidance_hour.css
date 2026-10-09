@@ -1,0 +1,203 @@
+.guidance_hour_header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.guidance_hour_my_slots {
+    width: 100%;
+    margin: 0 0 10px;
+    padding-left: 6px;
+    background-color: #eef4f8;
+    border-left: 4px solid var(--make-blue);
+    color: #0b2f4a;
+}
+
+.guidance_hour_matrix {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.guidance_hour_matrix :is(th, td) {
+    border: 1px solid black;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.guidance_hour_matrix th {
+    background-color: var(--make-blue);
+    color: #ffffff;
+}
+
+.guidance_hour_matrix td {
+    background-color: var(--make-yellow);
+    color: black;
+}
+
+.guidance_hour_matrix td.guidance_slot_empty {
+    background-color: #827f7f;
+}
+
+.guidance_hour_matrix td.guidance_matrix_slot {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.guidance_hour_matrix .guidance_slot_time {
+    width: 150px;
+    white-space: nowrap;
+}
+
+.guidance_slot_members {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.guidance_slot_members .guidance_member_name + .guidance_member_name {
+    padding-top: 3px;
+    position: relative;
+}
+
+.guidance_slot_members .guidance_member_name + .guidance_member_name::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: calc(100% + 24px);
+    border-top: 1px solid var(--make-blue);
+}
+
+.guidance_slot_clickable {
+    cursor: pointer;
+}
+
+.guidance_member_name {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.guidance_hour_notes,
+.guidance_hour_notes_display {
+    width: 100%;
+    min-height: 65px;
+    margin: 0;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
+.guidance_hour_notes {
+    resize: vertical;
+    border: 1px solid rgba(12, 66, 106, 0.35);
+    background: #ffffff;
+}
+
+.guidance_hour_notes_controls {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guidance_hour_notes_save {
+    border: 1px solid var(--make-blue);
+    background-color: var(--make-blue);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.guidance_hour_notes_save.guidance_hour_notes_save_success {
+    background-color: #1a7a3c;
+    border-color: #1a7a3c;
+    cursor: default;
+}
+
+.cancel_button,
+.book_button {
+    border: 1px solid var(--make-blue);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+}
+
+.book_button {
+    background-color: var(--make-blue);
+    color: #ffffff;
+}
+
+.cancel_button {
+    background-color: #ffffff;
+    color: var(--make-blue);
+}
+
+.clear-all-button {
+    border: 1px solid #8f1f1f;
+    background: #b52d2d;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+}
+
+.guidance_slot_full {
+    font-weight: 700;
+    color: #7c1d00;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.guidance-slot-modal .actions form {
+    display: inline-block;
+    margin: 0 0.5em 0 0;
+}
+
+.guidance_hour_mobile_cards {
+    display: none;
+}
+
+.guidance_hour_mobile_day_table {
+    margin-bottom: 12px;
+}
+
+.guidance_slot_member_detail .description {
+    margin-top: 4px;
+}
+
+.guidance_slot_member_detail + .guidance_slot_member_detail {
+    border-top: 1px solid rgba(0, 0, 0, 1);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .guidance_hour_matrix {
+        display: none;
+    }
+
+    .guidance_hour_mobile_cards .guidance_hour_matrix {
+        display: table;
+    }
+
+    .guidance_hour_mobile_cards {
+        display: block;
+    }
+
+    .guidance_hour_notes,
+    .guidance_hour_notes_display {
+        max-width: 100%;
+    }
+}
