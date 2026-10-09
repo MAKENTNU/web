@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
-from internal.models import Member, Quote, Secret, SystemAccess
+from internal.models import GuidanceHour, Member, Quote, Secret, SystemAccess
 from users.models import User
 from web.widgets import (
     SemanticDateInput,
@@ -199,4 +199,14 @@ class QuoteForm(forms.ModelForm):
         fields = ("quote", "quoted", "context", "date")
         widgets = {
             "date": SemanticDateInput(),
+        }
+
+
+class GuidanceHourForm(forms.ModelForm):
+    class Meta:
+        model = GuidanceHour
+        fields = ("from_time", "to_time", "weekday")
+        widgets = {
+            "from_time": forms.TimeInput(attrs={"type": "time"}),
+            "to_time": forms.TimeInput(attrs={"type": "time"}),
         }

@@ -3,6 +3,7 @@ from datetime import datetime
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
@@ -391,3 +392,84 @@ class Quote(models.Model):
 
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
+
+
+class GuidanceHour(models.Model):
+    MAX_MEMBERS = 5
+    MAX_NOTES_LENGTH = 2000
+
+    WEEKDAYS = [
+        (0, _("Monday")),
+        (1, _("Tuesday")),
+        (2, _("Wednesday")),
+        (3, _("Thursday")),
+        (4, _("Friday")),
+    ]
+
+    weekday = models.PositiveSmallIntegerField(
+        choices=WEEKDAYS,
+        verbose_name=_("weekday"),
+    )
+    from_time = models.TimeField(verbose_name=_("from time"))
+    to_time = models.TimeField(verbose_name=_("to time"))
+    notes = models.TextField(
+        blank=True, max_length=MAX_NOTES_LENGTH, verbose_name=_("notes")
+    )
+    members = models.ManyToManyField(
+        to=Member,
+        related_name="guidance_hour",
+        verbose_name=_("members"),
+    )
+
+    class Meta:
+        ordering = ("weekday", "from_time")
+        constraints = (
+            models.CheckConstraint(
+                check=models.Q(from_time__lt=F("to_time")),
+                name="guidance_hour_from_time_before_to_time",
+            ),
+            models.UniqueConstraint(
+                fields=("weekday", "from_time", "to_time"),
+                name="guidance_hour_unique_weekday_time_range",
+            ),
+        )
+
+    def __str__(self):
+        weekday = self.get_weekday_display()
+        return f"{weekday} {self.from_time:%H:%M} - {self.to_time:%H:%M}"
+
+    def clean(self):
+        super().clean()
+
+        if self.from_time is None or self.to_time is None:
+            return
+
+        if self.from_time >= self.to_time:
+            raise ValidationError(
+                _("Start time must be before end time."),
+                code="invalid_time_range",
+            )
+
+        if self.weekday is None:
+            return
+
+        overlapping_slots = GuidanceHour.objects.filter(
+            weekday=self.weekday,
+            from_time__lt=self.to_time,
+            to_time__gt=self.from_time,
+        )
+        if self.pk:
+            overlapping_slots = overlapping_slots.exclude(pk=self.pk)
+
+        if overlapping_slots.exists():
+            raise ValidationError(
+                _("This slot overlaps with an existing guidance slot."),
+                code="overlapping_slot",
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+    def is_full(self):
+        return self.members.count() >= self.MAX_MEMBERS

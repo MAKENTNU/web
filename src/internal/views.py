@@ -2,19 +2,22 @@ from abc import ABC
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
+from django.db import transaction
+from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 from django.views.generic.detail import SingleObjectMixin
 
 from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from internal.forms import (
     AddMemberForm,
     ChangeMemberForm,
+    GuidanceHourForm,
     MemberQuitForm,
     MemberRetireForm,
     MemberStatusForm,
@@ -23,9 +26,13 @@ from internal.forms import (
     SecretsForm,
     SystemAccessValueForm,
 )
-from internal.models import Member, Quote, Secret, SystemAccess
+from internal.models import GuidanceHour, Member, Quote, Secret, SystemAccess
 from make_queue.models.course import Printer3DCourse
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+from util.view_utils import (
+    CustomFieldsetFormMixin,
+    PreventGetRequestsMixin,
+    UTF8JsonResponse,
+)
 
 
 class InternalContentBoxDetailView(ContentBoxDetailView):
@@ -367,3 +374,199 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
             self.request.user.has_perm("internal.delete_quote")
             or self.request.user == self.get_object().author
         )
+
+
+class GuidanceHourView(ListView):
+    model = GuidanceHour
+    template_name = "internal/guidance_hour.html"
+    context_object_name = "slots"
+
+    def get_queryset(self):
+        return GuidanceHour.objects.prefetch_related(
+            Prefetch(
+                "members",
+                queryset=Member.objects.select_related("user").prefetch_related(
+                    "committees__group"
+                ),
+                to_attr="all_members",
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        current_guidance_members = []
+        current_guidance_member_ids = set()
+        current_weekday = timezone.localdate().weekday()
+        current_time = timezone.localtime().time()
+
+        all_slots = list(context["slots"])
+
+        for slot in all_slots:
+            if (
+                slot.weekday == current_weekday
+                and slot.from_time <= current_time < slot.to_time
+            ):
+                for member in slot.all_members:
+                    if member.pk not in current_guidance_member_ids:
+                        current_guidance_member_ids.add(member.pk)
+                        current_guidance_members.append(member)
+
+        context["current_guidance_members"] = current_guidance_members
+
+        weekday_order = [weekday for weekday, _label in GuidanceHour.WEEKDAYS]
+        weekday_labels = {weekday: label for weekday, label in GuidanceHour.WEEKDAYS}
+        slots_by_weekday_and_time = {
+            (slot.weekday, slot.from_time, slot.to_time): slot for slot in all_slots
+        }
+        time_ranges = sorted({(slot.from_time, slot.to_time) for slot in all_slots})
+
+        matrix_rows = []
+        for from_time, to_time in time_ranges:
+            matrix_rows.append(
+                {
+                    "from_time": from_time,
+                    "to_time": to_time,
+                    "slots": [
+                        slots_by_weekday_and_time.get((weekday, from_time, to_time))
+                        for weekday in weekday_order
+                    ],
+                }
+            )
+
+        context["weekday_columns"] = [
+            {"label": weekday_labels[weekday]} for weekday in weekday_order
+        ]
+        context["matrix_rows"] = matrix_rows
+
+        try:
+            current_member = self.request.user.member
+        except Member.DoesNotExist:
+            current_member = None
+        context["current_member"] = current_member
+        context["current_member_slots"] = [
+            slot for slot in all_slots if current_member in slot.all_members
+        ]
+
+        return context
+
+
+class APIGuidanceHourNotesView(View):
+    def get_edit_error(self, request, slot):
+        try:
+            member = Member.objects.get(user=request.user)
+        except Member.DoesNotExist:
+            return _("You need to be booked to this slot to edit comments.")
+
+        if not slot.members.filter(pk=member.pk).exists():
+            return _("Only booked members can edit comments for this slot.")
+
+        return None
+
+    def get(self, request, slot_id):
+        slot = get_object_or_404(GuidanceHour, id=slot_id)
+        return UTF8JsonResponse({"notes": slot.notes})
+
+    def post(self, request, slot_id):
+        slot = get_object_or_404(GuidanceHour, id=slot_id)
+        error_message = self.get_edit_error(request, slot)
+        if error_message:
+            return UTF8JsonResponse(
+                {"error": "forbidden", "message": error_message},
+                status=403,
+            )
+        notes = request.POST.get("notes", "")
+        if len(notes) > GuidanceHour.MAX_NOTES_LENGTH:
+            return UTF8JsonResponse(
+                {
+                    "error": "notes_too_long",
+                    "message": _(
+                        "Comment is too long (maximum %(max_length)s characters)."
+                    )
+                    % {"max_length": GuidanceHour.MAX_NOTES_LENGTH},
+                },
+                status=400,
+            )
+        slot.notes = notes
+        slot.save(update_fields=["notes"])
+        return UTF8JsonResponse({"notes": slot.notes})
+
+
+class GuidanceHourBookView(PreventGetRequestsMixin, View):
+    def post(self, request, slot_id):
+        try:
+            member = Member.objects.get(user=request.user)
+        except Member.DoesNotExist:
+            messages.error(request, _("You need to be a member to book."))
+            return redirect("guidance_hour")
+        with transaction.atomic():
+            slot = get_object_or_404(
+                GuidanceHour.objects.select_for_update(), id=slot_id
+            )
+            if slot.is_full():
+                messages.error(request, _("This guidance slot is already full."))
+                return redirect("guidance_hour")
+            slot.members.add(member)
+        return redirect("guidance_hour")
+
+
+class GuidanceHourCancelView(PreventGetRequestsMixin, View):
+    def post(self, request, slot_id):
+        slot = get_object_or_404(GuidanceHour, id=slot_id)
+        member = get_object_or_404(Member, user=request.user)
+        slot.members.remove(member)
+        return redirect("guidance_hour")
+
+
+class GuidanceHourClearView(UserPassesTestMixin, PreventGetRequestsMixin, View):
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def post(self, request):
+        with transaction.atomic():
+            GuidanceHour.members.through.objects.all().delete()
+            GuidanceHour.objects.update(notes="")
+        messages.success(
+            request,
+            _("All guidance hour bookings and comments have been cleared."),
+        )
+        return redirect("guidance_hour")
+
+
+class GuidanceHourFormMixin(CustomFieldsetFormMixin, ABC):
+    model = GuidanceHour
+    form_class = GuidanceHourForm
+    template_name = "internal/create_guidance_hour_slot.html"
+    success_url = reverse_lazy("guidance_hour")
+
+    base_template = "internal/base.html"
+    back_button_link = success_url
+    back_button_text = _("Guidance hours")
+
+
+class GuidanceHourCreateView(
+    PermissionRequiredMixin, GuidanceHourFormMixin, CreateView
+):
+    permission_required = ("internal.add_guidancehour",)
+
+    form_title = _("Create Guidance Hour Slot")
+    save_button_text = _("Create")
+
+
+class GuidanceHourUpdateView(
+    PermissionRequiredMixin, GuidanceHourFormMixin, UpdateView
+):
+    permission_required = ("internal.change_guidancehour",)
+
+    form_title = _("Update Guidance Hour Slot")
+    save_button_text = _("Update")
+
+
+class GuidanceHourDeleteView(
+    PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView
+):
+    permission_required = ("internal.delete_guidancehour",)
+    model = GuidanceHour
+    success_url = reverse_lazy("guidance_hour")

@@ -1,18 +1,23 @@
 from contextlib import suppress
+from datetime import datetime, time
 from http import HTTPStatus
+from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.templatetags.static import static
-from django.test import Client, TestCase, override_settings
+from django.test import Client, RequestFactory, TestCase, override_settings
 from django.urls import clear_url_caches
 
 from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
-from internal.models import Secret
+from internal.forms import GuidanceHourForm
+from internal.models import GuidanceHour, Member, Secret
 from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS
+from internal.views import GuidanceHourView
 from users.models import User
 from util.auth_utils import get_perms, perm_to_str
 from util.url_utils import reverse_admin, reverse_internal
@@ -324,4 +329,305 @@ class SecretTests(TestCase):
         assert_users_can_view_admin_page(
             reverse_admin("internal_secret_delete", args=[self.board_secret.pk]),
             is_board_secret=True,
+        )
+
+
+class GuidanceHourTests(TestCase):
+    def setUp(self):
+        self.superuser = User.objects.create_user(
+            "superuser", is_staff=True, is_superuser=True
+        )
+        self.regular_user = User.objects.create_user("regular_user")
+        self.regular_user.add_perms(
+            "internal.is_internal", "internal.view_guidancehour"
+        )
+        Member.objects.create(user=self.superuser)
+        Member.objects.create(user=self.regular_user)
+
+        self.superuser_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.regular_user_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.request_factory = RequestFactory()
+        self.superuser_client.force_login(self.superuser)
+        self.regular_user_client.force_login(self.regular_user)
+
+        booked_user_1 = User.objects.create_user("booked_user_1")
+        booked_user_2 = User.objects.create_user("booked_user_2")
+        self.booked_member_1 = Member.objects.create(user=booked_user_1)
+        self.booked_member_2 = Member.objects.create(user=booked_user_2)
+
+        self.slot_1 = GuidanceHour.objects.create(
+            weekday=0, from_time=time(9, 0), to_time=time(10, 0), notes="note 1"
+        )
+        self.slot_2 = GuidanceHour.objects.create(
+            weekday=1, from_time=time(10, 0), to_time=time(11, 0), notes="note 2"
+        )
+        self.slot_1.members.add(self.booked_member_1, self.booked_member_2)
+        self.slot_2.members.add(self.booked_member_1)
+
+    def test_superuser_can_clear_all_guidance_slots(self):
+        clear_url = reverse_internal("clear_guidance_slots")
+
+        response = self.superuser_client.post(clear_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith("/guidance-hour/"))
+        self.slot_1.refresh_from_db()
+        self.slot_2.refresh_from_db()
+        self.assertEqual(self.slot_1.members.count(), 0)
+        self.assertEqual(self.slot_2.members.count(), 0)
+        self.assertEqual(self.slot_1.notes, "")
+        self.assertEqual(self.slot_2.notes, "")
+
+    def test_user_without_change_permission_cannot_clear_all_guidance_slots(self):
+        clear_url = reverse_internal("clear_guidance_slots")
+
+        response = self.regular_user_client.post(clear_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.slot_1.refresh_from_db()
+        self.slot_2.refresh_from_db()
+        self.assertGreater(self.slot_1.members.count(), 0)
+        self.assertGreater(self.slot_2.members.count(), 0)
+        self.assertEqual(self.slot_1.notes, "note 1")
+        self.assertEqual(self.slot_2.notes, "note 2")
+
+    def test_guidance_hour_notes_enforce_max_length(self):
+        self.slot_1.members.add(self.regular_user.member)
+        notes_url = reverse_internal("update_guidance_slot_notes", self.slot_1.pk)
+
+        valid_notes = "x" * GuidanceHour.MAX_NOTES_LENGTH
+        valid_response = self.regular_user_client.post(
+            notes_url, {"notes": valid_notes}
+        )
+        self.assertEqual(valid_response.status_code, HTTPStatus.OK)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.notes, valid_notes)
+
+        invalid_response = self.regular_user_client.post(
+            notes_url, {"notes": f"{valid_notes}x"}
+        )
+        self.assertEqual(invalid_response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(invalid_response.json()["error"], "notes_too_long")
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.notes, valid_notes)
+
+    def test_unbooked_member_can_read_but_not_edit_guidance_hour_notes(self):
+        notes_url = reverse_internal("update_guidance_slot_notes", self.slot_1.pk)
+
+        get_response = self.regular_user_client.get(notes_url)
+        post_response = self.regular_user_client.post(notes_url, {"notes": "changed"})
+
+        self.assertEqual(get_response.status_code, HTTPStatus.OK)
+        self.assertEqual(get_response.json()["notes"], "note 1")
+        self.assertEqual(post_response.status_code, HTTPStatus.FORBIDDEN)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.notes, "note 1")
+
+    @patch("internal.views.timezone.localtime")
+    @patch("internal.views.timezone.localdate")
+    def test_guidance_hour_view_shows_current_guidance_members(
+        self, mock_localdate, mock_localtime
+    ):
+        mock_localdate.return_value = datetime(2026, 4, 27).date()
+        mock_localtime.return_value = datetime(2026, 4, 27, 9, 30)
+
+        request = self.request_factory.get(reverse_internal("guidance_hour"))
+        request.user = self.regular_user
+        view = GuidanceHourView()
+        view.setup(request)
+        view.object_list = view.get_queryset()
+        context = view.get_context_data()
+
+        current_members = context["current_guidance_members"]
+        self.assertEqual(
+            [member.pk for member in current_members],
+            [self.booked_member_1.pk, self.booked_member_2.pk],
+        )
+
+    @patch("internal.views.timezone.localtime")
+    @patch("internal.views.timezone.localdate")
+    def test_guidance_hour_view_excludes_members_at_slot_end_time(
+        self, mock_localdate, mock_localtime
+    ):
+        mock_localdate.return_value = datetime(2026, 4, 27).date()
+        mock_localtime.return_value = datetime(2026, 4, 27, 10, 0)
+
+        request = self.request_factory.get(reverse_internal("guidance_hour"))
+        request.user = self.regular_user
+        view = GuidanceHourView()
+        view.setup(request)
+        view.object_list = view.get_queryset()
+        context = view.get_context_data()
+
+        self.assertEqual(context["current_guidance_members"], [])
+
+    def test_member_can_book_an_available_slot(self):
+        book_url = reverse_internal("book_guidance_slot", self.slot_2.pk)
+        regular_member = self.regular_user.member
+
+        response = self.regular_user_client.post(book_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith("/guidance-hour/"))
+        self.assertIn(regular_member, self.slot_2.members.all())
+
+    def test_member_cannot_book_a_full_slot(self):
+        # Fill slot_1 to max_members (currently 5)
+        for i in range(3):
+            extra_user = User.objects.create_user(f"extra_user_{i}")
+            extra_member = Member.objects.create(user=extra_user)
+            self.slot_1.members.add(extra_member)
+        book_url = reverse_internal("book_guidance_slot", self.slot_1.pk)
+
+        response = self.regular_user_client.post(book_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertNotIn(self.regular_user.member, self.slot_1.members.all())
+
+    def test_member_can_cancel_their_booking(self):
+        self.slot_2.members.add(self.regular_user.member)
+        cancel_url = reverse_internal("cancel_guidance_slot", self.slot_2.pk)
+
+        response = self.regular_user_client.post(cancel_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(response.url.endswith("/guidance-hour/"))
+        self.assertNotIn(self.regular_user.member, self.slot_2.members.all())
+
+    def test_superuser_can_create_slot(self):
+        create_url = reverse_internal("create_guidance_hour")
+
+        response = self.superuser_client.post(
+            create_url,
+            {
+                "weekday": 2,
+                "from_time": "18:30",
+                "to_time": "19:30",
+            },
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertTrue(
+            GuidanceHour.objects.filter(
+                weekday=2, from_time="18:30", to_time="19:30"
+            ).exists()
+        )
+
+    def test_non_superuser_cannot_create_slot(self):
+        create_url = reverse_internal("create_guidance_hour")
+        slot_count_before = GuidanceHour.objects.count()
+
+        response = self.regular_user_client.post(
+            create_url,
+            {
+                "weekday": 2,
+                "from_time": "18:30",
+                "to_time": "19:30",
+            },
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.assertEqual(GuidanceHour.objects.count(), slot_count_before)
+
+    def test_superuser_can_update_slot(self):
+        update_url = reverse_internal("guidance_hour_update", self.slot_1.pk)
+
+        response = self.superuser_client.post(
+            update_url,
+            {
+                "weekday": 0,
+                "from_time": "09:00",
+                "to_time": "11:00",
+            },
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.to_time.strftime("%H:%M"), "11:00")
+
+    def test_non_superuser_cannot_update_slot(self):
+        update_url = reverse_internal("guidance_hour_update", self.slot_1.pk)
+
+        response = self.regular_user_client.post(
+            update_url,
+            {
+                "weekday": 0,
+                "from_time": "09:00",
+                "to_time": "11:00",
+            },
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.slot_1.refresh_from_db()
+        self.assertEqual(self.slot_1.to_time.strftime("%H:%M"), "10:00")
+
+    def test_superuser_can_delete_slot(self):
+        delete_url = reverse_internal("guidance_hour_delete", self.slot_1.pk)
+
+        response = self.superuser_client.post(delete_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertFalse(GuidanceHour.objects.filter(pk=self.slot_1.pk).exists())
+
+    def test_non_superuser_cannot_delete_slot(self):
+        delete_url = reverse_internal("guidance_hour_delete", self.slot_1.pk)
+
+        response = self.regular_user_client.post(delete_url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        self.assertTrue(GuidanceHour.objects.filter(pk=self.slot_1.pk).exists())
+
+    def test_create_slot_rejects_invalid_time_range(self):
+        form = GuidanceHourForm(
+            data={
+                "weekday": 3,
+                "from_time": "15:00",
+                "to_time": "13:00",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "invalid_time_range",
+            [e.code for e in form.non_field_errors().as_data()],
+        )
+
+    def test_create_slot_rejects_overlapping_time_range_same_weekday(self):
+        form = GuidanceHourForm(
+            data={
+                "weekday": self.slot_1.weekday,
+                "from_time": "09:30",
+                "to_time": "10:30",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "overlapping_slot",
+            [e.code for e in form.non_field_errors().as_data()],
+        )
+
+    def test_model_rejects_invalid_time_range(self):
+        with self.assertRaises(ValidationError) as raised_exception:
+            GuidanceHour.objects.create(
+                weekday=3,
+                from_time=time(15, 0),
+                to_time=time(13, 0),
+            )
+
+        self.assertIn(
+            "invalid_time_range",
+            [e.code for e in raised_exception.exception.error_dict["__all__"]],
+        )
+
+    def test_model_rejects_overlapping_slots(self):
+        with self.assertRaises(ValidationError) as raised_exception:
+            GuidanceHour.objects.create(
+                weekday=self.slot_1.weekday,
+                from_time=time(9, 30),
+                to_time=time(10, 30),
+            )
+
+        self.assertIn(
+            "overlapping_slot",
+            [e.code for e in raised_exception.exception.error_dict["__all__"]],
         )
