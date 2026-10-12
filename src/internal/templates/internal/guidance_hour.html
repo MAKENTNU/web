@@ -1,0 +1,189 @@
+{% extends 'internal/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{% translate "Guidance hours" %}{% endblock title %}
+
+{% block extra_head %}
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+    </script>
+    <link rel="stylesheet" href="{% static 'internal/css/guidance_hour.css' %}"/>
+    <script defer src="{% static 'internal/js/guidance_hour.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+<div class="ui container" data-notes-save-error-message="{% translate 'Failed to save comments. Please try again.' %}">
+    {% if messages %}
+        <div class="ui messages">
+            {% for message in messages %}
+                <div class="ui {{ message.tags }} message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% translate "Are you sure you want to cancel this slot?" as cancel_confirm_msg %}
+    {% translate "Are you sure you want to book this slot?" as book_confirm_msg %}
+    {% translate "Are you sure you want to clear all bookings and comments?" as clear_all_confirm_msg %}
+    {% translate "Are you sure you want to delete this slot?" as delete_slot_confirm_msg %}
+    <h1 class="ui header guidance_hour_header">
+            {% translate "Guidance hours" %}
+            {% if perms.internal.add_guidancehour %}
+                <a href="{% url 'create_guidance_hour' %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+            {% if request.user.is_superuser %}
+                <form method="post" action="{% url 'clear_guidance_slots' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="clear-all-button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ clear_all_confirm_msg }}">
+                        {% translate "Clear all bookings" %}
+                    </button>
+                </form>
+            {% endif %}
+        </h1>
+    <div class="guidance_hour_my_slots">
+        <strong>{% translate "Your scheduled times this semester:" %}</strong>
+        {% if current_member_slots %}
+            {% for slot in current_member_slots %}
+                {{ slot.get_weekday_display }} {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            {% translate "None" %}
+        {% endif %}
+    </div>
+    <div class="guidance_hour_my_slots">
+        <strong>{% translate "At the makerspace now:" %}</strong>
+        {% if current_guidance_members %}
+            {% for member in current_guidance_members %}
+                {{ member.user.get_short_full_name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            {% translate "None" %}
+        {% endif %}
+    </div>
+    <table class="guidance_hour_matrix">
+        <thead>
+            <tr>
+                <th class="guidance_slot_time">{% translate "Time" %}</th>
+                {% for day in weekday_columns %}
+                    <th>{{ day.label }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in matrix_rows %}
+                <tr class="guidance_slot_row">
+                    <th class="guidance_slot_time">{{ row.from_time|time:"H:i" }} - {{ row.to_time|time:"H:i" }}</th>
+                    {% for slot in row.slots %}
+                        <td class="guidance_matrix_slot{% if not slot or not slot.all_members %} guidance_slot_empty{% endif %}{% if slot %} guidance_slot_clickable{% endif %}"{% if slot %} data-slot-modal="#guidance-slot-modal-{{ slot.id }}" role="button" tabindex="0" aria-label="{{ slot.get_weekday_display }} {{ row.from_time|time:'H:i' }} - {{ row.to_time|time:'H:i' }}"{% endif %}>
+                            {% if slot %}
+                                <div class="guidance_slot_members">
+                                    {% for member in slot.all_members %}
+                                        <div class="guidance_member_name">{{ member.user.get_short_full_name }}</div>
+                                    {% empty %}
+                                        <div class="guidance_member_name_none">{% translate "No members" %}</div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <span class="guidance_member_name">-</span>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="guidance_hour_mobile_cards"></div>
+
+    {% for row in matrix_rows %}
+        {% for slot in row.slots %}
+            {% if slot %}
+                <div id="guidance-slot-modal-{{ slot.id }}" class="ui small modal guidance-slot-modal">
+                    <div class="header">
+                        {{ slot.get_weekday_display }} {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}
+                    </div>
+                    <div class="content">
+                        <h4 class="ui header">{% translate "Members" %}</h4>
+                        <div class="ui relaxed list">
+                                    {% for member in slot.all_members %}
+                                <div class="item guidance_slot_member_detail">
+                                    <div class="content">
+                                        <div class="header">{{ member.user.get_full_name }}</div>
+                                        {% if member.phone_number %}
+                                                <div class="description">{{ member.phone_number }}</div>
+                                        {% endif %}
+                                        <div class="description">
+                                            {% for committee in member.committees.all %}
+                                                {{ committee.group.name }}{% if not forloop.last %}, {% endif %}
+                                            {% empty %}
+                                                -
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p>{% translate "No members" %}</p>
+                            {% endfor %}
+                        </div>
+
+                        <h4 class="ui header">{% translate "comments" %}</h4>
+                        {% if current_member in slot.all_members %}
+                            <textarea class="guidance_hour_notes"
+                                data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
+                                autocomplete="off"
+                                maxlength="{{ slot.MAX_NOTES_LENGTH }}"
+                                rows="2">{{ slot.notes }}</textarea>
+                            <div class="guidance_hour_notes_controls">
+                                <button type="button" class="ui button guidance_hour_notes_save"
+                                        data-save-label="{% translate 'Save' %}"
+                                        data-saved-label="{% translate 'Saved' %}">
+                                    {% translate "Save" %}
+                                </button>
+                            </div>
+                        {% elif slot.notes %}
+                            <p class="guidance_hour_notes_display">{{ slot.notes }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="actions">
+                        {% if current_member in slot.all_members %}
+                            <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="ui button cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
+                                    {% translate "cancel" %}
+                                </button>
+                            </form>
+                        {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
+                            <span class="guidance_slot_full">{% translate "full" %}</span>
+                        {% else %}
+                            <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="ui button book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
+                                    {% translate "book" %}
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if perms.internal.change_guidancehour %}
+                            <a href="{% url 'guidance_hour_update' slot.pk %}" class="ui icon button">
+                                <i class="make-col-yellow pencil icon"></i>
+                            </a>
+                        {% endif %}
+                        {% if perms.internal.delete_guidancehour %}
+                            <form method="post" action="{% url 'guidance_hour_delete' slot.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="ui icon button" aria-label="{% translate 'Delete slot' %}" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ delete_slot_confirm_msg }}">
+                                    <i class="red trash icon"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endblock body %}
