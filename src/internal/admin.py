@@ -3,6 +3,7 @@ from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
+from internal.forms import GuidanceHourForm
 from internal.models import GuidanceHour, Member, Quote, Secret, SystemAccess
 from util import html_utils
 from util.admin_utils import (
@@ -107,6 +108,7 @@ class QuoteAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdm
 
 
 class GuidanceHourAdmin(admin.ModelAdmin):
+    form = GuidanceHourForm
     list_display = ("get_display", "get_member_count", "notes")
     list_filter = ("weekday",)
     filter_horizontal = ("members",)

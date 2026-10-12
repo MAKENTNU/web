@@ -6,7 +6,6 @@ from unittest.mock import patch
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.templatetags.static import static
 from django.test import Client, RequestFactory, TestCase, override_settings
@@ -588,7 +587,11 @@ class GuidanceHourTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn(
             "invalid_time_range",
-            [e.code for e in form.non_field_errors().as_data()],
+            [e.code for e in form.errors.as_data()["to_time"]],
+        )
+        self.assertNotIn(
+            "guidance_hour_from_time_before_to_time",
+            str(form.errors),
         )
 
     def test_create_slot_rejects_overlapping_time_range_same_weekday(self):
@@ -606,28 +609,14 @@ class GuidanceHourTests(TestCase):
             [e.code for e in form.non_field_errors().as_data()],
         )
 
-    def test_model_rejects_invalid_time_range(self):
-        with self.assertRaises(ValidationError) as raised_exception:
-            GuidanceHour.objects.create(
-                weekday=3,
-                from_time=time(15, 0),
-                to_time=time(13, 0),
-            )
-
-        self.assertIn(
-            "invalid_time_range",
-            [e.code for e in raised_exception.exception.error_dict["__all__"]],
+    def test_update_slot_does_not_overlap_with_itself(self):
+        form = GuidanceHourForm(
+            data={
+                "weekday": self.slot_1.weekday,
+                "from_time": "09:00",
+                "to_time": "10:00",
+            },
+            instance=self.slot_1,
         )
 
-    def test_model_rejects_overlapping_slots(self):
-        with self.assertRaises(ValidationError) as raised_exception:
-            GuidanceHour.objects.create(
-                weekday=self.slot_1.weekday,
-                from_time=time(9, 30),
-                to_time=time(10, 30),
-            )
-
-        self.assertIn(
-            "overlapping_slot",
-            [e.code for e in raised_exception.exception.error_dict["__all__"]],
-        )
+        self.assertTrue(form.is_valid(), form.errors)
