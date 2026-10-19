@@ -152,8 +152,8 @@
                         {% if current_member in slot.all_members %}
                             <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="ui button cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
-                                    {% translate "cancel" %}
+                                <button type="submit" class="ui red button cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
+                                    {% translate "remove booking" %}
                                 </button>
                             </form>
                         {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
@@ -161,7 +161,7 @@
                         {% else %}
                             <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="ui button book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
+                                <button type="submit" class="ui green button book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
                                     {% translate "book" %}
                                 </button>
                             </form>

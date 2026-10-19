@@ -123,22 +123,11 @@
 
 .cancel_button,
 .book_button {
-    border: 1px solid var(--make-blue);
     border-radius: 6px;
     padding: 6px 12px;
     font-weight: 600;
     font-size: 0.92rem;
     cursor: pointer;
-}
-
-.book_button {
-    background-color: var(--make-blue);
-    color: #ffffff;
-}
-
-.cancel_button {
-    background-color: #ffffff;
-    color: var(--make-blue);
 }
 
 .clear-all-button {
