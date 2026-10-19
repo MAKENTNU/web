@@ -379,9 +379,9 @@ urlpatterns = [
     path("events/<int:pk>/change/", ..., name="event_update"),
     path("events/<int:pk>/occurrences/", ..., name="event_occurrence_list"),
     path(
-      "events/<int:pk>/occurrences/<int:occurrence_pk>/",
-      ...,
-      name="event_occurrence_detail",
+        "events/<int:pk>/occurrences/<int:occurrence_pk>/",
+        ...,
+        name="event_occurrence_detail",
     ),
 ]
 ```
