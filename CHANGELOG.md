@@ -15,6 +15,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### New features
 
+- Sponsor page under Makerverkstedet (MAKENTNU/web#835)
 
 ### Improvements
 
