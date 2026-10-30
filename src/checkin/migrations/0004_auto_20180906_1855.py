@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
             name="suggestskill",
             options={
                 "ordering": ("title",),
-                "permissions": (("can_force_suggestion", "Can force suggestion"),),
+                "permissions": [("can_force_suggestion", "Can force suggestion")],
             },
         ),
     ]

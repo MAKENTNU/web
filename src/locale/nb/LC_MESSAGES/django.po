@@ -2283,35 +2283,3 @@ msgstr "Velg verdi"
 
 msgid "Search places"
 msgstr "Søk etter steder"
-
-#~ msgid "You have completed the Raise3D printer course"
-#~ msgstr "Du har fullført Raise3D-printerkurset"
-
-#~ msgid "You have not taken the Raise3D printer course"
-#~ msgstr "Du har ikke tatt Raise3D-printerkurset"
-
-#~ msgid ""
-#~ "To use a Raise3D printer, make a reservation in the calendar of one of "
-#~ "the Raise3D printers on the “Reservations” page."
-#~ msgstr ""
-#~ "For å bruke en Raise3D-printer, lag en reservasjon i kalenderen til en av "
-#~ "Raise3D-printerne på «Reservasjoner»-siden."
-
-#~ msgid "You have completed the SLA 3D printer course"
-#~ msgstr "Du har fullført SLA 3D-printerkurset"
-
-#~ msgid "You have not taken the SLA 3D printer course"
-#~ msgstr "Du har ikke tatt SLA 3D-printerkurset"
-
-#~ msgid ""
-#~ "To use an SLA 3D printer, make a reservation in the calendar of one of "
-#~ "the SLA 3D printers on the “Reservations” page."
-#~ msgstr ""
-#~ "For å bruke en SLA 3D-printer, lag en reservasjon i kalenderen til en av "
-#~ "SLA 3D-printerne på «Reservasjoner»-siden."
-
-#~ msgid "Raise3D course"
-#~ msgstr "Raise3D-kurs"
-
-#~ msgid "SLA course"
-#~ msgstr "SLA-kurs"
