@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 10:50+0100\n"
+"POT-Creation-Date: 2026-10-30 15:56+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -234,15 +234,12 @@ msgstr ""
 "For å bruke en 3D-printer, lag en reservasjon i kalenderen til en av 3D-"
 "printerne på «Reservasjoner»-siden."
 
-#, python-brace-format
 msgid "You have completed the {} course"
 msgstr "Du har fullført {}kurset"
 
-#, python-brace-format
 msgid "You have not taken the {} course"
 msgstr "Du har ikke tatt {}kurset"
 
-#, python-brace-format
 msgid ""
 "To use a {}, make a reservation in the calendar of one of the {}s on the "
 "“Reservations” page."
@@ -681,6 +678,9 @@ msgstr "Historien til MAKE NTNU"
 
 msgid "Public pages"
 msgstr "Offentlige sider"
+
+msgid "Administration"
+msgstr "Administrasjon"
 
 msgid "Django admin"
 msgstr "Django-admin"
@@ -1548,6 +1548,12 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
+msgid "Sponsors"
+msgstr "Sponsorer"
+
+msgid "the companies and organisations that support the workshop"
+msgstr "bedriftene og organisasjonene som støtter verkstedet"
+
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
@@ -2268,9 +2274,6 @@ msgstr "Om oss"
 
 msgid "Apply to MAKE"
 msgstr "Søk verv"
-
-msgid "Administration"
-msgstr "Administrasjon"
 
 msgid "Profile"
 msgstr "Profil"

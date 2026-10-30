@@ -92,6 +92,7 @@ class UrlTests(TestCase):
             # Makerverkstedet content boxes
             S(**main_kwargs, viewname="makerspace", should_be_bleached=True),
             S(**main_kwargs, viewname="rules", should_be_bleached=True),
+            S(**main_kwargs, viewname="sponsors", should_be_bleached=True),
             # Internal front page content boxes
             S(**internal_kwargs, viewname="home", should_be_bleached=False),
             S(**internal_kwargs, viewname="dev-board", should_be_bleached=False),

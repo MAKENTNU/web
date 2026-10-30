@@ -12,6 +12,7 @@ urlpatterns = [
     path("", views.MakerspaceView.as_view(url_name="makerspace"), name="makerspace"),
     path("equipment/", include(equipment_urlpatterns)),
     ContentBoxDetailView.get_path("rules"),
+    ContentBoxDetailView.get_path("sponsors"),
 ]
 
 # --- Admin URL patterns (imported in `web/urls.py`) ---
