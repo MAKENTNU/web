@@ -130,7 +130,7 @@
                             {% endfor %}
                         </div>
 
-                        <h4 class="ui header">{% translate "comments" %}</h4>
+                        <h4 class="ui header">{% translate "comments"|capfirst %}</h4>
                         {% if current_member in slot.all_members %}
                             <textarea class="guidance_hour_notes"
                                 data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
@@ -153,16 +153,16 @@
                             <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="ui red button cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
-                                    {% translate "remove booking" %}
+                                    {% translate "remove booking"|capfirst %}
                                 </button>
                             </form>
                         {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
-                            <span class="guidance_slot_full">{% translate "full" %}</span>
+                            <span class="guidance_slot_full">{% translate "full"|capfirst %}</span>
                         {% else %}
                             <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="ui green button book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
-                                    {% translate "book" %}
+                                    {% translate "book"|capfirst %}
                                 </button>
                             </form>
                         {% endif %}
