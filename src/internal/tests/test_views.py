@@ -465,6 +465,10 @@ class GuidanceHourTests(TestCase):
         Member.objects.create(user=exempt_user, guidance_exemption=True)
         inactive_user = User.objects.create_user("inactive_user")
         Member.objects.create(user=inactive_user, active=False)
+        quit_user = User.objects.create_user("quit_user")
+        Member.objects.create(user=quit_user, quit=True)
+        retired_user = User.objects.create_user("retired_user")
+        Member.objects.create(user=retired_user, retired=True)
         unassigned_user = User.objects.create_user("unassigned_user")
         unassigned_member = Member.objects.create(user=unassigned_user)
 
@@ -485,6 +489,8 @@ class GuidanceHourTests(TestCase):
         self.assertNotIn(self.booked_member_1, unassigned)
         self.assertNotIn(exempt_user.member, unassigned)
         self.assertNotIn(inactive_user.member, unassigned)
+        self.assertNotIn(quit_user.member, unassigned)
+        self.assertNotIn(retired_user.member, unassigned)
         self.assertNotIn("unassigned_members", regular_context)
 
     def test_member_can_book_an_available_slot(self):

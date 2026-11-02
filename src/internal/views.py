@@ -454,6 +454,8 @@ class GuidanceHourView(ListView):
             context["unassigned_members"] = (
                 Member.objects.filter(
                     active=True,
+                    quit=False,
+                    retired=False,
                     guidance_exemption=False,
                     user__isnull=False,
                     guidance_hour__isnull=True,
