@@ -10,12 +10,12 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          uv-sync-extra-args: "--group linting"
+          uv-sync-extra-args: "--group linting --no-default-groups"
 
       # Code based on https://pre-commit.com/#github-actions-example
       - name: Set `PY` envvar
@@ -35,12 +35,12 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          uv-sync-extra-args: "--group ci"
+          uv-sync-extra-args: "--group ci --no-default-groups"
 
       - name: Create `.env`
         shell: bash

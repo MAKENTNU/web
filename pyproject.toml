@@ -116,10 +116,8 @@ lint.isort.combine-as-imports = true
 lint.pycodestyle.ignore-overlong-task-comments = true
 
 [tool.uv]
-# Don't install `dev` by default (see
-# https://docs.astral.sh/uv/concepts/projects/dependencies/#default-groups), to make it
-# easier to *not* install those dependencies in prod
-default-groups = [  ]
+# https://docs.astral.sh/uv/concepts/projects/dependencies/#default-groups
+default-groups = [ "dev" ]
 
 [tool.uv.sources]
 python-ldap = [
