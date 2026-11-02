@@ -467,6 +467,7 @@ class GuidanceHourTests(TestCase):
         Member.objects.create(user=inactive_user, active=False)
         unassigned_user = User.objects.create_user("unassigned_user")
         unassigned_member = Member.objects.create(user=unassigned_user)
+
         def get_context(user):
             request = self.request_factory.get(reverse_internal("guidance_hour"))
             request.user = user
