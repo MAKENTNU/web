@@ -99,10 +99,26 @@
 
     <div class="guidance_hour_mobile_cards"></div>
 
+    {% if unassigned_members is not None %}
+        <div class="guidance_hour_unassigned_members">
+            <h3 class="ui header">{% translate "Active members without a guidance hour" %}</h3>
+            {% if unassigned_members %}
+                <ul>
+                    {% for member in unassigned_members %}
+                        <li>{{ member.user.get_full_name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                {% translate "None" %}
+            {% endif %}
+        </div>
+    {% endif %}
+
     {% for row in matrix_rows %}
         {% for slot in row.slots %}
             {% if slot %}
                 <div id="guidance-slot-modal-{{ slot.id }}" class="ui small modal guidance-slot-modal">
+                    <i class="close inside icon" aria-label="{% translate 'Close' %}"></i>
                     <div class="header">
                         {{ slot.get_weekday_display }} {{ slot.from_time|time:"H:i" }} - {{ slot.to_time|time:"H:i" }}
                     </div>

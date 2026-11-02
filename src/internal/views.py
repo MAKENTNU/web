@@ -448,6 +448,20 @@ class GuidanceHourView(ListView):
             slot for slot in all_slots if current_member in slot.all_members
         ]
 
+        if self.request.user.has_perm(
+            "internal.add_guidancehour"
+        ) or self.request.user.has_perm("internal.change_guidancehour"):
+            context["unassigned_members"] = (
+                Member.objects.filter(
+                    active=True,
+                    guidance_exemption=False,
+                    user__isnull=False,
+                    guidance_hour__isnull=True,
+                )
+                .select_related("user")
+                .order_by("user__first_name", "user__last_name")
+            )
+
         return context
 
 

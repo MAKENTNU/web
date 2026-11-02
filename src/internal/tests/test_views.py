@@ -460,6 +460,32 @@ class GuidanceHourTests(TestCase):
 
         self.assertEqual(context["current_guidance_members"], [])
 
+    def test_unassigned_members_list_only_shown_to_users_who_can_edit_slots(self):
+        exempt_user = User.objects.create_user("exempt_user")
+        Member.objects.create(user=exempt_user, guidance_exemption=True)
+        inactive_user = User.objects.create_user("inactive_user")
+        Member.objects.create(user=inactive_user, active=False)
+        unassigned_user = User.objects.create_user("unassigned_user")
+        unassigned_member = Member.objects.create(user=unassigned_user)
+        def get_context(user):
+            request = self.request_factory.get(reverse_internal("guidance_hour"))
+            request.user = user
+            view = GuidanceHourView()
+            view.setup(request)
+            view.object_list = view.get_queryset()
+            return view.get_context_data()
+
+        superuser_context = get_context(self.superuser)
+        regular_context = get_context(self.regular_user)
+
+        unassigned = list(superuser_context["unassigned_members"])
+        self.assertIn(unassigned_member, unassigned)
+        self.assertIn(self.superuser.member, unassigned)
+        self.assertNotIn(self.booked_member_1, unassigned)
+        self.assertNotIn(exempt_user.member, unassigned)
+        self.assertNotIn(inactive_user.member, unassigned)
+        self.assertNotIn("unassigned_members", regular_context)
+
     def test_member_can_book_an_available_slot(self):
         book_url = reverse_internal("book_guidance_slot", self.slot_2.pk)
         regular_member = self.regular_user.member

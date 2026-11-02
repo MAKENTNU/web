@@ -154,12 +154,31 @@
     margin: 0 0.5em 0 0;
 }
 
+.ui.modal.guidance-slot-modal > .close.icon {
+    top: 0.75rem;
+    right: 0.75rem;
+    color: rgba(0, 0, 0, 0.87);
+    opacity: 0.6;
+}
+
+.ui.modal.guidance-slot-modal > .close.icon:hover {
+    opacity: 1;
+}
+
+.guidance-slot-modal > .header {
+    padding-right: 3.5rem;
+}
+
 .guidance_hour_mobile_cards {
     display: none;
 }
 
 .guidance_hour_mobile_day_table {
     margin-bottom: 12px;
+}
+
+.guidance_hour_unassigned_members {
+    margin-top: 24px;
 }
 
 .guidance_slot_member_detail .description {

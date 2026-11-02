@@ -1088,6 +1088,12 @@ msgstr "Søndag"
 msgid "Guidance hours"
 msgstr "Veiledningstimer"
 
+msgid "Close"
+msgstr "Lukk"
+
+msgid "Active members without a guidance hour"
+msgstr "Aktive medlemmer uten veiledningstime"
+
 msgid "from time"
 msgstr "fra klokken"
 
