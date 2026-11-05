@@ -77,6 +77,14 @@
     cursor: pointer;
 }
 
+.guidance_hour_matrix td.guidance_slot_clickable:hover {
+    background-color: var(--make-yellow-darker);
+}
+
+.guidance_hour_matrix td.guidance_slot_empty.guidance_slot_clickable:hover {
+    background-color: #6b6868;
+}
+
 .guidance_member_name {
     font-weight: 700;
     font-size: 0.9rem;
