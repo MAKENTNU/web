@@ -1163,8 +1163,8 @@ msgstr "Du må være medlem for å melde deg på."
 msgid "All guidance hour bookings and comments have been cleared."
 msgstr "Alle påmeldinger og kommentarer for veiledningstimer er fjernet."
 
-msgid "Create Guidance Hour Slot"
-msgstr "Opprett veiledningstime"
+msgid "Add Guidance Hour Slot"
+msgstr "Legg til veiledningstime"
 
 msgid "Update Guidance Hour Slot"
 msgstr "Oppdater veiledningstime"

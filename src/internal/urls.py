@@ -98,42 +98,44 @@ quote_urlpatterns = [
     path("add/", views.QuoteCreateView.as_view(), name="quote_create"),
     path("<int:pk>/", include(specific_quote_urlpatterns)),
 ]
-guidance_hour_urlpatterns = [
-    path("", views.GuidanceHourView.as_view(), name="guidance_hour"),
+specific_guidance_hour_urlpatterns = [
     path(
-        "book/<int:slot_id>/",
+        "book/",
         views.GuidanceHourBookView.as_view(),
         name="book_guidance_slot",
     ),
     path(
-        "cancel/<int:slot_id>/",
+        "cancel/",
         views.GuidanceHourCancelView.as_view(),
         name="cancel_guidance_slot",
     ),
-    path("clear/", views.GuidanceHourClearView.as_view(), name="clear_guidance_slots"),
     path(
-        "create/",
-        views.GuidanceHourCreateView.as_view(),
-        name="create_guidance_hour",
+        "change/", views.GuidanceHourUpdateView.as_view(), name="guidance_hour_update"
     ),
     path(
-        "delete/<int:pk>/",
-        views.GuidanceHourDeleteView.as_view(),
-        name="guidance_hour_delete",
-    ),
-    path(
-        "<int:pk>/change/",
-        views.GuidanceHourUpdateView.as_view(),
-        name="guidance_hour_update",
+        "delete/", views.GuidanceHourDeleteView.as_view(), name="guidance_hour_delete"
     ),
 ]
-
-guidance_hour_apipatterns = [
+guidance_hour_urlpatterns = [
+    path("", views.GuidanceHourView.as_view(), name="guidance_hour"),
+    path("clear/", views.GuidanceHourClearView.as_view(), name="clear_guidance_slots"),
     path(
-        "notes/<int:slot_id>/",
+        "add/",
+        views.GuidanceHourAddView.as_view(),
+        name="add_guidance_hour",
+    ),
+    path("<int:pk>/", include(specific_guidance_hour_urlpatterns)),
+]
+
+specific_guidance_hour_apipatterns = [
+    path(
+        "notes/",
         views.APIGuidanceHourNotesView.as_view(),
         name="update_guidance_slot_notes",
     ),
+]
+guidance_hour_apipatterns = [
+    path("<int:pk>/", include(specific_guidance_hour_apipatterns)),
 ]
 
 apipatterns = [

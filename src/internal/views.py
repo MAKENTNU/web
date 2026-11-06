@@ -479,12 +479,12 @@ class APIGuidanceHourNotesView(View):
 
         return None
 
-    def get(self, request, slot_id):
-        slot = get_object_or_404(GuidanceHour, id=slot_id)
+    def get(self, request, pk):
+        slot = get_object_or_404(GuidanceHour, pk=pk)
         return UTF8JsonResponse({"notes": slot.notes})
 
-    def post(self, request, slot_id):
-        slot = get_object_or_404(GuidanceHour, id=slot_id)
+    def post(self, request, pk):
+        slot = get_object_or_404(GuidanceHour, pk=pk)
         error_message = self.get_edit_error(request, slot)
         if error_message:
             return UTF8JsonResponse(
@@ -509,16 +509,14 @@ class APIGuidanceHourNotesView(View):
 
 
 class GuidanceHourBookView(PreventGetRequestsMixin, View):
-    def post(self, request, slot_id):
+    def post(self, request, pk):
         try:
             member = Member.objects.get(user=request.user)
         except Member.DoesNotExist:
             messages.error(request, _("You need to be a member to book."))
             return redirect("guidance_hour")
         with transaction.atomic():
-            slot = get_object_or_404(
-                GuidanceHour.objects.select_for_update(), id=slot_id
-            )
+            slot = get_object_or_404(GuidanceHour.objects.select_for_update(), pk=pk)
             if slot.is_full():
                 messages.error(request, _("This guidance slot is already full."))
                 return redirect("guidance_hour")
@@ -527,8 +525,8 @@ class GuidanceHourBookView(PreventGetRequestsMixin, View):
 
 
 class GuidanceHourCancelView(PreventGetRequestsMixin, View):
-    def post(self, request, slot_id):
-        slot = get_object_or_404(GuidanceHour, id=slot_id)
+    def post(self, request, pk):
+        slot = get_object_or_404(GuidanceHour, pk=pk)
         member = get_object_or_404(Member, user=request.user)
         slot.members.remove(member)
         return redirect("guidance_hour")
@@ -554,7 +552,7 @@ class GuidanceHourClearView(UserPassesTestMixin, PreventGetRequestsMixin, View):
 class GuidanceHourFormMixin(CustomFieldsetFormMixin, ABC):
     model = GuidanceHour
     form_class = GuidanceHourForm
-    template_name = "internal/create_guidance_hour_slot.html"
+    template_name = "internal/add_guidance_hour_slot.html"
     success_url = reverse_lazy("guidance_hour")
 
     base_template = "internal/base.html"
@@ -562,13 +560,11 @@ class GuidanceHourFormMixin(CustomFieldsetFormMixin, ABC):
     back_button_text = _("Guidance hours")
 
 
-class GuidanceHourCreateView(
-    PermissionRequiredMixin, GuidanceHourFormMixin, CreateView
-):
+class GuidanceHourAddView(PermissionRequiredMixin, GuidanceHourFormMixin, CreateView):
     permission_required = ("internal.add_guidancehour",)
 
-    form_title = _("Create Guidance Hour Slot")
-    save_button_text = _("Create")
+    form_title = _("Add Guidance Hour Slot")
+    save_button_text = _("Add")
 
 
 class GuidanceHourUpdateView(

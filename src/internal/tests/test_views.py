@@ -526,11 +526,11 @@ class GuidanceHourTests(TestCase):
         self.assertTrue(response.url.endswith("/guidance-hour/"))
         self.assertNotIn(self.regular_user.member, self.slot_2.members.all())
 
-    def test_superuser_can_create_slot(self):
-        create_url = reverse_internal("create_guidance_hour")
+    def test_superuser_can_add_slot(self):
+        add_url = reverse_internal("add_guidance_hour")
 
         response = self.superuser_client.post(
-            create_url,
+            add_url,
             {
                 "weekday": 2,
                 "from_time": "18:30",
@@ -545,12 +545,12 @@ class GuidanceHourTests(TestCase):
             ).exists()
         )
 
-    def test_non_superuser_cannot_create_slot(self):
-        create_url = reverse_internal("create_guidance_hour")
+    def test_non_superuser_cannot_add_slot(self):
+        add_url = reverse_internal("add_guidance_hour")
         slot_count_before = GuidanceHour.objects.count()
 
         response = self.regular_user_client.post(
-            create_url,
+            add_url,
             {
                 "weekday": 2,
                 "from_time": "18:30",
@@ -609,7 +609,7 @@ class GuidanceHourTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertTrue(GuidanceHour.objects.filter(pk=self.slot_1.pk).exists())
 
-    def test_create_slot_rejects_invalid_time_range(self):
+    def test_add_slot_rejects_invalid_time_range(self):
         form = GuidanceHourForm(
             data={
                 "weekday": 3,
@@ -627,7 +627,7 @@ class GuidanceHourTests(TestCase):
             str(form.errors),
         )
 
-    def test_create_slot_rejects_overlapping_time_range_same_weekday(self):
+    def test_add_slot_rejects_overlapping_time_range_same_weekday(self):
         form = GuidanceHourForm(
             data={
                 "weekday": self.slot_1.weekday,
