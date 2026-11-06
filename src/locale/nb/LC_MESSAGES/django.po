@@ -1928,9 +1928,20 @@ msgstr "Printer status"
 msgid "Unable to retrieve printer status."
 msgstr "Kunne ikke hente printer status"
 
-#: src/make_queue/templates/make_queue/reservation_actions.html:25
-msgid "File is too large."
-msgstr "Filen er for stor"
+#: src/make_queue/templates/make_queue/reservation_actions.html:27
+#: src/make_queue/views/machine.py:436
+#, python-format
+msgid "The file is too large (%(size)s). The maximum size is %(max_size)s."
+msgstr "Filen er for stor (%(size)s). Maksimal størrelse er %(max_size)s."
+
+#: src/make_queue/templates/make_queue/reservation_actions.html:28
+msgid "Lost the connection to the server during the upload."
+msgstr "Mistet forbindelsen til serveren under opplastingen."
+
+#: src/make_queue/templates/make_queue/reservation_actions.html:191
+#, python-format
+msgid "Max. file size: %(max_size)s"
+msgstr "Maks. filstørrelse: %(max_size)s"
 
 #: src/make_queue/templates/make_queue/reservation_actions.html:136
 #: src/make_queue/templates/make_queue/reservation_form.html:13
@@ -2241,6 +2252,14 @@ msgstr "Opplasting fullført"
 #, python-format
 msgid "Printer rejected the upload (status %(code)s)."
 msgstr "Printeren avviste opplastingen (status %(code)s)."
+
+#: src/make_queue/views/machine.py:503
+msgid ""
+"The printer took too long to respond. Check whether the file appeared on the "
+"printer before trying again."
+msgstr ""
+"Printeren brukte for lang tid på å svare. Sjekk om filen dukket opp på "
+"printeren før du prøver igjen."
 
 #: src/make_queue/views/quota.py:99 src/make_queue/views/quota.py:126
 msgid "Admin page for quotas"

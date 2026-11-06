@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const icon = document.getElementById("upload-icon");
     let uploading = false;
 
+    const MAX_FILE_SIZE = {{ gcode_upload_max_size }};
     const TXT = {
         uploading: "{% translate 'Uploading' %}...",
         upload: "{% translate 'Upload' %}",
@@ -22,13 +23,26 @@ document.addEventListener("DOMContentLoaded", function () {
         ready: "{% translate 'Ready for upload' %}",
         unknown: "{% translate 'Current printer status' %}:",
         fetchError: "{% translate 'Unable to retrieve printer status.' %}",
-        tooLarge: "{% translate 'File is too large.' %}",
+        tooLarge: "{% blocktranslate with size='{size}' max_size=gcode_upload_max_size|filesizeformat %}The file is too large ({{ size }}). The maximum size is {{ max_size }}.{% endblocktranslate %}",
+        connectionLost: "{% translate 'Lost the connection to the server during the upload.' %}",
     };
+
+    function formatFileSize(bytes) {
+        return (bytes / 1024 / 1024).toFixed(1) + " MB";
+    }
+
     if (button && fileInput) {
         button.addEventListener("click", () => fileInput.click());
 
         fileInput.addEventListener("change", () => {
             if (!fileInput.files.length) return;
+
+            const file = fileInput.files[0];
+            if (file.size > MAX_FILE_SIZE) {
+                statusText.textContent = TXT.tooLarge.replace("{size}", formatFileSize(file.size));
+                fileInput.value = "";
+                return;
+            }
 
             button.disabled = true;
             uploading = true;
@@ -50,10 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     data = await res.json();
                 } catch {}
                 if (!res.ok || !data || !data.success) {
-                    if (res.status === 413) {
-                        throw new Error(TXT.tooLarge);
+                    if (data && data.message) {
+                        throw new Error(data.message);
                     }
-                    throw new Error((data && data.message) || TXT.uploadFailed);
+                    if (res.status === 413) {
+                        throw new Error(TXT.tooLarge.replace("{size}", formatFileSize(file.size)));
+                    }
+                    throw new Error(`${TXT.uploadFailed} (HTTP ${res.status})`);
                 }
                 return data;
             })
@@ -63,7 +80,9 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => {
                 button.textContent = TXT.upload;
-                statusText.textContent = err.message || TXT.uploadFailed;
+                statusText.textContent = err instanceof TypeError
+                    ? TXT.connectionLost
+                    : err.message || TXT.uploadFailed;
             })
             .finally(() => {
                 uploading = false;
@@ -159,6 +178,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <button id="upload-button" type="button" class="ui button small" disabled>
             {% translate "Upload" %}
         </button>
+        <div class="ui tiny text">
+            {% blocktranslate with max_size=gcode_upload_max_size|filesizeformat %}Max. file size: {{ max_size }}{% endblocktranslate %}
+        </div>
 
         <div id="upload-status" class="ui tiny text"></div>
         <div id="upload-message" class="ui tiny text">
