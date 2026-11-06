@@ -1,4 +1,4 @@
-.guidance_hour_header {
+.guidance-hour-header {
     width: 100%;
     display: flex;
     align-items: center;
@@ -6,7 +6,7 @@
     flex-wrap: wrap;
 }
 
-.guidance_hour_my_slots {
+.guidance-hour-my-slots {
     width: 100%;
     margin: 0 0 10px;
     padding-left: 6px;
@@ -15,56 +15,56 @@
     color: #0b2f4a;
 }
 
-.guidance_hour_matrix {
+.guidance-hour-matrix {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
 }
 
-.guidance_hour_matrix :is(th, td) {
+.guidance-hour-matrix :is(th, td) {
     border: 1px solid black;
     padding: 10px 12px;
     text-align: left;
     vertical-align: top;
 }
 
-.guidance_hour_matrix th {
+.guidance-hour-matrix th {
     background-color: var(--make-blue);
     color: #ffffff;
 }
 
-.guidance_hour_matrix td {
+.guidance-hour-matrix td {
     background-color: var(--make-yellow);
     color: black;
 }
 
-.guidance_hour_matrix td.guidance_slot_empty {
+.guidance-hour-matrix td.guidance-slot-empty {
     background-color: #827f7f;
 }
 
-.guidance_hour_matrix td.guidance_matrix_slot {
+.guidance-hour-matrix td.guidance-matrix-slot {
     padding-top: 6px;
     padding-bottom: 6px;
 }
 
-.guidance_hour_matrix .guidance_slot_time {
+.guidance-hour-matrix .guidance-slot-time {
     width: 150px;
     white-space: nowrap;
 }
 
-.guidance_slot_members {
+.guidance-slot-members {
     display: flex;
     flex-direction: column;
     gap: 3px;
     margin-bottom: 4px;
 }
 
-.guidance_slot_members .guidance_member_name + .guidance_member_name {
+.guidance-slot-members .guidance-member-name + .guidance-member-name {
     padding-top: 3px;
     position: relative;
 }
 
-.guidance_slot_members .guidance_member_name + .guidance_member_name::before {
+.guidance-slot-members .guidance-member-name + .guidance-member-name::before {
     content: "";
     position: absolute;
     top: 0;
@@ -73,25 +73,25 @@
     border-top: 1px solid var(--make-blue);
 }
 
-.guidance_slot_clickable {
+.guidance-slot-clickable {
     cursor: pointer;
 }
 
-.guidance_hour_matrix td.guidance_slot_clickable:hover {
+.guidance-hour-matrix td.guidance-slot-clickable:hover {
     background-color: var(--make-yellow-darker);
 }
 
-.guidance_hour_matrix td.guidance_slot_empty.guidance_slot_clickable:hover {
+.guidance-hour-matrix td.guidance-slot-empty.guidance-slot-clickable:hover {
     background-color: #6b6868;
 }
 
-.guidance_member_name {
+.guidance-member-name {
     font-weight: 700;
     font-size: 0.9rem;
 }
 
-.guidance_hour_notes,
-.guidance_hour_notes_display {
+.guidance-hour-notes,
+.guidance-hour-notes-display {
     width: 100%;
     min-height: 65px;
     margin: 0;
@@ -99,20 +99,20 @@
     white-space: pre-wrap;
 }
 
-.guidance_hour_notes {
+.guidance-hour-notes {
     resize: vertical;
     border: 1px solid rgba(12, 66, 106, 0.35);
     background: #ffffff;
 }
 
-.guidance_hour_notes_controls {
+.guidance-hour-notes-controls {
     margin-top: 6px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.guidance_hour_notes_save {
+.guidance-hour-notes-save {
     border: 1px solid var(--make-blue);
     background-color: var(--make-blue);
     color: #ffffff;
@@ -123,14 +123,14 @@
     cursor: pointer;
 }
 
-.guidance_hour_notes_save.guidance_hour_notes_save_success {
+.guidance-hour-notes-save.guidance-hour-notes-save-success {
     background-color: #1a7a3c;
     border-color: #1a7a3c;
     cursor: default;
 }
 
-.cancel_button,
-.book_button {
+.cancel-button,
+.book-button {
     border-radius: 6px;
     padding: 6px 12px;
     font-weight: 600;
@@ -150,7 +150,7 @@
     cursor: pointer;
 }
 
-.guidance_slot_full {
+.guidance-slot-full {
     font-weight: 700;
     color: #7c1d00;
     text-transform: uppercase;
@@ -177,43 +177,43 @@
     padding-right: 3.5rem;
 }
 
-.guidance_hour_mobile_cards {
+.guidance-hour-mobile-cards {
     display: none;
 }
 
-.guidance_hour_mobile_day_table {
+.guidance-hour-mobile-day-table {
     margin-bottom: 12px;
 }
 
-.guidance_hour_unassigned_members {
+.guidance-hour-unassigned-members {
     margin-top: 24px;
 }
 
-.guidance_slot_member_detail .description {
+.guidance-slot-member-detail .description {
     margin-top: 4px;
 }
 
-.guidance_slot_member_detail + .guidance_slot_member_detail {
+.guidance-slot-member-detail + .guidance-slot-member-detail {
     border-top: 1px solid rgba(0, 0, 0, 1);
     margin-top: 8px;
     padding-top: 8px;
 }
 
 @media (max-width: 900px) {
-    .guidance_hour_matrix {
+    .guidance-hour-matrix {
         display: none;
     }
 
-    .guidance_hour_mobile_cards .guidance_hour_matrix {
+    .guidance-hour-mobile-cards .guidance-hour-matrix {
         display: table;
     }
 
-    .guidance_hour_mobile_cards {
+    .guidance-hour-mobile-cards {
         display: block;
     }
 
-    .guidance_hour_notes,
-    .guidance_hour_notes_display {
+    .guidance-hour-notes,
+    .guidance-hour-notes-display {
         max-width: 100%;
     }
 }

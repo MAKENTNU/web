@@ -28,7 +28,7 @@
     {% translate "Are you sure you want to book this slot?" as book_confirm_msg %}
     {% translate "Are you sure you want to clear all bookings and comments?" as clear_all_confirm_msg %}
     {% translate "Are you sure you want to delete this slot?" as delete_slot_confirm_msg %}
-    <h1 class="ui header guidance_hour_header">
+    <h1 class="ui header guidance-hour-header">
             {% translate "Guidance hours" %}
             {% if perms.internal.add_guidancehour %}
                 <a href="{% url 'create_guidance_hour' %}">
@@ -44,7 +44,7 @@
                 </form>
             {% endif %}
         </h1>
-    <div class="guidance_hour_my_slots">
+    <div class="guidance-hour-my-slots">
         <strong>{% translate "Your scheduled times this semester:" %}</strong>
         {% if current_member_slots %}
             {% for slot in current_member_slots %}
@@ -54,7 +54,7 @@
             {% translate "None" %}
         {% endif %}
     </div>
-    <div class="guidance_hour_my_slots">
+    <div class="guidance-hour-my-slots">
         <strong>{% translate "At the makerspace now:" %}</strong>
         {% if current_guidance_members %}
             {% for member in current_guidance_members %}
@@ -64,10 +64,10 @@
             {% translate "None" %}
         {% endif %}
     </div>
-    <table class="guidance_hour_matrix">
+    <table class="guidance-hour-matrix">
         <thead>
             <tr>
-                <th class="guidance_slot_time">{% translate "Time" %}</th>
+                <th class="guidance-slot-time">{% translate "Time" %}</th>
                 {% for day in weekday_columns %}
                     <th>{{ day.label }}</th>
                 {% endfor %}
@@ -75,20 +75,20 @@
         </thead>
         <tbody>
             {% for row in matrix_rows %}
-                <tr class="guidance_slot_row">
-                    <th class="guidance_slot_time">{{ row.from_time|time:"H:i" }} - {{ row.to_time|time:"H:i" }}</th>
+                <tr class="guidance-slot-row">
+                    <th class="guidance-slot-time">{{ row.from_time|time:"H:i" }} - {{ row.to_time|time:"H:i" }}</th>
                     {% for slot in row.slots %}
-                        <td class="guidance_matrix_slot{% if not slot or not slot.all_members %} guidance_slot_empty{% endif %}{% if slot %} guidance_slot_clickable{% endif %}"{% if slot %} data-slot-modal="#guidance-slot-modal-{{ slot.id }}" role="button" tabindex="0" aria-label="{{ slot.get_weekday_display }} {{ row.from_time|time:'H:i' }} - {{ row.to_time|time:'H:i' }}"{% endif %}>
+                        <td class="guidance-matrix-slot{% if not slot or not slot.all_members %} guidance-slot-empty{% endif %}{% if slot %} guidance-slot-clickable{% endif %}"{% if slot %} data-slot-modal="#guidance-slot-modal-{{ slot.id }}" role="button" tabindex="0" aria-label="{{ slot.get_weekday_display }} {{ row.from_time|time:'H:i' }} - {{ row.to_time|time:'H:i' }}"{% endif %}>
                             {% if slot %}
-                                <div class="guidance_slot_members">
+                                <div class="guidance-slot-members">
                                     {% for member in slot.all_members %}
-                                        <div class="guidance_member_name">{{ member.user.get_short_full_name }}</div>
+                                        <div class="guidance-member-name">{{ member.user.get_short_full_name }}</div>
                                     {% empty %}
-                                        <div class="guidance_member_name_none">{% translate "No members" %}</div>
+                                        <div class="guidance-member-name-none">{% translate "No members" %}</div>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <span class="guidance_member_name">-</span>
+                                <span class="guidance-member-name">-</span>
                             {% endif %}
                         </td>
                     {% endfor %}
@@ -97,10 +97,10 @@
         </tbody>
     </table>
 
-    <div class="guidance_hour_mobile_cards"></div>
+    <div class="guidance-hour-mobile-cards"></div>
 
     {% if unassigned_members is not None %}
-        <div class="guidance_hour_unassigned_members">
+        <div class="guidance-hour-unassigned-members">
             <h3 class="ui header">{% translate "Active members without a guidance hour" %}</h3>
             {% if unassigned_members %}
                 <ul>
@@ -126,7 +126,7 @@
                         <h4 class="ui header">{% translate "Members" %}</h4>
                         <div class="ui relaxed list">
                                     {% for member in slot.all_members %}
-                                <div class="item guidance_slot_member_detail">
+                                <div class="item guidance-slot-member-detail">
                                     <div class="content">
                                         <div class="header">{{ member.user.get_full_name }}</div>
                                         {% if member.phone_number %}
@@ -148,36 +148,36 @@
 
                         <h4 class="ui header">{% translate "comments"|capfirst %}</h4>
                         {% if current_member in slot.all_members %}
-                            <textarea class="guidance_hour_notes"
+                            <textarea class="guidance-hour-notes"
                                 data-notes-url="{% url 'update_guidance_slot_notes' slot.id %}"
                                 autocomplete="off"
                                 maxlength="{{ slot.MAX_NOTES_LENGTH }}"
                                 rows="2">{{ slot.notes }}</textarea>
-                            <div class="guidance_hour_notes_controls">
-                                <button type="button" class="ui button guidance_hour_notes_save"
+                            <div class="guidance-hour-notes-controls">
+                                <button type="button" class="ui button guidance-hour-notes-save"
                                         data-save-label="{% translate 'Save' %}"
                                         data-saved-label="{% translate 'Saved' %}">
                                     {% translate "Save" %}
                                 </button>
                             </div>
                         {% elif slot.notes %}
-                            <p class="guidance_hour_notes_display">{{ slot.notes }}</p>
+                            <p class="guidance-hour-notes-display">{{ slot.notes }}</p>
                         {% endif %}
                     </div>
                     <div class="actions">
                         {% if current_member in slot.all_members %}
                             <form method="post" action="{% url 'cancel_guidance_slot' slot.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="ui red button cancel_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
+                                <button type="submit" class="ui red button cancel-button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ cancel_confirm_msg }}">
                                     {% translate "remove booking"|capfirst %}
                                 </button>
                             </form>
                         {% elif slot.all_members|length >= slot.MAX_MEMBERS %}
-                            <span class="guidance_slot_full">{% translate "full"|capfirst %}</span>
+                            <span class="guidance-slot-full">{% translate "full"|capfirst %}</span>
                         {% else %}
                             <form method="post" action="{% url 'book_guidance_slot' slot.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="ui green button book_button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
+                                <button type="submit" class="ui green button book-button" onclick="return confirm(this.dataset.confirm)" data-confirm="{{ book_confirm_msg }}">
                                     {% translate "book"|capfirst %}
                                 </button>
                             </form>

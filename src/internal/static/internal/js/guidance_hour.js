@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $(target).modal({
             onHidden: function () {
-                this.find(".guidance_hour_notes").each((_, el) => { el.value = el.defaultValue; });
+                this.find(".guidance-hour-notes").each((_, el) => { el.value = el.defaultValue; });
             }
         }).modal("show");
     }
 
     function buildMobileDayTables() {
-        const table = document.querySelector(".guidance_hour_matrix");
-        const cardsContainer = document.querySelector(".guidance_hour_mobile_cards");
+        const table = document.querySelector(".guidance-hour-matrix");
+        const cardsContainer = document.querySelector(".guidance-hour-mobile-cards");
         if (!table || !cardsContainer) {
             return;
         }
@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         dayHeaders.forEach((dayLabel, dayIndex) => {
             const dayTable = document.createElement("table");
-            dayTable.className = "guidance_hour_matrix guidance_hour_mobile_day_table";
+            dayTable.className = "guidance-hour-matrix guidance-hour-mobile-day-table";
 
             const tableHead = document.createElement("thead");
             const headerRow = document.createElement("tr");
 
             const timeHeader = document.createElement("th");
-            timeHeader.className = "guidance_slot_time";
-            timeHeader.textContent = table.querySelector("thead .guidance_slot_time")?.textContent.trim() || "Time";
+            timeHeader.className = "guidance-slot-time";
+            timeHeader.textContent = table.querySelector("thead .guidance-slot-time")?.textContent.trim() || "Time";
             headerRow.appendChild(timeHeader);
 
             const dayHeader = document.createElement("th");
@@ -52,17 +52,17 @@ document.addEventListener("DOMContentLoaded", function () {
             const tableBody = document.createElement("tbody");
 
             rows.forEach((row) => {
-                const timeLabel = row.querySelector(".guidance_slot_time")?.textContent.trim() || "";
+                const timeLabel = row.querySelector(".guidance-slot-time")?.textContent.trim() || "";
                 const slotCell = row.querySelectorAll("td")[dayIndex];
                 if (!slotCell) {
                     return;
                 }
 
                 const tableRow = document.createElement("tr");
-                tableRow.className = "guidance_slot_row";
+                tableRow.className = "guidance-slot-row";
 
                 const slotTime = document.createElement("th");
-                slotTime.className = "guidance_slot_time";
+                slotTime.className = "guidance-slot-time";
                 slotTime.textContent = timeLabel;
                 tableRow.appendChild(slotTime);
 
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     buildMobileDayTables();
 
     document.addEventListener("click", function (event) {
-        const slotCell = event.target.closest(".guidance_matrix_slot[data-slot-modal]");
+        const slotCell = event.target.closest(".guidance-matrix-slot[data-slot-modal]");
         if (slotCell) {
             openSlotModal(slotCell);
         }
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const slotCell = event.target.closest(".guidance_matrix_slot[data-slot-modal]");
+        const slotCell = event.target.closest(".guidance-matrix-slot[data-slot-modal]");
         if (!slotCell) {
             return;
         }
@@ -100,8 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
         openSlotModal(slotCell);
     });
 
-    document.querySelectorAll(".guidance_hour_notes_save").forEach(saveButton => {
-        const textarea = saveButton.closest(".content").querySelector(".guidance_hour_notes");
+    document.querySelectorAll(".guidance-hour-notes-save").forEach(saveButton => {
+        const textarea = saveButton.closest(".content").querySelector(".guidance-hour-notes");
         const saveLabel = saveButton.dataset.saveLabel;
         const savedLabel = saveButton.dataset.savedLabel;
 
@@ -139,11 +139,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 textarea.defaultValue = notes;
 
                 saveButton.textContent = savedLabel;
-                saveButton.classList.add("guidance_hour_notes_save_success");
+                saveButton.classList.add("guidance-hour-notes-save-success");
                 saveButton.disabled = true;
                 setTimeout(() => {
                     saveButton.textContent = saveLabel;
-                    saveButton.classList.remove("guidance_hour_notes_save_success");
+                    saveButton.classList.remove("guidance-hour-notes-save-success");
                     saveButton.disabled = false;
                 }, 1500);
             } catch (error) {
