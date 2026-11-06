@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
-from internal.models import Member, Quote, Secret, SystemAccess
+from internal.models import GuidanceHour, Member, Quote, Secret, SystemAccess
 from users.models import User
 from web.widgets import (
     SemanticDateInput,
@@ -200,3 +200,50 @@ class QuoteForm(forms.ModelForm):
         widgets = {
             "date": SemanticDateInput(),
         }
+
+
+class GuidanceHourForm(forms.ModelForm):
+    class Meta:
+        model = GuidanceHour
+        fields = ("from_time", "to_time", "weekday")
+        widgets = {
+            "from_time": forms.TimeInput(attrs={"type": "time"}),
+            "to_time": forms.TimeInput(attrs={"type": "time"}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        from_time = cleaned_data.get("from_time")
+        to_time = cleaned_data.get("to_time")
+
+        if from_time is None or to_time is None:
+            return cleaned_data
+
+        if from_time >= to_time:
+            self.add_error(
+                "to_time",
+                forms.ValidationError(
+                    _("Start time must be before end time."),
+                    code="invalid_time_range",
+                ),
+            )
+            return cleaned_data
+
+        weekday = cleaned_data.get("weekday")
+        if weekday is None:
+            return cleaned_data
+
+        overlapping_slots = GuidanceHour.objects.filter(
+            weekday=weekday,
+            from_time__lt=to_time,
+            to_time__gt=from_time,
+        )
+        if self.instance.pk:
+            overlapping_slots = overlapping_slots.exclude(pk=self.instance.pk)
+
+        if overlapping_slots.exists():
+            raise forms.ValidationError(
+                _("This slot overlaps with an existing guidance slot."),
+                code="overlapping_slot",
+            )
+        return cleaned_data
