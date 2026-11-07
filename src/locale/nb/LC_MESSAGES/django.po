@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:56+0100\n"
+"POT-Creation-Date: 2026-11-07 00:55+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -1260,11 +1260,52 @@ msgstr "Maksimalt antall aktive reservasjoner"
 msgid "User has no personal quotas"
 msgstr "Brukeren har ingen personlige kvoter"
 
+msgid "Uploading"
+msgstr "Laster opp"
+
+msgid "Upload"
+msgstr "Last opp"
+
+msgid "Upload complete"
+msgstr "Opplasting fullført"
+
+msgid "Upload failed"
+msgstr "Opplasting feilet"
+
+msgid "Printer is offline"
+msgstr "Printer er frakoblet"
+
+msgid "Upload unavailable while printing is in progress."
+msgstr "Kan ikke laste opp mens printeren printer"
+
+msgid "Ready for upload"
+msgstr "Klar for opplasting"
+
+msgid "Current printer status"
+msgstr "Printer status"
+
+msgid "Unable to retrieve printer status."
+msgstr "Kunne ikke hente printer status"
+
+#, python-format
+msgid "The file is too large (%(size)s). The maximum size is %(max_size)s."
+msgstr "Filen er for stor (%(size)s). Maksimal størrelse er %(max_size)s."
+
+msgid "Lost the connection to the server during the upload."
+msgstr "Mistet forbindelsen til serveren under opplastingen."
+
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
 msgid "Click to create a new reservation"
 msgstr "Klikk for å lage en ny reservasjon"
+
+msgid "Upload Gcode"
+msgstr "Last opp Gcode"
+
+#, python-format
+msgid "Max. file size: %(max_size)s"
+msgstr "Maks. filstørrelse: %(max_size)s"
 
 msgid "Click to see your reservations"
 msgstr "Klikk for å se dine reservasjoner"
@@ -1452,6 +1493,39 @@ msgstr "Legg til maskin"
 
 msgid "Change Machine"
 msgstr "Endre maskin"
+
+msgid "You are not allowed to upload to this printer."
+msgstr "Du kan ikke laste opp til denne printeren"
+
+msgid "No file was selected."
+msgstr "Ingen fil valgt"
+
+msgid "Only .gcode files are allowed."
+msgstr "Bare .gcode filer tillatt"
+
+msgid "This doesn't look like a valid G-code file."
+msgstr "Dette ser ikke ut som gyldig G-code"
+
+msgid "Invalid printer address configured."
+msgstr "Ugyldig printer adresse"
+
+msgid ""
+"The printer took too long to respond. Check whether the file appeared on the "
+"printer before trying again."
+msgstr ""
+"Printeren brukte for lang tid på å svare. Sjekk om filen dukket opp på "
+"printeren før du prøver igjen."
+
+#, python-format
+msgid "Could not reach the printer: %(error)s"
+msgstr "Kunne ikke nå printeren: %(error)s"
+
+msgid "File uploaded successfully."
+msgstr "Opplasting fullført"
+
+#, python-format
+msgid "Printer rejected the upload (status %(code)s)."
+msgstr "Printeren avviste opplastingen (status %(code)s)."
 
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"

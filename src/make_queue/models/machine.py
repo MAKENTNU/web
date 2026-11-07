@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
 
+import requests
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
 from django.db.models import F, Prefetch, Q
@@ -50,6 +51,8 @@ class MachineType(models.Model):
         on_delete=models.PROTECT,
     )
     has_stream = models.BooleanField(default=False)
+    has_ip = models.BooleanField(default=False)
+
     priority = models.IntegerField(
         verbose_name=_("priority"),
         help_text=_("The machine types are sorted ascending by this value."),
@@ -205,6 +208,7 @@ class Machine(models.Model):
     history = HistoricalRecords(
         excluded_fields=["status", "info_message_date", "priority", "last_modified"]
     )
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
@@ -260,6 +264,20 @@ class Machine(models.Model):
             in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
             self.get_status_display(),
         )
+
+    def show_upload_button(self, user):  # Only show upload button if user can use it
+        return self.ip_address and self.can_user_use(user)
+
+    def get_printer_status(self):
+        try:
+            res = requests.get(
+                f"http://{self.ip_address}/printer/objects/query?print_stats", timeout=5
+            )
+            data = res.json()
+
+            return data["result"]["status"]["print_stats"]["state"]
+        except (requests.RequestException, KeyError, TypeError):
+            return "offline"
 
 
 class MachineUsageRule(models.Model):

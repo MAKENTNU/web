@@ -52,6 +52,7 @@ class MachineAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
         "machine_type",
         "get_location",
         "internal",
+        "ip_address",
         "status",
         "priority",
         "last_modified",

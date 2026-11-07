@@ -1,9 +1,18 @@
+import io
+import ipaddress
 from abc import ABC
+from http import HTTPStatus
 
+import requests
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.files.uploadedfile import UploadedFile
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import filesizeformat
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -11,6 +20,8 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from urllib3.fields import RequestField
+from urllib3.filepost import choose_boundary, encode_multipart_formdata
 
 from make_queue.forms.machine import (
     AddMachineForm,
@@ -22,6 +33,7 @@ from make_queue.models.machine import Machine, MachineType, MachineUsageRule
 from make_queue.models.reservation import Quota
 from make_queue.templatetags.reservation_extra import reservation_denied_message
 from util.locale_utils import get_current_year_and_week, year_and_week_to_monday
+from util.logging_utils import get_request_logger
 from util.view_utils import (
     CustomFieldsetFormMixin,
     PreventGetRequestsMixin,
@@ -178,6 +190,10 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
             "selected_year": selected_year,
             "selected_week": selected_week,
             "selected_date": year_and_week_to_monday(selected_year, selected_week),
+            "can_upload_gcode": False,
+            "show_upload_button": False,
+            "printer_status": "Offline",
+            "gcode_upload_max_size": settings.GCODE_UPLOAD_MAX_SIZE,
         }
 
         if self.request.user.is_authenticated:
@@ -187,8 +203,18 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
                     self.request.user, machine.machine_type
                 ).filter(ignore_rules=True)
             )
-
+            context["show_upload_button"] = machine.show_upload_button(
+                self.request.user
+            )
         return context
+
+
+def printer_status_api(request, pk):
+    machine = get_object_or_404(Machine, pk=pk)
+
+    status = machine.get_printer_status()
+
+    return JsonResponse({"status": status})
 
 
 class MachineFormMixin(CustomFieldsetFormMixin, ABC):
@@ -214,6 +240,9 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
             {"fields": ("stream_name",), "layout_class": "ui two fields"}
             if self.should_include_stream_name()
             else None,
+            {"fields": ("ip_address",), "layout_class": "ui two fields"}
+            if self.should_include_ip_address()
+            else None,
             {"fields": ("location", "location_url"), "layout_class": "ui two fields"},
             {"fields": ("priority", "status"), "layout_class": "ui two fields"},
             {
@@ -225,6 +254,9 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
         ]
 
     def should_include_stream_name(self):
+        return True
+
+    def should_include_ip_address(self):
         return True
 
 
@@ -248,6 +280,9 @@ class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
 
     def should_include_stream_name(self):
         return self.object.machine_type.has_stream
+
+    def should_include_ip_address(self):
+        return self.object.machine_type.has_ip
 
 
 class MachineDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -273,4 +308,227 @@ class MachineRelatedViewMixin:
         machine_pk = self.kwargs["pk"]
         self.machine = get_object_or_404(
             Machine.objects.visible_to(self.request.user), pk=machine_pk
+        )
+
+
+TAILSCALE_CGNAT = ipaddress.ip_network("100.64.0.0/10")
+# How large a share of the lines at the start of a file must look like G-code
+MIN_VALID_GCODE_LINE_RATIO = 0.8
+
+
+def _looks_like_gcode(file) -> bool:
+    """Heuristic: most non-empty lines in the first chunk should look like G-code."""
+    try:
+        file.seek(0)
+        chunk = file.read(8192)
+        file.seek(0)
+    # `ValueError` is raised if the file has been closed
+    except (OSError, ValueError):
+        return False
+
+    if isinstance(chunk, bytes):
+        chunk = chunk.decode("utf-8", errors="ignore")
+
+    lines = [line.strip() for line in chunk.splitlines() if line.strip()]
+    if not lines:
+        return False
+
+    valid_prefixes = ("G", "M", "T", "N", ";")
+    valid_count = sum(1 for line in lines if line.upper().startswith(valid_prefixes))
+    return valid_count / len(lines) >= MIN_VALID_GCODE_LINE_RATIO
+
+
+class StreamingMultipartBody:
+    """
+    A ``multipart/form-data`` request body that reads ``file`` in small blocks while
+    it's being sent.
+
+    When passing ``files=...`` to ``requests``, the whole body is built as a single
+    ``bytes`` object and sent with one ``socket.sendall()`` call, which means that the
+    read timeout limits how long the *entire* upload can take. A large file over a slow
+    connection (e.g. Tailscale relaying the traffic) will then time out, even though
+    data is flowing the whole time. Passing an instance of this class as ``data``
+    instead makes urllib3 send the body in small blocks, so that the timeout only
+    applies to each block - i.e. only to a connection that has stalled.
+    """
+
+    def __init__(self, fields: dict[str, str], *, file_field: str, file: UploadedFile):
+        boundary = choose_boundary()
+        self.content_type = f"multipart/form-data; boundary={boundary}"
+
+        file_part = RequestField(file_field, b"", filename=file.name)
+        file_part.make_multipart(content_type="application/octet-stream")
+        # Encode all the fields with an empty file (as the last field), and then send
+        # the file's contents between its part headers and the closing boundary
+        encoded_fields, _content_type = encode_multipart_formdata(
+            [*fields.items(), file_part], boundary=boundary
+        )
+        closing_boundary = f"\r\n--{boundary}--\r\n".encode()
+
+        file.seek(0)
+        self._parts = [
+            io.BytesIO(encoded_fields.removesuffix(closing_boundary)),
+            file,
+            io.BytesIO(closing_boundary),
+        ]
+        self._length = len(encoded_fields) + file.size
+
+    def __len__(self):
+        # Used by `requests` to set the `Content-Length` header
+        return self._length
+
+    def read(self, size: int = -1) -> bytes:
+        chunks = []
+        while self._parts and size != 0:
+            chunk = self._parts[0].read(size)
+            if not chunk:
+                self._parts.pop(0)
+                continue
+            chunks.append(chunk)
+            if size > 0:
+                size -= len(chunk)
+        return b"".join(chunks)
+
+
+class UploadGcodeView(View):
+    def printer_error_response(
+        self,
+        message: str,
+        *,
+        status: HTTPStatus,
+        log_message: str,
+        exception: Exception = None,
+    ):
+        # Log the actual cause (which also emails the admins), as the generic
+        # "Bad Gateway" report that Django would otherwise send doesn't include it
+        get_request_logger().error(
+            log_message, exc_info=exception, extra={"request": self.request}
+        )
+        response = JsonResponse({"success": False, "message": message}, status=status)
+        # Prevent Django from also logging (and emailing) the generic report
+        response._has_been_logged = True
+        return response
+
+    def post(self, request, pk):
+        machine = get_object_or_404(Machine, pk=pk)
+
+        if not machine.show_upload_button(request.user):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("You are not allowed to upload to this printer.")),
+                },
+                status=403,
+            )
+
+        file = request.FILES.get("file")
+        if not file:
+            return JsonResponse(
+                {"success": False, "message": str(_("No file was selected."))},
+                status=400,
+            )
+
+        max_size = settings.GCODE_UPLOAD_MAX_SIZE
+        if file.size > max_size:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(
+                        _(
+                            "The file is too large (%(size)s). The maximum size is "
+                            "%(max_size)s."
+                        )
+                    )
+                    % {
+                        "size": filesizeformat(file.size),
+                        "max_size": filesizeformat(max_size),
+                    },
+                },
+                status=HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+            )
+
+        if not file.name.lower().endswith(".gcode"):
+            return JsonResponse(
+                {"success": False, "message": str(_("Only .gcode files are allowed."))},
+                status=400,
+            )
+
+        username = request.user.username
+        if username.lower() not in file.name.lower():
+            file.name = f"{username}-{file.name}"
+
+        if not _looks_like_gcode(file):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("This doesn't look like a valid G-code file.")),
+                },
+                status=400,
+            )
+
+        try:
+            ip = ipaddress.ip_address(machine.ip_address)
+        except (ValueError, TypeError):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("Invalid printer address configured.")),
+                },
+                status=500,
+            )
+
+        if not (ip.is_private or ip in TAILSCALE_CGNAT):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("Invalid printer address configured.")),
+                },
+                status=500,
+            )
+
+        body = StreamingMultipartBody(
+            {"root": "gcodes", "path": ""}, file_field="file", file=file
+        )
+        try:
+            response = requests.post(
+                f"http://{machine.ip_address}/server/files/upload",
+                data=body,
+                headers={"Content-Type": body.content_type},
+                # As the body is streamed, the read timeout applies to sending each
+                # block and to waiting for the response - not to the whole upload
+                timeout=(5, 120),
+            )
+        except requests.Timeout as e:
+            return self.printer_error_response(
+                str(
+                    _(
+                        "The printer took too long to respond. Check whether the file "
+                        "appeared on the printer before trying again."
+                    )
+                ),
+                status=HTTPStatus.GATEWAY_TIMEOUT,
+                log_message=f"Uploading G-code to {machine} ({machine.ip_address}) "
+                f"timed out.",
+                exception=e,
+            )
+        except requests.RequestException as e:
+            return self.printer_error_response(
+                str(_("Could not reach the printer: %(error)s")) % {"error": e},
+                status=HTTPStatus.BAD_GATEWAY,
+                log_message=f"Uploading G-code to {machine} ({machine.ip_address}) "
+                f"failed.",
+                exception=e,
+            )
+
+        if response.ok:
+            return JsonResponse(
+                {"success": True, "message": str(_("File uploaded successfully."))}
+            )
+
+        return self.printer_error_response(
+            str(_("Printer rejected the upload (status %(code)s)."))
+            % {"code": response.status_code},
+            status=HTTPStatus.BAD_GATEWAY,
+            log_message=f"{machine} ({machine.ip_address}) rejected the G-code upload "
+            f"with status {response.status_code}: {response.text[:1000]}",
         )

@@ -534,6 +534,11 @@ PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 # See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
 SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
 
+# The largest G-code file (in bytes) that can be uploaded to a 3D printer.
+# This should match Nginx's `client_max_body_size` on the server, so that users get
+# a proper error message instead of the request being cut off by Nginx.
+GCODE_UPLOAD_MAX_SIZE = 50 * 1024 * 1024  # (custom setting)
+
 
 if USE_DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
