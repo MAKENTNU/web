@@ -276,7 +276,7 @@ class Machine(models.Model):
             data = res.json()
 
             return data["result"]["status"]["print_stats"]["state"]
-        except Exception:
+        except (requests.RequestException, KeyError, TypeError):
             return "offline"
 
 

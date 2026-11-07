@@ -310,7 +310,10 @@ class MachineRelatedViewMixin:
             Machine.objects.visible_to(self.request.user), pk=machine_pk
         )
 
+
 TAILSCALE_CGNAT = ipaddress.ip_network("100.64.0.0/10")
+# How large a share of the lines at the start of a file must look like G-code
+MIN_VALID_GCODE_LINE_RATIO = 0.8
 
 
 def _looks_like_gcode(file) -> bool:
@@ -319,14 +322,12 @@ def _looks_like_gcode(file) -> bool:
         file.seek(0)
         chunk = file.read(8192)
         file.seek(0)
-    except Exception:
+    # `ValueError` is raised if the file has been closed
+    except (OSError, ValueError):
         return False
 
     if isinstance(chunk, bytes):
-        try:
-            chunk = chunk.decode("utf-8", errors="ignore")
-        except Exception:
-            return False
+        chunk = chunk.decode("utf-8", errors="ignore")
 
     lines = [line.strip() for line in chunk.splitlines() if line.strip()]
     if not lines:
@@ -334,7 +335,7 @@ def _looks_like_gcode(file) -> bool:
 
     valid_prefixes = ("G", "M", "T", "N", ";")
     valid_count = sum(1 for line in lines if line.upper().startswith(valid_prefixes))
-    return valid_count / len(lines) >= 0.8
+    return valid_count / len(lines) >= MIN_VALID_GCODE_LINE_RATIO
 
 
 class StreamingMultipartBody:
