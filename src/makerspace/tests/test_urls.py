@@ -27,6 +27,7 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             # urlpatterns
             Get(reverse("makerspace"), public=True),
             Get(reverse("rules"), public=True),
+            Get(reverse("sponsors"), public=True),
             # specific_equipment_adminpatterns
             Get(reverse("equipment_update", args=[self.equipment1.pk]), public=False),
             # equipment_adminpatterns
