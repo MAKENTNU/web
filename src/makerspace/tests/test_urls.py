@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django_hosts import reverse
 
-from makerspace.models import Equipment
+from makerspace.models import Equipment, EquipmentCategory
 from util.test_utils import (
     MOCK_JPG_FILE,
     CleanUpTempFilesTestMixin,
@@ -13,8 +13,10 @@ from util.test_utils import (
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
     def setUp(self):
+        self.category = EquipmentCategory.objects.create(name="Test category")
         self.equipment1 = Equipment.objects.create(
             title="Test equipment 1",
+            category=self.category,
             description="Lorem ipsum dolor sit amet",
             image=MOCK_JPG_FILE,
         )

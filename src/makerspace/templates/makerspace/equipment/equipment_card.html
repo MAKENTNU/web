@@ -1,0 +1,18 @@
+{% load i18n %}
+{% load thumbnail %}
+
+
+<div class="ui card">
+    <a class="image" href="{{ equipment.get_absolute_url }}">
+        <img {% thumbnail equipment.image "600x400" crop="center" as image_thumb %}
+            src="{{ image_thumb.url }}"
+        {% empty %}
+            src="{{ equipment.image.url }}"
+        {% endthumbnail %}
+            alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
+        />
+    </a>
+    <div class="word-breaking hyphenated content">
+        <a class="header" href="{{ equipment.get_absolute_url }}">{{ equipment.title }}</a>
+    </div>
+</div>

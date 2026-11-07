@@ -2,13 +2,14 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from makerspace.models import Equipment
+from makerspace.models import Equipment, EquipmentCategory
 from util import html_utils
 from util.admin_utils import DefaultAdminWidgetsMixin, search_escaped_and_unescaped
 
 
 class EquipmentAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
-    list_display = ("title", "get_image", "priority", "last_modified")
+    list_display = ("title", "get_image", "category", "priority", "last_modified")
+    list_filter = ("category",)
     search_fields = ("title", "description")
     list_editable = ("priority",)
 
@@ -30,3 +31,16 @@ class EquipmentAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
 
 
 admin.site.register(Equipment, EquipmentAdmin)
+
+
+class EquipmentCategoryAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
+    list_display = ("name", "priority", "get_equipment_count")
+    list_editable = ("priority",)
+    search_fields = ("name",)
+
+    @admin.display(description=_("equipment"))
+    def get_equipment_count(self, category: EquipmentCategory):
+        return category.equipment.count()
+
+
+admin.site.register(EquipmentCategory, EquipmentCategoryAdmin)
