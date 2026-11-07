@@ -21,6 +21,30 @@ class EquipmentQuerySet(models.QuerySet):
         )
 
 
+class EquipmentCategoryQuerySet(models.QuerySet):
+    def default_order_by(self) -> "EquipmentCategoryQuerySet[EquipmentCategory]":
+        return self.order_by("priority")
+
+
+class EquipmentCategory(models.Model):
+    name = MultiLingualTextField(unique=True, verbose_name=_("name"))
+    priority = models.IntegerField(
+        default=0,
+        verbose_name=_("priority"),
+        help_text=_("The categories are sorted ascending by this value."),
+    )
+
+    objects = EquipmentCategoryQuerySet.as_manager()
+
+    class Meta:
+        ordering = ("priority",)
+        verbose_name = _("equipment category")
+        verbose_name_plural = _("equipment categories")
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Equipment(models.Model):
     title = MultiLingualTextField(unique=True, verbose_name=_("title"))
     description = MultiLingualRichTextUploadingField(verbose_name=_("description"))
@@ -36,6 +60,15 @@ class Equipment(models.Model):
         verbose_name=_("priority"),
         help_text=_("If specified, the equipment is sorted ascending by this value."),
     )
+    category = models.ForeignKey(
+        to=EquipmentCategory,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="equipment",
+        verbose_name=_("category"),
+    )
+
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = EquipmentQuerySet.as_manager()

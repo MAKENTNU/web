@@ -1,6 +1,7 @@
 from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Prefetch
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -13,7 +14,7 @@ from django.views.generic import (
 
 from contentbox.views import ContentBoxDetailView
 from makerspace.forms import EquipmentForm
-from makerspace.models import Equipment
+from makerspace.models import Equipment, EquipmentCategory
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 
@@ -29,10 +30,26 @@ class EquipmentDetailView(DetailView):
 
 
 class EquipmentListView(ListView):
-    model = Equipment
-    queryset = Equipment.objects.default_order_by()
+    model = EquipmentCategory
+    context_object_name = "categories"
     template_name = "makerspace/equipment/equipment_list.html"
-    context_object_name = "equipment_list"
+
+    def get_queryset(self):
+        return EquipmentCategory.objects.default_order_by().prefetch_related(
+            Prefetch(
+                "equipment",
+                queryset=Equipment.objects.default_order_by(),
+                to_attr="shown_equipment",
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "uncategorised_equipment": Equipment.objects.filter(
+                category__isnull=True
+            ).default_order_by(),
+        }
 
 
 class AdminEquipmentListView(PermissionRequiredMixin, ListView):
