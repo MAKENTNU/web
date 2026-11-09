@@ -12,8 +12,26 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ## Unreleased
 
+### New features
+
+<<<<<<< HEAD
+=======
+
+### Improvements
+
+
+### Fixes
+
+
+### Other changes
+
+
+## 2026-11-09 (MAKENTNU/web#839)
 
 ### New features
+- Added guidance hours to the internal pages (MAKENTNU/web#816)
+- Sponsor page under Makerverkstedet (MAKENTNU/web#835)
+>>>>>>> origin/main
 
 
 ### Improvements
