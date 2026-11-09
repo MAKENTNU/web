@@ -7,6 +7,11 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'makerspace/css/equipment_list.css' %}"/>
+    <script>
+        $(document).ready(function () {
+            $(".equipment-categories.ui.accordion").accordion({exclusive: false});
+        });
+    </script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -15,28 +20,34 @@
     </h1>
 
     <div class="ui container">
-        {% for category in categories %}
-            {% if category.shown_equipment %}
-                <div class="word-breaking hyphenated equipment-category-title ui large header">
-                    {{ category.name }}
+        <div class="equipment-categories ui accordion">
+            {% for category in categories %}
+                {% if category.shown_equipment %}
+                    <div class="word-breaking hyphenated equipment-category-title title ui large header">
+                        <i class="dropdown icon"></i>{{ category.name }}
+                    </div>
+                    <div class="content">
+                        <div class="ui three stackable cards">
+                            {% for equipment in category.shown_equipment %}
+                                {% include 'makerspace/equipment/equipment_card.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if uncategorised_equipment %}
+                <div class="equipment-category-title title ui large header">
+                    <i class="dropdown icon"></i>{% translate "Other" %}
                 </div>
-                <div class="ui three stackable cards">
-                    {% for equipment in category.shown_equipment %}
-                        {% include 'makerspace/equipment/equipment_card.html' %}
-                    {% endfor %}
+                <div class="content">
+                    <div class="ui three stackable cards">
+                        {% for equipment in uncategorised_equipment %}
+                            {% include 'makerspace/equipment/equipment_card.html' %}
+                        {% endfor %}
+                    </div>
                 </div>
             {% endif %}
-        {% endfor %}
-
-        {% if uncategorised_equipment %}
-            <div class="equipment-category-title ui large header">
-                {% translate "Other" %}
-            </div>
-            <div class="ui three stackable cards">
-                {% for equipment in uncategorised_equipment %}
-                    {% include 'makerspace/equipment/equipment_card.html' %}
-                {% endfor %}
-            </div>
-        {% endif %}
+        </div>
     </div>
 {% endblock body %}

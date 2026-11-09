@@ -36,6 +36,9 @@
                 {% endif %}
 
                 <h1 class="word-breaking hyphenated">{{ equipment.title }}</h1>
+                {% if equipment.category %}
+                    <a class="ui basic label" href="{% url 'equipment_list' %}">{{ equipment.category.name }}</a>
+                {% endif %}
                 <div class="equipment-description">
                     {{ equipment.description|safe }}
                 </div>

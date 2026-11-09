@@ -53,13 +53,29 @@ class EquipmentListView(ListView):
 
 
 class AdminEquipmentListView(PermissionRequiredMixin, ListView):
-    model = Equipment
-    queryset = Equipment.objects.default_order_by()
+    model = EquipmentCategory
+    context_object_name = "categories"
     template_name = "makerspace/equipment/admin_equipment_list.html"
-    context_object_name = "equipment_list"
 
     def has_permission(self):
         return self.request.user.has_any_permissions_for(Equipment)
+
+    def get_queryset(self):
+        return EquipmentCategory.objects.default_order_by().prefetch_related(
+            Prefetch(
+                "equipment",
+                queryset=Equipment.objects.default_order_by(),
+                to_attr="shown_equipment",
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "uncategorised_equipment": Equipment.objects.filter(
+                category__isnull=True
+            ).default_order_by(),
+        }
 
 
 class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):

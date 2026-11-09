@@ -17,30 +17,22 @@
         </a>
     </h1>
     <div class="ui text container">
-        {% if equipment_list %}
+        {% for category in categories %}
+            {% if category.shown_equipment %}
+                <h2 class="word-breaking hyphenated make-col-blue">{{ category.name }}</h2>
+                <div class="equipment-list ui divided list">
+                    {% for equipment in category.shown_equipment %}
+                        {% include 'makerspace/equipment/admin_equipment_row.html' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if uncategorised_equipment %}
+            <h2 class="make-col-blue">{% translate "Other" %}</h2>
             <div class="equipment-list ui divided list">
-                {% for equipment in equipment_list %}
-                    <div class="item">
-
-                        <a class="image" href="{% url 'equipment_update' equipment.pk %}">
-                            <img src="{{ equipment.image.url }}"
-                                 alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
-                            />
-                        </a>
-                        <h3 class="word-breaking hyphenated equipment-title">
-                            <a class="make-col-blue" href="{% url 'equipment_update' equipment.pk %}">
-                                {{ equipment.title }}
-                            </a>
-                        </h3>
-                        {% if perms.makerspace.delete_equipment %}
-                            <a class="delete-modal-button"
-                               data-url="{% url 'equipment_delete' equipment.pk %}"
-                               data-obj-name="{{ equipment }}">
-                                <i class="large red delete icon"></i>
-                            </a>
-                        {% endif %}
-
-                    </div>
+                {% for equipment in uncategorised_equipment %}
+                    {% include 'makerspace/equipment/admin_equipment_row.html' %}
                 {% endfor %}
             </div>
         {% endif %}
