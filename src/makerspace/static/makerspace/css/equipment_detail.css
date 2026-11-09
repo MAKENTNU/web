@@ -12,3 +12,7 @@
        to prevent them from getting skewed when `max-width` takes effect */
     height: auto !important;
 }
+
+.equipment-description {
+    margin-top: 1em;
+}

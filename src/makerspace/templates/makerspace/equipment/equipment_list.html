@@ -1,8 +1,6 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load thumbnail %}
-{% load css_tags %}
 
 
 {% block title %}{% translate "Some of the available equipment <br/>at Makerverkstedet"|striptags %}{% endblock title %}
@@ -11,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'makerspace/css/equipment_list.css' %}"/>
     <script>
         $(document).ready(function () {
-            $(".accordion-and-list .ui.accordion").accordion();
+            $(".equipment-categories.ui.accordion").accordion({exclusive: false});
         });
     </script>
 {% endblock extra_head %}
@@ -20,56 +18,36 @@
     <h1 class="ui text-centered make-col-blue header">
         {% translate "Some of the available equipment <br/>at Makerverkstedet" %}
     </h1>
-    <div class="ui container">
 
-        <div class="accordion-and-list">
-            <div class="ui styled accordion">
-                <div class="title">
-                    <i class="dropdown icon"></i>
-                    {% translate "Contents" %}
+    <div class="ui container">
+        <div class="equipment-categories ui accordion">
+            {% for category in categories %}
+                {% if category.shown_equipment %}
+                    <div class="word-breaking hyphenated equipment-category-title title ui large header">
+                        <i class="dropdown icon"></i>{{ category.name }}
+                    </div>
+                    <div class="content">
+                        <div class="ui three stackable cards">
+                            {% for equipment in category.shown_equipment %}
+                                {% include 'makerspace/equipment/equipment_card.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if uncategorised_equipment %}
+                <div class="equipment-category-title title ui large header">
+                    <i class="dropdown icon"></i>{% translate "Other" %}
                 </div>
                 <div class="content">
-                    <ul class="ui list">
-                        {% for equipment in equipment_list %}
-                            <li>
-                                <a href="#equipment-{{ equipment.pk }}">
-                                    {{ equipment.title }}
-                                </a>
-                            </li>
+                    <div class="ui three stackable cards">
+                        {% for equipment in uncategorised_equipment %}
+                            {% include 'makerspace/equipment/equipment_card.html' %}
                         {% endfor %}
-                    </ul>
-                </div>
-            </div>
-
-            <div class="equipment-list">
-                {% for equipment in equipment_list %}
-                    <a id="equipment-{{ equipment.pk }}" class="equipment-img-container"
-                       href="{{ equipment.get_absolute_url }}">
-                        <img {% thumbnail equipment.image "600x600" crop="center" as image_thumb %}
-                            src="{{ image_thumb.url }}"
-                        {% empty %}
-                            src="{{ equipment.image.url }}"
-                        {% endthumbnail %}
-                            alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
-                        />
-                    </a>
-
-                    <div class="word-breaking hyphenated equipment-text
-                            {% if forloop.first %}first{% endif %}
-                            {% if forloop.last %}last{% endif %}">
-                        {% if forloop.first or forloop.last %}
-                            <img class="text-border-corner top left" src="{% static 'web/img/top_left.svg' %}" alt=""/>
-                            <img class="text-border-corner top right" src="{% static 'web/img/top_right.svg' %}" alt=""/>
-                            <img class="text-border-corner bottom left" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
-                            <img class="text-border-corner bottom right" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
-                        {% endif %}
-                        <h1 class="equipment-title">
-                            <a class="make-col-yellow" href="{{ equipment.get_absolute_url }}">{{ equipment.title }}</a>
-                        </h1>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endif %}
         </div>
-
     </div>
 {% endblock body %}

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:56+0100\n"
+"POT-Creation-Date: 2026-11-09 18:31+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -492,6 +492,12 @@ msgstr "fullt navn"
 msgid "extra view permissions"
 msgstr "ekstra visningsrettigheter"
 
+msgid "slot"
+msgstr ""
+
+msgid "members booked"
+msgstr ""
+
 msgid "Choose user"
 msgstr "Velg bruker"
 
@@ -525,6 +531,12 @@ msgid ""
 msgstr ""
 "Medlemmets «pang»-status ble ikke omgjort, fordi medlemmet ikke hadde status "
 "«pang»."
+
+msgid "Start time must be before end time."
+msgstr "Starttiden kan ikke være etter sluttiden"
+
+msgid "This slot overlaps with an existing guidance slot."
+msgstr "Denne veiledningstimen overlapper med en eksisterende veiledningstime."
 
 msgid "user"
 msgstr "bruker"
@@ -652,6 +664,36 @@ msgstr "forfatter"
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
+msgid "Monday"
+msgstr "Mandag"
+
+msgid "Tuesday"
+msgstr "Tirsdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "weekday"
+msgstr "ukedag"
+
+msgid "from time"
+msgstr "fra klokken"
+
+msgid "to time"
+msgstr "til klokken"
+
+msgid "notes"
+msgstr "notater"
+
+msgid "members"
+msgstr "medlemmer"
+
 msgid "Internal pages"
 msgstr "Internsider"
 
@@ -661,8 +703,71 @@ msgstr "Komitéoppslagstavler"
 msgid "MAKE Internal"
 msgstr "MAKE internsider"
 
+msgid "Guidance hours"
+msgstr "Veiledningstimer"
+
+msgid "Failed to save comments. Please try again."
+msgstr "Kunne ikke lagre kommentarer. Prøv igjen."
+
+msgid "Are you sure you want to cancel this slot?"
+msgstr "Er du helt sikker på at du vil melde deg av denne veiledningstimen?"
+
+msgid "Are you sure you want to book this slot?"
+msgstr "Er du helt sikker på at du vil melde deg på denne veiledningstimen?"
+
+msgid "Are you sure you want to clear all bookings and comments?"
+msgstr "Er du helt sikker på at du vil tømme alle påmeldinger og kommentarer?"
+
+msgid "Are you sure you want to delete this slot?"
+msgstr "Er du helt sikker på at du vil slette denne veiledningstimen?"
+
+msgid "Clear all bookings"
+msgstr "Tøm alle påmeldinger"
+
+msgid "Your scheduled times this semester:"
+msgstr "Dine veiledningstimer dette semesteret:"
+
+msgid "None"
+msgstr "Ingen"
+
+msgid "At the makerspace now:"
+msgstr "På verkstedet nå:"
+
+msgid "Time"
+msgstr "Tidspunkt"
+
+msgid "No members"
+msgstr "Ingen medlemmer"
+
+msgid "Active members without a guidance hour"
+msgstr "Aktive medlemmer uten veiledningstime"
+
+msgid "Close"
+msgstr "Lukk"
+
 msgid "Members"
 msgstr "Medlemmer"
+
+msgid "comments"
+msgstr "kommentarer"
+
+msgid "Save"
+msgstr "Lagre"
+
+msgid "Saved"
+msgstr "Lagret"
+
+msgid "remove booking"
+msgstr "meld av"
+
+msgid "full"
+msgstr "fullt"
+
+msgid "book"
+msgstr "meld på"
+
+msgid "Delete slot"
+msgstr "Slett veiledningstime"
 
 msgid "Secrets"
 msgstr "Hemmeligheter"
@@ -846,6 +951,35 @@ msgstr "Legg til sitat"
 msgid "Change Quote"
 msgstr "Endre sitat"
 
+msgid "You need to be booked to this slot to edit comments."
+msgstr "Du må være påmeldt denne veiledningstimen for å redigere kommentarer."
+
+msgid "Only booked members can edit comments for this slot."
+msgstr ""
+"Kun påmeldte medlemmer kan redigere kommentarer for denne veiledningstimen."
+
+#, python-format
+msgid "Comment is too long (maximum %(max_length)s characters)."
+msgstr "Kommentaren er for lang (maksimalt %(max_length)s tegn)."
+
+msgid "You need to be a member to book."
+msgstr "Du må være medlem for å melde deg på."
+
+msgid "This guidance slot is already full."
+msgstr "Denne veiledningstimen er allerede full."
+
+msgid "All guidance hour bookings and comments have been cleared."
+msgstr "Alle påmeldinger og kommentarer for veiledningstimer er fjernet."
+
+msgid "Add Guidance Hour Slot"
+msgstr "Legg til veiledningstime"
+
+msgid "Update Guidance Hour Slot"
+msgstr "Oppdater veiledningstime"
+
+msgid "Update"
+msgstr "Oppdater"
+
 msgid "machines"
 msgstr "maskiner"
 
@@ -1026,9 +1160,6 @@ msgstr "tidspunkt infomeldingen ble endra"
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
-msgid "notes"
-msgstr "notater"
-
 msgid "This is only for internal use and is not displayed anywhere."
 msgstr "Dette er bare for intern bruk og blir ikke vist fram noe sted."
 
@@ -1064,131 +1195,11 @@ msgstr "<ingen>"
 msgid "Quota for {user} on {machine_type}"
 msgstr "Kvote for {user} på {machine_type}"
 
-msgid "Monday"
-msgstr "Mandag"
-
-msgid "Tuesday"
-msgstr "Tirsdag"
-
-msgid "Wednesday"
-msgstr "Onsdag"
-
-msgid "Thursday"
-msgstr "Torsdag"
-
-msgid "Friday"
-msgstr "Fredag"
-
 msgid "Saturday"
 msgstr "Lørdag"
 
 msgid "Sunday"
 msgstr "Søndag"
-
-msgid "Guidance hours"
-msgstr "Veiledningstimer"
-
-msgid "Close"
-msgstr "Lukk"
-
-msgid "Active members without a guidance hour"
-msgstr "Aktive medlemmer uten veiledningstime"
-
-msgid "from time"
-msgstr "fra klokken"
-
-msgid "to time"
-msgstr "til klokken"
-
-msgid "weekday"
-msgstr "ukedag"
-
-msgid "members"
-msgstr "medlemmer"
-
-msgid "Failed to save comments. Please try again."
-msgstr "Kunne ikke lagre kommentarer. Prøv igjen."
-
-msgid "Are you sure you want to cancel this slot?"
-msgstr "Er du helt sikker på at du vil melde deg av denne veiledningstimen?"
-
-msgid "Are you sure you want to book this slot?"
-msgstr "Er du helt sikker på at du vil melde deg på denne veiledningstimen?"
-
-msgid "Are you sure you want to clear all bookings and comments?"
-msgstr "Er du helt sikker på at du vil tømme alle påmeldinger og kommentarer?"
-
-msgid "Are you sure you want to delete this slot?"
-msgstr "Er du helt sikker på at du vil slette denne veiledningstimen?"
-
-msgid "Clear all bookings"
-msgstr "Tøm alle påmeldinger"
-
-msgid "Your scheduled times this semester:"
-msgstr "Dine veiledningstimer dette semesteret:"
-
-msgid "At the makerspace now:"
-msgstr "På verkstedet nå:"
-
-msgid "None"
-msgstr "Ingen"
-
-msgid "No members"
-msgstr "Ingen medlemmer"
-
-msgid "comments"
-msgstr "kommentarer"
-
-msgid "Saved"
-msgstr "Lagret"
-
-msgid "remove booking"
-msgstr "meld av"
-
-msgid "full"
-msgstr "fullt"
-
-msgid "book"
-msgstr "meld på"
-
-msgid "Delete slot"
-msgstr "Slett veiledningstime"
-
-msgid "This guidance slot is already full."
-msgstr "Denne veiledningstimen er allerede full."
-
-msgid "You need to be a member to book."
-msgstr "Du må være medlem for å melde deg på."
-
-msgid "All guidance hour bookings and comments have been cleared."
-msgstr "Alle påmeldinger og kommentarer for veiledningstimer er fjernet."
-
-msgid "Add Guidance Hour Slot"
-msgstr "Legg til veiledningstime"
-
-msgid "Update Guidance Hour Slot"
-msgstr "Oppdater veiledningstime"
-
-msgid "Create"
-msgstr "Opprett"
-
-msgid "Update"
-msgstr "Oppdater"
-
-msgid "Start time must be before end time."
-msgstr "Starttiden kan ikke være etter sluttiden"
-
-msgid "This slot overlaps with an existing guidance slot."
-msgstr "Denne veiledningstimen overlapper med en eksisterende veiledningstime."
-
-msgid "Comment is too long (maximum %(max_length)s characters)."
-msgstr "Kommentaren er for lang (maksimalt %(max_length)s tegn)."
-
-msgid "Only booked members can edit comments for this slot."
-msgstr "Kun påmeldte medlemmer kan redigere kommentarer for denne veiledningstimen."
-
-msgid "You need to be booked to this slot to edit comments."
-msgstr "Du må være påmeldt denne veiledningstimen for å redigere kommentarer."
 
 msgid "start time"
 msgstr "starttidspunkt"
@@ -1259,9 +1270,6 @@ msgstr "Nullstill valg"
 
 msgid "Registration status"
 msgstr "Registreringsstatus"
-
-msgid "Save"
-msgstr "Lagre"
 
 msgctxt "abort action"
 msgid "Cancel"
@@ -1431,9 +1439,6 @@ msgstr "Skjul tidligere reservasjoner"
 
 msgid "Reservation"
 msgstr "Reservasjon"
-
-msgid "Time"
-msgstr "Tidspunkt"
 
 msgctxt "cancel reservation"
 msgid "Cancel"
@@ -1624,11 +1629,23 @@ msgstr "Endre regel for {machine_type}"
 msgid "Image of {equipment}."
 msgstr "Bilde av {equipment}."
 
+msgid "The categories are sorted ascending by this value."
+msgstr "Kategoriene er sortert stigende etter dette tallet"
+
+msgid "equipment category"
+msgstr "utstyrskategori"
+
+msgid "equipment categories"
+msgstr "utstyrskategorier"
+
 msgid "If specified, the equipment is sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 
 msgid "Add equipment"
 msgstr "Legg til utstyr"
+
+msgid "Other"
+msgstr "Andre"
 
 #, python-format
 msgid "Image of %(equipment)s"
@@ -1636,9 +1653,6 @@ msgstr "Bilde av %(equipment)s"
 
 msgid "Some of the available equipment <br/>at Makerverkstedet"
 msgstr "Noe av det tilgjengelige utstyret <br/>på Makerverkstedet"
-
-msgid "Contents"
-msgstr "Innhold"
 
 msgid ""
 "an overview of the various equipment at the workshop, and instructions on "
@@ -2391,6 +2405,12 @@ msgstr "Velg verdi"
 
 msgid "Search places"
 msgstr "Søk etter steder"
+
+#~ msgid "Create"
+#~ msgstr "Opprett"
+
+#~ msgid "Contents"
+#~ msgstr "Innhold"
 
 #~ msgid "You have completed the Raise3D printer course"
 #~ msgstr "Du har fullført Raise3D-printerkurset"

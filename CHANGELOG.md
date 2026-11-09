@@ -14,6 +14,8 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### New features
 
+<<<<<<< HEAD
+=======
 
 ### Improvements
 
@@ -29,10 +31,12 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 ### New features
 - Added guidance hours to the internal pages (MAKENTNU/web#816)
 - Sponsor page under Makerverkstedet (MAKENTNU/web#835)
+>>>>>>> origin/main
 
 
 ### Improvements
 
+- Grouped the equipment list by category (MAKENTNU/web#838)
 
 ### Fixes
 

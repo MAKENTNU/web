@@ -1,0 +1,22 @@
+{% load i18n %}
+
+
+<div class="item">
+    <a class="image" href="{% url 'equipment_update' equipment.pk %}">
+        <img src="{{ equipment.image.url }}"
+            alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
+        />
+    </a>
+    <h3 class="word-breaking hyphenated equipment-title">
+        <a class="make-col-blue" href="{% url 'equipment_update' equipment.pk %}">
+            {{ equipment.title }}
+        </a>
+    </h3>
+    {% if perms.makerspace.delete_equipment %}
+        <a class="delete-modal-button"
+            data-url="{% url 'equipment_delete' equipment.pk %}"
+            data-obj-name="{{ equipment }}">
+            <i class="large red delete icon"></i>
+        </a>
+    {% endif %}
+</div>

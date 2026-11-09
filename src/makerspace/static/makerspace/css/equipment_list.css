@@ -1,104 +1,19 @@
-.accordion-and-list {
-    max-width: 933px; /* Same as the `width` of Fomantic-UI's `.ui.container` for tablet layout */
-    margin: 2em auto;
+.equipment-category-title {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
-.accordion-and-list .accordion {
-    width: -moz-fit-content !important; /* Overrides Fomantic-UI */
-    width: fit-content !important; /* Overrides Fomantic-UI */
-    min-width: 250px;
+.ui.cards .card > .image img {
+    height: 200px;
+    object-fit: cover;
 }
 
-.equipment-list {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    row-gap: 2em;
-    margin-top: 3em;
+.equipment-categories.accordion > .title {
+    font-size: 1.71428571rem;
+    color: var(--make-blue);
+    cursor: pointer;
 }
 
-.equipment-img-container img {
-    display: block;
-    max-width: 100%;
-}
-
-.equipment-text .text-border-corner {
-    display: none;
-    position: absolute;
-    width: 50px;
-    height: 50px;
-}
-
-.equipment-text .text-border-corner.top {
-    top: 0;
-}
-
-.equipment-text .text-border-corner.right {
-    right: 0;
-}
-
-.equipment-text .text-border-corner.left {
-    left: 0;
-}
-
-.equipment-text .text-border-corner.bottom {
-    bottom: 0;
-}
-
-.equipment-text .equipment-title {
-    padding: 0 1em;
-    font-size: 3rem;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-
-/* Desktop layout */
-@media screen and (min-width: 992px) {
-    .equipment-img-container img {
-        width: 250px;
-    }
-
-    .equipment-text {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .equipment-text.first .text-border-corner.top.right,
-    .equipment-text.last .text-border-corner.bottom.right {
-        display: inline;
-    }
-}
-
-
-/* Tablet and mobile layout */
-@media screen and (max-width: 991.98px) {
-    .accordion-and-list {
-        margin: 2em 10% 0;
-    }
-
-    .equipment-list {
-        grid-template-columns: 1fr;
-        row-gap: 0;
-    }
-
-    .equipment-img-container img {
-        margin: 0 auto;
-        max-height: 50vh;
-    }
-
-    .equipment-text .equipment-title {
-        margin: 0.25em 0 2em;
-        padding: 0;
-        text-align: start;
-    }
-}
-
-
-/* Mobile layout */
-@media screen and (max-width: 426px) {
-    .accordion-and-list {
-        margin: 2em 4% 0;
-    }
+.equipment-categories.accordion > .title > .dropdown.icon {
+    color: var(--make-yellow);
 }
