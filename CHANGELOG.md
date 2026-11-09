@@ -24,7 +24,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 ### Other changes
 
 
-## 2026-11-09 (MAKENTNU/web#)
+## 2026-11-09 (MAKENTNU/web#810)
 
 ### New features
 - Added guidance hours to the internal pages (MAKENTNU/web#816)
