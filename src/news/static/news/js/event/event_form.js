@@ -5,6 +5,7 @@ function updateEventType() {
         $("#info-message-tickets").show();
         $("#info-message-tickets-repeating").hide();
     } else {
+        $("#id_number_of_tickets").prop("value", 0);
         $("#info-message-tickets").hide();
         $("#info-message-tickets-repeating").show();
     }
