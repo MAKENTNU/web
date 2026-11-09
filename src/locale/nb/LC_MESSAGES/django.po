@@ -1085,6 +1085,111 @@ msgstr "Lørdag"
 msgid "Sunday"
 msgstr "Søndag"
 
+msgid "Guidance hours"
+msgstr "Veiledningstimer"
+
+msgid "Close"
+msgstr "Lukk"
+
+msgid "Active members without a guidance hour"
+msgstr "Aktive medlemmer uten veiledningstime"
+
+msgid "from time"
+msgstr "fra klokken"
+
+msgid "to time"
+msgstr "til klokken"
+
+msgid "weekday"
+msgstr "ukedag"
+
+msgid "members"
+msgstr "medlemmer"
+
+msgid "Failed to save comments. Please try again."
+msgstr "Kunne ikke lagre kommentarer. Prøv igjen."
+
+msgid "Are you sure you want to cancel this slot?"
+msgstr "Er du helt sikker på at du vil melde deg av denne veiledningstimen?"
+
+msgid "Are you sure you want to book this slot?"
+msgstr "Er du helt sikker på at du vil melde deg på denne veiledningstimen?"
+
+msgid "Are you sure you want to clear all bookings and comments?"
+msgstr "Er du helt sikker på at du vil tømme alle påmeldinger og kommentarer?"
+
+msgid "Are you sure you want to delete this slot?"
+msgstr "Er du helt sikker på at du vil slette denne veiledningstimen?"
+
+msgid "Clear all bookings"
+msgstr "Tøm alle påmeldinger"
+
+msgid "Your scheduled times this semester:"
+msgstr "Dine veiledningstimer dette semesteret:"
+
+msgid "At the makerspace now:"
+msgstr "På verkstedet nå:"
+
+msgid "None"
+msgstr "Ingen"
+
+msgid "No members"
+msgstr "Ingen medlemmer"
+
+msgid "comments"
+msgstr "kommentarer"
+
+msgid "Saved"
+msgstr "Lagret"
+
+msgid "remove booking"
+msgstr "meld av"
+
+msgid "full"
+msgstr "fullt"
+
+msgid "book"
+msgstr "meld på"
+
+msgid "Delete slot"
+msgstr "Slett veiledningstime"
+
+msgid "This guidance slot is already full."
+msgstr "Denne veiledningstimen er allerede full."
+
+msgid "You need to be a member to book."
+msgstr "Du må være medlem for å melde deg på."
+
+msgid "All guidance hour bookings and comments have been cleared."
+msgstr "Alle påmeldinger og kommentarer for veiledningstimer er fjernet."
+
+msgid "Add Guidance Hour Slot"
+msgstr "Legg til veiledningstime"
+
+msgid "Update Guidance Hour Slot"
+msgstr "Oppdater veiledningstime"
+
+msgid "Create"
+msgstr "Opprett"
+
+msgid "Update"
+msgstr "Oppdater"
+
+msgid "Start time must be before end time."
+msgstr "Starttiden kan ikke være etter sluttiden"
+
+msgid "This slot overlaps with an existing guidance slot."
+msgstr "Denne veiledningstimen overlapper med en eksisterende veiledningstime."
+
+msgid "Comment is too long (maximum %(max_length)s characters)."
+msgstr "Kommentaren er for lang (maksimalt %(max_length)s tegn)."
+
+msgid "Only booked members can edit comments for this slot."
+msgstr "Kun påmeldte medlemmer kan redigere kommentarer for denne veiledningstimen."
+
+msgid "You need to be booked to this slot to edit comments."
+msgstr "Du må være påmeldt denne veiledningstimen for å redigere kommentarer."
+
 msgid "start time"
 msgstr "starttidspunkt"
 

@@ -1,0 +1,219 @@
+.guidance-hour-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.guidance-hour-my-slots {
+    width: 100%;
+    margin: 0 0 10px;
+    padding-left: 6px;
+    background-color: #eef4f8;
+    border-left: 4px solid var(--make-blue);
+    color: #0b2f4a;
+}
+
+.guidance-hour-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.guidance-hour-matrix :is(th, td) {
+    border: 1px solid black;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.guidance-hour-matrix th {
+    background-color: var(--make-blue);
+    color: #ffffff;
+}
+
+.guidance-hour-matrix td {
+    background-color: var(--make-yellow);
+    color: black;
+}
+
+.guidance-hour-matrix td.guidance-slot-empty {
+    background-color: #827f7f;
+}
+
+.guidance-hour-matrix td.guidance-matrix-slot {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.guidance-hour-matrix .guidance-slot-time {
+    width: 150px;
+    white-space: nowrap;
+}
+
+.guidance-slot-members {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.guidance-slot-members .guidance-member-name + .guidance-member-name {
+    padding-top: 3px;
+    position: relative;
+}
+
+.guidance-slot-members .guidance-member-name + .guidance-member-name::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -12px;
+    width: calc(100% + 24px);
+    border-top: 1px solid var(--make-blue);
+}
+
+.guidance-slot-clickable {
+    cursor: pointer;
+}
+
+.guidance-hour-matrix td.guidance-slot-clickable:hover {
+    background-color: var(--make-yellow-darker);
+}
+
+.guidance-hour-matrix td.guidance-slot-empty.guidance-slot-clickable:hover {
+    background-color: #6b6868;
+}
+
+.guidance-member-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.guidance-hour-notes,
+.guidance-hour-notes-display {
+    width: 100%;
+    min-height: 65px;
+    margin: 0;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
+.guidance-hour-notes {
+    resize: vertical;
+    border: 1px solid rgba(12, 66, 106, 0.35);
+    background: #ffffff;
+}
+
+.guidance-hour-notes-controls {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guidance-hour-notes-save {
+    border: 1px solid var(--make-blue);
+    background-color: var(--make-blue);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.guidance-hour-notes-save.guidance-hour-notes-save-success {
+    background-color: #1a7a3c;
+    border-color: #1a7a3c;
+    cursor: default;
+}
+
+.cancel-button,
+.book-button {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+}
+
+.clear-all-button {
+    border: 1px solid #8f1f1f;
+    background: #b52d2d;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+}
+
+.guidance-slot-full {
+    font-weight: 700;
+    color: #7c1d00;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.guidance-slot-modal .actions form {
+    display: inline-block;
+    margin: 0 0.5em 0 0;
+}
+
+.ui.modal.guidance-slot-modal > .close.icon {
+    top: 0.75rem;
+    right: 0.75rem;
+    color: rgba(0, 0, 0, 0.87);
+    opacity: 0.6;
+}
+
+.ui.modal.guidance-slot-modal > .close.icon:hover {
+    opacity: 1;
+}
+
+.guidance-slot-modal > .header {
+    padding-right: 3.5rem;
+}
+
+.guidance-hour-mobile-cards {
+    display: none;
+}
+
+.guidance-hour-mobile-day-table {
+    margin-bottom: 12px;
+}
+
+.guidance-hour-unassigned-members {
+    margin-top: 24px;
+}
+
+.guidance-slot-member-detail .description {
+    margin-top: 4px;
+}
+
+.guidance-slot-member-detail + .guidance-slot-member-detail {
+    border-top: 1px solid rgba(0, 0, 0, 1);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .guidance-hour-matrix {
+        display: none;
+    }
+
+    .guidance-hour-mobile-cards .guidance-hour-matrix {
+        display: table;
+    }
+
+    .guidance-hour-mobile-cards {
+        display: block;
+    }
+
+    .guidance-hour-notes,
+    .guidance-hour-notes-display {
+        max-width: 100%;
+    }
+}
