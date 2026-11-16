@@ -24,12 +24,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="historicalmachine",
             name="ip_address",
-            field=models.GenericIPAddressField(blank=True, null=True),
+            field=models.GenericIPAddressField(
+                blank=True, null=True, verbose_name="IP address"
+            ),
         ),
         migrations.AddField(
             model_name="machine",
             name="ip_address",
-            field=models.GenericIPAddressField(blank=True, null=True),
+            field=models.GenericIPAddressField(
+                blank=True, null=True, verbose_name="IP address"
+            ),
         ),
         migrations.AddField(
             model_name="machinetype",

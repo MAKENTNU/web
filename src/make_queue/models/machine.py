@@ -208,7 +208,9 @@ class Machine(models.Model):
     history = HistoricalRecords(
         excluded_fields=["status", "info_message_date", "priority", "last_modified"]
     )
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    ip_address = models.GenericIPAddressField(
+        blank=True, null=True, verbose_name=_("IP address")
+    )
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"

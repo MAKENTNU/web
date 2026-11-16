@@ -212,6 +212,8 @@ class MachineDetailView(QueryParameterFormMixin, DetailView):
 def printer_status_api(request, pk):
     machine = get_object_or_404(Machine, pk=pk)
 
+    if not machine.show_upload_button(request.user):
+        return JsonResponse({"status": "offline"}, status=403)
     status = machine.get_printer_status()
 
     return JsonResponse({"status": status})
