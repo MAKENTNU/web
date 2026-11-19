@@ -4,6 +4,7 @@ from django.contrib.auth import get_user
 from django.http import HttpRequest
 from django.test import TestCase
 from django_hosts import reverse
+from social_core.exceptions import AuthFailed
 from social_django.models import UserSocialAuth
 
 from dataporten import views
@@ -14,6 +15,10 @@ from util.test_utils import mock_module_attrs
 
 def mock_complete(*args, **kwargs):
     return "mock response"
+
+
+def mock_complete_with_auth_failed(*args, **kwargs):
+    raise AuthFailed(None, "some error")
 
 
 ldap_data_return_value = {
@@ -34,6 +39,12 @@ class ViewTestCase(TestCase):
         self.assertTrue(get_user(self.client).is_authenticated)
         self.client.post(reverse("logout"))
         self.assertFalse(get_user(self.client).is_authenticated)
+
+    @mock_module_attrs({(views, "complete"): mock_complete_with_auth_failed})
+    def test_login_wrapper_returns_forbidden_when_auth_fails(self):
+        request = HttpRequest()
+        response = views.login_wrapper(request, None)
+        self.assertEqual(response.status_code, 403)
 
     @mock_module_attrs(
         {

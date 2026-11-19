@@ -1,14 +1,19 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.utils.http import urlencode
 from django.views import View
+from social_core.exceptions import AuthException
 from social_django import views as social_views
 from social_django.models import UserSocialAuth
 
 from dataporten import ldap_utils
 from users.models import User
 from util.logging_utils import log_request_exception
+
+logger = logging.getLogger(__name__)
 
 # Assign these functions to module-level variables, to facilitate testing (through
 # monkey patching)
@@ -58,6 +63,14 @@ def login_wrapper(request, backend, *args, **kwargs):
     """
     try:
         response = complete(request, backend, *args, **kwargs)
+    except AuthException as e:
+        # These are expected failure modes of the OAuth flow itself - e.g. a canceled
+        # login, an expired/invalid state, or (most commonly) bots/scanners hitting
+        # this callback URL directly with missing or invalid parameters - rather than
+        # bugs in our code. Log them without alerting the admins by email, unlike the
+        # `RuntimeError` raised below for genuinely unexpected failures.
+        logger.warning("Authentication through Dataporten failed: %s", e)
+        return HttpResponseForbidden()
     except Exception as e:
         raise RuntimeError("Authentication through Dataporten failed.") from e
 
