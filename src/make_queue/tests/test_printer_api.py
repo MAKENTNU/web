@@ -90,7 +90,9 @@ class TestResolvePrinterAddress(SimpleTestCase):
             resolve_printer_address("")
 
     def test_ipv6_addresses_are_enclosed_in_brackets_in_urls(self):
-        self.assertEqual(get_base_url("fd7a:115c:a1e0::1"), "http://[fd7a:115c:a1e0::1]")
+        self.assertEqual(
+            get_base_url("fd7a:115c:a1e0::1"), "http://[fd7a:115c:a1e0::1]"
+        )
         self.assertEqual(get_base_url("100.64.0.1"), "http://100.64.0.1")
 
 
