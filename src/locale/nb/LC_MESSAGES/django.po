@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 00:55+0100\n"
+"POT-Creation-Date: 2026-11-19 17:24+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -898,6 +898,20 @@ msgstr ""
 "Enten må både 'calendar_year' og 'calendar_week' være oppgitt, eller ingen "
 "av dem."
 
+msgid "G-code file"
+msgstr "G-code-fil"
+
+#, python-format
+msgid "Max. file size: %(max_size)s"
+msgstr "Maks. filstørrelse: %(max_size)s"
+
+#, python-format
+msgid "The file is too large (%(size)s). The maximum size is %(max_size)s."
+msgstr "Filen er for stor (%(size)s). Maksimal størrelse er %(max_size)s."
+
+msgid "The file doesn't look like a valid G-code file."
+msgstr "Filen ser ikke ut som en gyldig G-code-fil."
+
 msgid "User must be set when “All users” is not set."
 msgstr "Bruker må oppgis når «Alle brukere» ikke er satt."
 
@@ -1032,6 +1046,18 @@ msgstr "notater"
 msgid "This is only for internal use and is not displayed anywhere."
 msgstr "Dette er bare for intern bruk og blir ikke vist fram noe sted."
 
+msgid "printer address"
+msgstr "printeradresse"
+
+msgid ""
+"The printer's IP address or Tailscale MagicDNS name (e.g. “printer-1”), "
+"which lets users upload G-code files to the printer from the website. Leave "
+"empty to disable uploading."
+msgstr ""
+"Printerens IP-adresse eller Tailscale MagicDNS-navn (f.eks. «printer-1»), "
+"som lar brukere laste opp G-code-filer til printeren fra nettsida. La stå "
+"tomt for å skru av opplasting."
+
 #, python-brace-format
 msgid "Usage rules for {machine_type}"
 msgstr "Bruksregler for {machine_type}"
@@ -1105,6 +1131,32 @@ msgstr "timer enkeltperiode"
 
 msgid "hours multi-period"
 msgstr "timer fler-periode"
+
+msgid "Enter a valid IP address or hostname."
+msgstr "Skriv inn en gyldig IP-adresse eller et gyldig vertsnavn."
+
+msgid "The printer's address has not been configured."
+msgstr "Printerens adresse er ikke satt opp."
+
+msgid "Could not find the printer on the network."
+msgstr "Fant ikke printeren på nettverket."
+
+msgid "The printer's address is not allowed."
+msgstr "Printerens adresse er ikke tillatt."
+
+msgid ""
+"The printer took too long to respond. Check whether the file appeared on the "
+"printer before trying again."
+msgstr ""
+"Printeren brukte for lang tid på å svare. Sjekk om filen dukket opp på "
+"printeren før du prøver igjen."
+
+msgid "Could not connect to the printer."
+msgstr "Kunne ikke koble til printeren."
+
+#, python-format
+msgid "The printer rejected the file (status %(code)s)."
+msgstr "Printeren avviste filen (status %(code)s)."
 
 msgid "Previous"
 msgstr "Forrige"
@@ -1220,6 +1272,16 @@ msgstr "Er du sikker på at du vil gjøre dette?"
 msgid "Set status"
 msgstr "Sett status"
 
+msgid "The printer is offline."
+msgstr "Printeren er frakoblet."
+
+msgid "Files can't be uploaded while the printer is printing."
+msgstr "Filer kan ikke lastes opp mens printeren printer."
+
+msgid ""
+"The printer is ready. The file will be added to the printer's list of files."
+msgstr "Printeren er klar. Filen blir lagt til i printerens liste over filer."
+
 #, python-format
 msgid "Live stream of the machine %(name)s"
 msgstr "Livestream av maskinen %(name)s"
@@ -1260,52 +1322,17 @@ msgstr "Maksimalt antall aktive reservasjoner"
 msgid "User has no personal quotas"
 msgstr "Brukeren har ingen personlige kvoter"
 
-msgid "Uploading"
-msgstr "Laster opp"
-
-msgid "Upload"
-msgstr "Last opp"
-
-msgid "Upload complete"
-msgstr "Opplasting fullført"
-
-msgid "Upload failed"
-msgstr "Opplasting feilet"
-
-msgid "Printer is offline"
-msgstr "Printer er frakoblet"
-
-msgid "Upload unavailable while printing is in progress."
-msgstr "Kan ikke laste opp mens printeren printer"
-
-msgid "Ready for upload"
-msgstr "Klar for opplasting"
-
-msgid "Current printer status"
-msgstr "Printer status"
-
-msgid "Unable to retrieve printer status."
-msgstr "Kunne ikke hente printer status"
-
-#, python-format
-msgid "The file is too large (%(size)s). The maximum size is %(max_size)s."
-msgstr "Filen er for stor (%(size)s). Maksimal størrelse er %(max_size)s."
-
-msgid "Lost the connection to the server during the upload."
-msgstr "Mistet forbindelsen til serveren under opplastingen."
-
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
 msgid "Click to create a new reservation"
 msgstr "Klikk for å lage en ny reservasjon"
 
-msgid "Upload Gcode"
-msgstr "Last opp Gcode"
+msgid "Upload G-code"
+msgstr "Last opp G-code"
 
-#, python-format
-msgid "Max. file size: %(max_size)s"
-msgstr "Maks. filstørrelse: %(max_size)s"
+msgid "Click to send a file directly to the printer"
+msgstr "Klikk for å sende en fil direkte til printeren"
 
 msgid "Click to see your reservations"
 msgstr "Klikk for å se dine reservasjoner"
@@ -1494,38 +1521,16 @@ msgstr "Legg til maskin"
 msgid "Change Machine"
 msgstr "Endre maskin"
 
-msgid "You are not allowed to upload to this printer."
-msgstr "Du kan ikke laste opp til denne printeren"
-
-msgid "No file was selected."
-msgstr "Ingen fil valgt"
-
-msgid "Only .gcode files are allowed."
-msgstr "Bare .gcode filer tillatt"
-
-msgid "This doesn't look like a valid G-code file."
-msgstr "Dette ser ikke ut som gyldig G-code"
-
-msgid "Invalid printer address configured."
-msgstr "Ugyldig printer adresse"
-
-msgid ""
-"The printer took too long to respond. Check whether the file appeared on the "
-"printer before trying again."
-msgstr ""
-"Printeren brukte for lang tid på å svare. Sjekk om filen dukket opp på "
-"printeren før du prøver igjen."
+msgid "Upload"
+msgstr "Last opp"
 
 #, python-format
-msgid "Could not reach the printer: %(error)s"
-msgstr "Kunne ikke nå printeren: %(error)s"
-
-msgid "File uploaded successfully."
-msgstr "Opplasting fullført"
+msgid "Upload G-code to %(machine)s"
+msgstr "Last opp G-code til %(machine)s"
 
 #, python-format
-msgid "Printer rejected the upload (status %(code)s)."
-msgstr "Printeren avviste opplastingen (status %(code)s)."
+msgid "“%(filename)s” was uploaded to %(machine)s."
+msgstr "«%(filename)s» ble lastet opp til %(machine)s."
 
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"

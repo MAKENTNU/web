@@ -1,0 +1,26 @@
+{% extends 'web/generic_form.html' %}
+{% load i18n %}
+
+
+{% block extra_pre_content %}
+    {% for message in messages %}
+        <div class="ui {{ message.tags }} message">
+            <i class="close icon"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% if printer_is_offline %}
+        <div class="ui warning message">
+            {% translate "The printer is offline." %}
+        </div>
+    {% elif printer_is_busy %}
+        <div class="ui warning message">
+            {% translate "Files can't be uploaded while the printer is printing." %}
+        </div>
+    {% else %}
+        <div class="ui info message">
+            {% translate "The printer is ready. The file will be added to the printer's list of files." %}
+        </div>
+    {% endif %}
+{% endblock extra_pre_content %}

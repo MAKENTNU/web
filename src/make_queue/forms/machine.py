@@ -1,13 +1,17 @@
 import datetime
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
+from django.template.defaultfilters import filesizeformat
 from django.utils import timezone
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from js_asset import JS
 
 from make_queue.models.machine import Machine, MachineType
+from make_queue.printer_api import looks_like_gcode
 from util.locale_utils import last_week_of_year, year_and_week_to_monday
 from util.templatetags.datetime_tags import long_datetime
 from web.widgets import MazeMapSearchInput, SemanticChoiceInput
@@ -103,7 +107,7 @@ class ChangeMachineForm(MachineFormBase):
         if not self.instance.machine_type.has_stream:
             self.fields["stream_name"].disabled = True
         if not self.instance.machine_type.has_ip:
-            self.fields["ip_address"].disabled = True
+            self.fields["printer_address"].disabled = True
 
     def clean(self):
         # Force the machine type before doing any other cleaning
@@ -165,3 +169,48 @@ class MachineDetailQueryForm(forms.Form):
             ),
             code="all_or_no_fields_must_be_set",
         )
+
+
+class GcodeUploadForm(forms.Form):
+    file = forms.FileField(
+        label=_("G-code file"),
+        validators=[FileExtensionValidator(["gcode"])],
+        widget=forms.FileInput(attrs={"accept": ".gcode"}),
+    )
+
+    class Media:
+        js = [
+            JS("make_queue/js/gcode_upload_form.js", attrs={"defer": True}),
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        max_size = settings.GCODE_UPLOAD_MAX_SIZE
+        file_field = self.fields["file"]
+        file_field.help_text = _("Max. file size: %(max_size)s") % {
+            "max_size": filesizeformat(max_size)
+        }
+        # Used by the JavaScript to check the file size before it's uploaded
+        file_field.widget.attrs["data-max-size"] = max_size
+
+    def clean_file(self):
+        file = self.cleaned_data["file"]
+        max_size = settings.GCODE_UPLOAD_MAX_SIZE
+        if file.size > max_size:
+            raise ValidationError(
+                _(
+                    "The file is too large (%(size)s). The maximum size is"
+                    " %(max_size)s."
+                ),
+                code="file_too_large",
+                params={
+                    "size": filesizeformat(file.size),
+                    "max_size": filesizeformat(max_size),
+                },
+            )
+        if not looks_like_gcode(file):
+            raise ValidationError(
+                _("The file doesn't look like a valid G-code file."),
+                code="invalid_gcode",
+            )
+        return file

@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
 
-import requests
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
 from django.db.models import F, Prefetch, Q
@@ -12,6 +11,7 @@ from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from make_queue.models.course import CoursePermission, Printer3DCourse
+from make_queue.printer_api import validate_printer_address
 from users.models import User
 from util.validators import lowercase_slug_validator
 from web.modelfields import UnlimitedCharField, URLTextField
@@ -203,13 +203,21 @@ class Machine(models.Model):
         help_text=_("This is only for internal use and is not displayed anywhere."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+    printer_address = models.CharField(
+        max_length=253,
+        blank=True,
+        validators=[validate_printer_address],
+        verbose_name=_("printer address"),
+        help_text=_(
+            "The printer's IP address or Tailscale MagicDNS name (e.g. abel”),"
+            " which lets users upload G-code files to the printer from the website."
+            " Leave empty to disable uploading."
+        ),
+    )
 
     objects = MachineQuerySet.as_manager()
     history = HistoricalRecords(
         excluded_fields=["status", "info_message_date", "priority", "last_modified"]
-    )
-    ip_address = models.GenericIPAddressField(
-        blank=True, null=True, verbose_name=_("IP address")
     )
 
     def __str__(self):
@@ -267,19 +275,12 @@ class Machine(models.Model):
             self.get_status_display(),
         )
 
-    def show_upload_button(self, user):  # Only show upload button if user can use it
-        return self.ip_address and self.can_user_use(user)
-
-    def get_printer_status(self):
-        try:
-            res = requests.get(
-                f"http://{self.ip_address}/printer/objects/query?print_stats", timeout=5
-            )
-            data = res.json()
-
-            return data["result"]["status"]["print_stats"]["state"]
-        except (requests.RequestException, KeyError, TypeError):
-            return "offline"
+    def can_user_upload_gcode(self, user) -> bool:
+        return bool(
+            self.machine_type.has_ip
+            and self.printer_address
+            and self.can_user_use(user)
+        )
 
 
 class MachineUsageRule(models.Model):
